@@ -1,0 +1,23 @@
+# 决策类型：trajectory_inference（轨迹推断）— inference / scRNA
+decision_type: trajectory_inference
+display:
+  cn: 拟时序/轨迹推断
+  en: Trajectory inference
+stage: inference
+paradigms: [scRNA]
+dimension: method_selection
+# G5 裁决（v1.1）：optional + 适用性谓词（研究不涉及轨迹分析 → 不适用）
+optional: true
+when_not_applicable: study_not_trajectory_focused
+aliases: []
+depends_on: [clustering_method, clustering_resolution]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: cell_type
+    type: string
+    required: false
+    missing: fail-open

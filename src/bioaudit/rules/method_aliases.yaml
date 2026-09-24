@@ -1,0 +1,86 @@
+# DP 决策点：声明的方法名 → 规则档位里的方法名（映射表）
+#
+# 为什么需要这张表（DP-CRITERIA-PANEL-ACKNOWLEDGEMENT / DP-NEXT-UNIT-JUDGEMENT §五）：
+#   规则文件里的档位是按方法名列的（filterByExpr、TMM、DESeq2…），而审计提交里写的是
+#   声明的方法（low_count_filter、tmm、deseq2…）。两套词不打通，判据面板就无法说出
+#   "你的做法落在哪一档"，只能并排显示并声明"未推导"。这张表就是那道桥。
+#
+# 两条纪律（与项目"档位只告知、不判定"一致）：
+#   1. 这张表只做名称→档位的归属，不给分、不排名、不改变任何判定词；
+#   2. 对不上的不许猜：对不上就写 unmapped 并给出原因，面板会如实显示"无法推导"，
+#      绝不硬塞一个档位。
+#
+# 来源列（source）的含义：
+#   exact      两侧名字同一个东西（含大小写/连字符差异）
+#   alias      同一物的常见别名（如 Benjamini-Hochberg == BH）
+#   interpreted 由声明语义归入某档——这属判断，待领域复核（`needs_review: true`）
+#   unmapped   声明的是"策略/参数"，规则档位列的是"方法名/表达式"——无法按名归属
+
+version: "1.0.0"
+generated_at: "2026-09-12"
+note: >
+  首版。三个点可按名字归属；过滤与阈值两点属"策略描述 vs 方法名/表达式"的落差，
+  标 unmapped 并给出原因，待治理与领域复核决定是否补写归类规则。
+
+rule_files:
+  filtering: "D1.2-DEG-001_filtering.yaml"
+  normalization: "D1.3-DEG-001_normalization.yaml"
+  differential_method: "M1.1-DEG-001_method_selection.yaml"
+  multiple_testing_correction: "M1.2-DEG-001_multiple_testing.yaml"
+  significance_threshold: "M1.3-DEG-001_threshold.yaml"
+
+# 每个家族各自一张映射（家族不同，规则文件与档位都不同）
+families:
+  DEG:
+    normalization:
+      tmm: {level: level_3, source: exact, matched_name: TMM}
+      rle: {level: level_3, source: exact, matched_name: RLE}
+      median_of_ratios: {level: level_3, source: alias, matched_name: DESeq2_median_of_ratios}
+      upper_quartile: {level: level_3, source: exact, matched_name: upper_quartile}
+      tpm: {level: level_2, source: exact, matched_name: TPM}
+      cpm: {level: level_2, source: alias, matched_name: CPM_no_log}
+      fpkm: {level: level_1, source: exact, matched_name: FPKM}
+      rpkm: {level: level_1, source: exact, matched_name: RPKM}
+      none: {level: level_0, source: alias, matched_name: raw_counts_no_normalization}
+
+    differential_method:
+      deseq2: {level: level_3, source: exact, matched_name: DESeq2}
+      edger: {level: level_3, source: exact, matched_name: edgeR}
+      limma_voom: {level: level_3, source: exact, matched_name: limma_voom}
+      limma-trend: {level: level_2, source: exact, matched_name: limma-trend}
+      wilcoxon: {level: level_1, source: alias, matched_name: Wilcoxon_rank_sum}
+      ttest: {level: level_0, source: alias, matched_name: ttest_equal_variance}
+
+    multiple_testing_correction:
+      bh: {level: level_3, source: exact, matched_name: BH}
+      fdr: {level: level_3, source: exact, matched_name: FDR}
+      benjamini_hochberg: {level: level_3, source: alias, matched_name: Benjamini-Hochberg}
+      by: {level: level_2, source: exact, matched_name: BY}
+      benjamini_yekutieli: {level: level_2, source: alias, matched_name: Benjamini-Yekutieli}
+      storey: {level: level_2, source: alias, matched_name: q_value_storey}
+      bonferroni: {level: level_1, source: exact, matched_name: Bonferroni}
+      none: {level: level_0, source: alias, matched_name: no_correction}
+
+    filtering:
+      low_count_filter:
+        level: null
+        source: unmapped
+        needs_review: false
+        why: >
+          声明的是策略（"按低计数过滤"），而规则档位列的是方法/工具名
+          （filterByExpr、CPM_filter_min_samples…）。规则区分的是"自适应阈值 vs 固定阈值"，
+          声明名本身并不表达这一点，因此按名无法归属。
+          若要做归属，需要声明方补一项"阈值是否自适应"，或在提交里直接给方法名——
+          两者都属产品输入语义，需另行裁定。
+
+    significance_threshold:
+      padj_0.05:
+        level: null
+        source: unmapped
+        needs_review: false
+        why: >
+          声明的是单个数（校正后 p < 0.05），而规则档位列的是成对阈值表达式
+          （`padj <= 0.05, |logFC| >= 1.0` 这一类）。规则要求同时给出统计显著性与
+          效应量边界，声明里只有一半，因此按名无法归属。
+          这与 P-01 §4.5「阈值决策是成对的解释性选择」一致：缺一半时，
+          应如实注明“缺”，而非代补默认效应量。

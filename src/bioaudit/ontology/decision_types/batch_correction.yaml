@@ -1,0 +1,43 @@
+# 决策类型：batch_correction（批次校正/整合）— preprocessing / scRNA
+decision_type: batch_correction
+display:
+  cn: 批次校正与数据整合
+  en: Batch correction
+stage: preprocessing
+paradigms: [scRNA]
+dimension: data_handling
+# G5 裁决（v1.1）：optional + 适用性谓词（单样本/无批次 → 不适用）
+optional: true
+when_not_applicable: single_sample_or_no_batch
+aliases: []
+depends_on: [qc_filtering, scRNA_normalization]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: has_batch
+    type: bool
+    required: true
+    # A2：被罚分规则（B1.1）引用 → 禁止 fail-open
+    missing: fail-closed
+  - key: n_patients
+    type: int
+    min: 0
+    required: false
+    # A2：被罚分规则（B1.1/B1.2，约束 n_patients>=2）引用 → 禁止 fail-open
+    missing: fail-closed
+  # G4 裁决（v1.1）：confound 结构键 —— 只评方法不评"是否该校正"会误杀
+  # 混淆设计下的正确选择（如以批次为设计因素的 mixed model）
+  - key: confound
+    type: enum
+    values: [none, batch, patient, library_prep, site]
+    required: false
+    missing: fail-closed
+  # G3 裁决（v1.1）：分析单位（整合为 sample 级操作）
+  - key: unit
+    type: enum
+    values: [cell, sample, pseudobulk, biological_replicate, technical_replicate]
+    required: false
+    missing: fail-closed

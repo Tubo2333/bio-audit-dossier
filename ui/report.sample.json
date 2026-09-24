@@ -1,0 +1,906 @@
+{
+  "_report_meta": {
+    "explanatory": true,
+    "not_authority": true,
+    "not_acceptance": true,
+    "source_first_bounded_set": true
+  },
+  "context": {
+    "project_id": "PRJ-Alpha",
+    "analysis_id": "AN-001",
+    "comparison": "treated_vs_control",
+    "n_samples": {
+      "treated": 8,
+      "control": 8
+    },
+    "data_type": "bulk_rnaseq",
+    "audit_scope": "five-point MVP slice",
+    "intended_use": "internal scientific review",
+    "input_version": {
+      "ruleset_version": "1.8.10",
+      "ontology_version": "0.1.3",
+      "engine_version": "0.3.0",
+      "input_format_version": "1.0",
+      "adapter_version": "1.0"
+    },
+    "exclusions": {
+      "note": "Declared exclusions are shown verbatim.",
+      "declared_boundary": "five-point MVP slice",
+      "declared_exclusions": "batch 3 excluded (instrument drift); no external release intended"
+    }
+  },
+  "state_meanings": {
+    "format": 1,
+    "statement": "These are the P-02 §5 state meanings this report can attest from facts it holds. Each entry states its reason and what it requires; `unexpressed_states` lists the meanings this system cannot express and what would have to change.",
+    "attested": {
+      "reviewed": {
+        "state": "reviewed",
+        "reason": "NO reviewer record was supplied to this report",
+        "may_be_relied_on": "nothing on this basis: nothing was reviewed here",
+        "must_not_be_inferred": "that a review happened outside this report's view",
+        "next_requirement": "supply a named reviewer record for a named target/scope"
+      },
+      "blocked": {
+        "state": "blocked",
+        "reason": "no required decision, review or fact is currently pending",
+        "may_be_relied_on": "this account's stated conclusions within their scope",
+        "must_not_be_inferred": "that a future block cannot arise",
+        "next_requirement": "nothing outstanding was observed"
+      },
+      "limited-use": {
+        "state": "limited-use",
+        "reason": "no separate governed use/release ceiling is recorded here",
+        "may_be_relied_on": "the account's stated scope only",
+        "must_not_be_inferred": "that a release or lane decision exists — this system grants none",
+        "next_requirement": "a governance decision, which this report cannot make"
+      },
+      "stale": {
+        "state": "stale",
+        "reason": "every point's version binding matches the current runtime",
+        "may_be_relied_on": "the account within its stated scope",
+        "must_not_be_inferred": "that a future runtime change cannot make it stale",
+        "next_requirement": "nothing: re-checked against the current runtime"
+      },
+      "scoped": {
+        "state": "scoped",
+        "reason": "this account is bounded to a named project/analysis/comparison/scope/use boundary",
+        "named_boundary": {
+          "project_id": "PRJ-Alpha",
+          "analysis_id": "AN-001",
+          "comparison": "treated_vs_control",
+          "audit_scope": "five-point MVP slice",
+          "intended_use": "internal scientific review"
+        },
+        "may_be_relied_on": "the conclusion within exactly that boundary",
+        "must_not_be_inferred": "global product, phase or package clearance; or that the same conclusion holds for another object",
+        "next_requirement": "what boundary is named, and whether expansion is separately authorized"
+      },
+      "planned": {
+        "state": "planned",
+        "reason": "the report lists future capabilities that are described but not built — REPORT-LEVEL intent, not a state of this account",
+        "planned_capabilities": [
+          {
+            "capability": "no release machinery / no lane grant",
+            "status": "partially implemented: no lane is granted and no release authority exists, but a use/release ceiling can be recorded and rendered with its evidence, restrictions and required next evidence (see lane_and_release). This is not release machinery: no automatic promotion, transition, rollback or deployment; the decision caps use and never authorises it by itself"
+          },
+          {
+            "capability": "deployment and Package A closure",
+            "status": "not implemented and not claimed"
+          },
+          {
+            "capability": "runtime proof / execution evidence",
+            "status": "not implemented and not claimed"
+          },
+          {
+            "capability": "independent reviewer approval",
+            "status": "not performed: the system records roles, it does not conduct review"
+          },
+          {
+            "capability": "additional decision points beyond the five",
+            "status": "not implemented: five RNA-seq points only"
+          },
+          {
+            "capability": "other analysis types beyond bulk RNA-seq",
+            "status": "not implemented"
+          },
+          {
+            "capability": "evidence provenance / freshness fields",
+            "status": "partially implemented: every evidence item now carries its observation time, the validity window its submitter declared, an optional provenance and subject, the claim it is offered for, and its role; the report derives and shows whether each item is still current. NOT implemented: per-item authority permission (who may rely on it), and any judgement of whether the declared provenance is genuine — the system records the declaration and does not adjudicate it"
+          },
+          {
+            "capability": "the full state vocabulary",
+            "status": "partially implemented: P-02 §5 lists 13 state and consequence meanings; auditable, scientifically_limited, conflicted, not_auditable and integrity_failed are expressible as point judgements, historical_only on the history side, and reviewed, blocked, limited-use, stale, scoped and planned are attested from facts this report holds — 12 of 13 in total, and external is not expressible, because no input carries an outside-the-artifact physical observation; see `state_meanings.unexpressed_states` for its reason and what would have to change for it."
+          },
+          {
+            "capability": "a formal report for showing to others",
+            "status": "not available: an inspector page for the accountable owner exists (ui/report.html) and renders this report for reading, but a user-facing product surface and any external-facing presentation remain undecided product decisions (P-03 §14)"
+          }
+        ],
+        "may_be_relied_on": "awareness of future intent or need",
+        "must_not_be_inferred": "implementation, evidence, proof, deployment or closure; and never as this account's outcome",
+        "next_requirement": "is this only a plan, or is separate evidence present?"
+      }
+    },
+    "unexpressed_states": [
+      {
+        "state": "external",
+        "reason": "the current data model has no outside-the-artifact physical observation to describe: nothing in an audit carries a byte- or encoding-level observation made outside the artifact",
+        "what_would_change_it": "an authorized input for external physical observations (a new input contract, hence a governance decision)"
+      }
+    ],
+    "not_yet_available": [
+      {
+        "capability": "no release machinery / no lane grant",
+        "status": "partially implemented: no lane is granted and no release authority exists, but a use/release ceiling can be recorded and rendered with its evidence, restrictions and required next evidence (see lane_and_release). This is not release machinery: no automatic promotion, transition, rollback or deployment; the decision caps use and never authorises it by itself"
+      },
+      {
+        "capability": "deployment and Package A closure",
+        "status": "not implemented and not claimed"
+      },
+      {
+        "capability": "runtime proof / execution evidence",
+        "status": "not implemented and not claimed"
+      },
+      {
+        "capability": "independent reviewer approval",
+        "status": "not performed: the system records roles, it does not conduct review"
+      },
+      {
+        "capability": "additional decision points beyond the five",
+        "status": "not implemented: five RNA-seq points only"
+      },
+      {
+        "capability": "other analysis types beyond bulk RNA-seq",
+        "status": "not implemented"
+      },
+      {
+        "capability": "evidence provenance / freshness fields",
+        "status": "partially implemented: every evidence item now carries its observation time, the validity window its submitter declared, an optional provenance and subject, the claim it is offered for, and its role; the report derives and shows whether each item is still current. NOT implemented: per-item authority permission (who may rely on it), and any judgement of whether the declared provenance is genuine — the system records the declaration and does not adjudicate it"
+      },
+      {
+        "capability": "the full state vocabulary",
+        "status": "partially implemented: P-02 §5 lists 13 state and consequence meanings; auditable, scientifically_limited, conflicted, not_auditable and integrity_failed are expressible as point judgements, historical_only on the history side, and reviewed, blocked, limited-use, stale, scoped and planned are attested from facts this report holds — 12 of 13 in total, and external is not expressible, because no input carries an outside-the-artifact physical observation; see `state_meanings.unexpressed_states` for its reason and what would have to change for it."
+      },
+      {
+        "capability": "a formal report for showing to others",
+        "status": "not available: an inspector page for the accountable owner exists (ui/report.html) and renders this report for reading, but a user-facing product surface and any external-facing presentation remain undecided product decisions (P-03 §14)"
+      }
+    ]
+  },
+  "five_decision_register": {
+    "points": [
+      {
+        "name": "filtering",
+        "purpose": "low-expression filtering",
+        "judgment": "scientifically_limited"
+      },
+      {
+        "name": "normalization",
+        "purpose": "normalization",
+        "judgment": "auditable"
+      },
+      {
+        "name": "differential_method",
+        "purpose": "differential-analysis method",
+        "judgment": "auditable"
+      },
+      {
+        "name": "multiple_testing_correction",
+        "purpose": "multiple-testing correction",
+        "judgment": "auditable"
+      },
+      {
+        "name": "significance_threshold",
+        "purpose": "significance / effect-size threshold",
+        "judgment": "scientifically_limited"
+      }
+    ],
+    "first_bounded_set": true,
+    "note": "First bounded set of five decision points, not the complete product decision set.",
+    "not_yet_available": [
+      {
+        "capability": "no release machinery / no lane grant",
+        "status": "partially implemented: no lane is granted and no release authority exists, but a use/release ceiling can be recorded and rendered with its evidence, restrictions and required next evidence (see lane_and_release). This is not release machinery: no automatic promotion, transition, rollback or deployment; the decision caps use and never authorises it by itself"
+      },
+      {
+        "capability": "deployment and Package A closure",
+        "status": "not implemented and not claimed"
+      },
+      {
+        "capability": "runtime proof / execution evidence",
+        "status": "not implemented and not claimed"
+      },
+      {
+        "capability": "independent reviewer approval",
+        "status": "not performed: the system records roles, it does not conduct review"
+      },
+      {
+        "capability": "additional decision points beyond the five",
+        "status": "not implemented: five RNA-seq points only"
+      },
+      {
+        "capability": "other analysis types beyond bulk RNA-seq",
+        "status": "not implemented"
+      },
+      {
+        "capability": "evidence provenance / freshness fields",
+        "status": "partially implemented: every evidence item now carries its observation time, the validity window its submitter declared, an optional provenance and subject, the claim it is offered for, and its role; the report derives and shows whether each item is still current. NOT implemented: per-item authority permission (who may rely on it), and any judgement of whether the declared provenance is genuine — the system records the declaration and does not adjudicate it"
+      },
+      {
+        "capability": "the full state vocabulary",
+        "status": "partially implemented: P-02 §5 lists 13 state and consequence meanings; auditable, scientifically_limited, conflicted, not_auditable and integrity_failed are expressible as point judgements, historical_only on the history side, and reviewed, blocked, limited-use, stale, scoped and planned are attested from facts this report holds — 12 of 13 in total, and external is not expressible, because no input carries an outside-the-artifact physical observation; see `state_meanings.unexpressed_states` for its reason and what would have to change for it."
+      },
+      {
+        "capability": "a formal report for showing to others",
+        "status": "not available: an inspector page for the accountable owner exists (ui/report.html) and renders this report for reading, but a user-facing product surface and any external-facing presentation remain undecided product decisions (P-03 §14)"
+      }
+    ],
+    "not_yet_available_note": "These product capabilities are not implemented here and are NOT being claimed; against each one the current account is unavailable. This list is a boundary statement, not a plan, a roadmap, or a release/lane authority."
+  },
+  "per_point": {
+    "points": [
+      {
+        "name": "filtering",
+        "purpose": "low-expression filtering",
+        "scope": "DP-01/filtering",
+        "judgment": "scientifically_limited",
+        "declared_method": "low_count_filter",
+        "diagnostic_explanation": "Unable to evaluate: the matching rules do not cover the declared method name. This does not mean the method is wrong — the rule library maps levels by method name, and this name is not in the mapping; the point is therefore treated as unevaluable, yielding no quality conclusion and altering no judgment.",
+        "limitations": [
+          {
+            "kind": "filtering_support",
+            "state": "unverified",
+            "detail": "Unable to evaluate: the matching rules do not cover the declared method name. This does not mean the method is wrong — the rule library maps levels by method name, and this name is not in the mapping; the point is therefore treated as unevaluable, yielding no quality conclusion and altering no judgment."
+          }
+        ],
+        "evidence_gaps": [
+          {
+            "kind": "absent_execution_observation",
+            "source": "observed",
+            "state": "unverified",
+            "target": "evidence_observations"
+          }
+        ],
+        "evidence": [
+          {
+            "source_type": "referenced",
+            "verification": "confirmed",
+            "value": "low_count_filter",
+            "observed_at": "2026-08-23T12:00:00+00:00",
+            "valid_for_seconds": 15552000,
+            "freshness": "current",
+            "freshness_meaning": "this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for",
+            "provenance": "the pipeline log for this run (rule match + executed method)",
+            "provenance_subject": "PRJ-Alpha / AN-001 filtering step",
+            "supports": "the declared low-count filtering method was the executed one",
+            "evidence_role": "support"
+          }
+        ],
+        "findings": [],
+        "next_actions": [
+          {
+            "action": "request_evidence",
+            "reason": "support execution observation",
+            "target": "evidence_observations",
+            "next_state": "evidence_requested"
+          }
+        ],
+        "version_snapshot": {
+          "ruleset_version": "1.8.10",
+          "ontology_version": "0.1.3",
+          "engine_version": "0.3.0",
+          "input_format_version": "1.0",
+          "adapter_version": "1.0"
+        }
+      },
+      {
+        "name": "normalization",
+        "purpose": "normalization",
+        "scope": "DP-02/normalization",
+        "judgment": "auditable",
+        "declared_method": "tmm",
+        "diagnostic_explanation": "normalization decision is supportable for the declared context",
+        "limitations": [],
+        "evidence_gaps": [],
+        "evidence": [
+          {
+            "source_type": "referenced",
+            "verification": "confirmed",
+            "value": "tmm",
+            "observed_at": "2026-08-23T12:00:00+00:00",
+            "valid_for_seconds": 15552000,
+            "freshness": "current",
+            "freshness_meaning": "this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for",
+            "provenance": "the analysis script parameters recorded for this run",
+            "provenance_subject": "PRJ-Alpha / AN-001 normalization step",
+            "supports": "the declared TMM normalization was what ran",
+            "evidence_role": "support"
+          }
+        ],
+        "findings": [
+          {
+            "kind": "method",
+            "source": "declared",
+            "state": "confirmed",
+            "value": "tmm"
+          }
+        ],
+        "next_actions": [],
+        "version_snapshot": {
+          "ruleset_version": "1.8.10",
+          "ontology_version": "0.1.3",
+          "engine_version": "0.3.0",
+          "input_format_version": "1.0",
+          "adapter_version": "1.0"
+        }
+      },
+      {
+        "name": "differential_method",
+        "purpose": "differential-analysis method",
+        "scope": "DP-03/differential_method",
+        "judgment": "auditable",
+        "declared_method": "deseq2",
+        "diagnostic_explanation": "differential-analysis method is supportable for the declared design and comparison",
+        "limitations": [],
+        "evidence_gaps": [],
+        "evidence": [
+          {
+            "source_type": "referenced",
+            "verification": "confirmed",
+            "value": "deseq2",
+            "observed_at": "2026-08-23T12:00:00+00:00",
+            "valid_for_seconds": 15552000,
+            "freshness": "current",
+            "freshness_meaning": "this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for",
+            "provenance": "the methods section of the submitted write-up",
+            "provenance_subject": "PRJ-Alpha / AN-001 differential analysis",
+            "supports": "the declared DESeq2 method",
+            "evidence_role": "support"
+          },
+          {
+            "source_type": "referenced",
+            "verification": "confirmed",
+            "value": "edgeR",
+            "observed_at": "2026-08-23T12:00:00+00:00",
+            "valid_for_seconds": 15552000,
+            "freshness": "current",
+            "freshness_meaning": "this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for",
+            "provenance": "the executed workflow log",
+            "provenance_subject": "PRJ-Alpha / AN-001 differential analysis",
+            "supports": "the executed differential method",
+            "evidence_role": "conflict"
+          }
+        ],
+        "findings": [
+          {
+            "kind": "method",
+            "source": "declared",
+            "state": "confirmed",
+            "value": "deseq2"
+          }
+        ],
+        "next_actions": [],
+        "version_snapshot": {
+          "ruleset_version": "1.8.10",
+          "ontology_version": "0.1.3",
+          "engine_version": "0.3.0",
+          "input_format_version": "1.0",
+          "adapter_version": "1.0"
+        }
+      },
+      {
+        "name": "multiple_testing_correction",
+        "purpose": "multiple-testing correction",
+        "scope": "DP-04/multiple_testing_correction",
+        "judgment": "auditable",
+        "declared_method": "BH",
+        "diagnostic_explanation": "multiple-testing correction choice is supportable for the declared context",
+        "limitations": [],
+        "evidence_gaps": [],
+        "evidence": [
+          {
+            "source_type": "referenced",
+            "verification": "confirmed",
+            "value": "BH",
+            "observed_at": "2026-08-23T12:00:00+00:00",
+            "valid_for_seconds": 15552000,
+            "freshness": "current",
+            "freshness_meaning": "this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for",
+            "provenance": "the analysis script parameters recorded for this run",
+            "provenance_subject": "PRJ-Alpha / AN-001 correction step",
+            "supports": "the declared BH correction was applied",
+            "evidence_role": "support"
+          }
+        ],
+        "findings": [
+          {
+            "kind": "method",
+            "source": "declared",
+            "state": "confirmed",
+            "value": "BH"
+          }
+        ],
+        "next_actions": [],
+        "version_snapshot": {
+          "ruleset_version": "1.8.10",
+          "ontology_version": "0.1.3",
+          "engine_version": "0.3.0",
+          "input_format_version": "1.0",
+          "adapter_version": "1.0"
+        }
+      },
+      {
+        "name": "significance_threshold",
+        "purpose": "significance / effect-size threshold",
+        "scope": "DP-05/significance_threshold",
+        "judgment": "scientifically_limited",
+        "declared_method": "padj_0.05",
+        "diagnostic_explanation": "threshold label alone is not evidence for the declared claim and intended use",
+        "limitations": [
+          {
+            "kind": "filtering_support",
+            "state": "unverified",
+            "detail": "threshold label alone is not evidence for the declared claim and intended use"
+          }
+        ],
+        "evidence_gaps": [
+          {
+            "kind": "absent_execution_observation",
+            "source": "observed",
+            "state": "unverified",
+            "target": "evidence_observations"
+          }
+        ],
+        "evidence": [
+          {
+            "source_type": "referenced",
+            "verification": "unverified",
+            "value": "padj_0.05",
+            "observed_at": "2026-08-23T12:00:00+00:00",
+            "valid_for_seconds": 15552000,
+            "freshness": "current",
+            "freshness_meaning": "this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for",
+            "provenance": "a threshold stated in the write-up, with no execution record",
+            "provenance_subject": "PRJ-Alpha / AN-001 threshold",
+            "supports": "the declared threshold choice",
+            "evidence_role": "limitation"
+          }
+        ],
+        "findings": [],
+        "next_actions": [
+          {
+            "action": "request_evidence",
+            "reason": "support the threshold choice with point-local evidence",
+            "target": "evidence_observations",
+            "next_state": "evidence_requested"
+          },
+          {
+            "action": "submit_correction",
+            "reason": "provide a supported threshold choice or rationale",
+            "target": "decision_declaration",
+            "next_state": "correction_submitted"
+          }
+        ],
+        "version_snapshot": {
+          "ruleset_version": "1.8.10",
+          "ontology_version": "0.1.3",
+          "engine_version": "0.3.0",
+          "input_format_version": "1.0",
+          "adapter_version": "1.0"
+        }
+      }
+    ],
+    "result_axes": {
+      "validation": {
+        "evaluable": true,
+        "completeness": "partial",
+        "scientific_evidence": "insufficient",
+        "auditability": "auditable",
+        "conditions": [
+          "filtering",
+          "significance_threshold"
+        ],
+        "prohibited_interpretations": [
+          "No total scientific score.",
+          "No confidence score standing in for the result vector.",
+          "No universal ranking.",
+          "No single quality number.",
+          "No lane-as-science interpretation.",
+          "No local summary that substitutes for the embedded result authority."
+        ],
+        "residual_unordered": false,
+        "detail": "Auditability here means the account can be evaluated; it does NOT mean every decision point is fully supported. Points with insufficient evidence or unresolved conflict are listed in conditions and flagged by scientific_evidence (insufficiency is never relabeled as not-auditable, P-02 §5.2)."
+      },
+      "scope": {
+        "evaluable": true,
+        "completeness": "complete",
+        "scientific_evidence": "sufficient",
+        "auditability": "auditable",
+        "conditions": [
+          "project_id=PRJ-Alpha",
+          "analysis_id=AN-001",
+          "comparison=treated_vs_control",
+          "audit_scope=five-point MVP slice"
+        ],
+        "prohibited_interpretations": [
+          "No total scientific score.",
+          "No confidence score standing in for the result vector.",
+          "No universal ranking.",
+          "No single quality number.",
+          "No lane-as-science interpretation.",
+          "No local summary that substitutes for the embedded result authority."
+        ],
+        "residual_unordered": false,
+        "detail": "The scope names the project, analysis, comparison, and audit scope for this combined account."
+      },
+      "inference_type": {
+        "evaluable": true,
+        "completeness": "partial",
+        "scientific_evidence": "insufficient",
+        "auditability": "auditable",
+        "conditions": [
+          "filtering",
+          "significance_threshold"
+        ],
+        "prohibited_interpretations": [
+          "No total scientific score.",
+          "No confidence score standing in for the result vector.",
+          "No universal ranking.",
+          "No single quality number.",
+          "No lane-as-science interpretation.",
+          "No local summary that substitutes for the embedded result authority."
+        ],
+        "residual_unordered": false,
+        "detail": "Inference is supported where a point is auditable; conflicting points preserve residual/unordered meaning with no arbitrary winner; points listed in conditions either lack sufficient evidence or support no inference."
+      },
+      "explanation_depth": {
+        "evaluable": true,
+        "completeness": "partial",
+        "scientific_evidence": "insufficient",
+        "auditability": "auditable",
+        "conditions": [
+          "filtering: evidence gaps",
+          "significance_threshold: evidence gaps",
+          "filtering: limitations",
+          "significance_threshold: limitations"
+        ],
+        "prohibited_interpretations": [
+          "No total scientific score.",
+          "No confidence score standing in for the result vector.",
+          "No universal ranking.",
+          "No single quality number.",
+          "No lane-as-science interpretation.",
+          "No local summary that substitutes for the embedded result authority."
+        ],
+        "residual_unordered": false,
+        "detail": "Explanation depth reflects per-point diagnostic explanations, evidence gaps, and limitations."
+      },
+      "_provenance": {
+        "combined_account": true,
+        "view_only": true,
+        "not_second_authority": true
+      }
+    }
+  },
+  "cross_step_coherence": {
+    "items": [
+      {
+        "id": "pair_1_filtering_to_normalization",
+        "kind": "pair",
+        "label": "① 过滤 → 归一化",
+        "state": "coherent",
+        "reason": "按计数过滤、接保计数的归一化，两步口径同族。",
+        "action": null,
+        "inputs": {
+          "filtering_method": "low_count_filter",
+          "normalization_method": "tmm"
+        }
+      },
+      {
+        "id": "pair_2_normalization_to_differential",
+        "kind": "pair",
+        "label": "② 归一化 → 差异分析方法",
+        "state": "coherent",
+        "reason": "归一化产出的是计数口径的量，与计数模型的假定一致。",
+        "action": null,
+        "inputs": {
+          "normalization_method": "tmm",
+          "differential_method": "deseq2"
+        }
+      },
+      {
+        "id": "pair_3_differential_to_correction",
+        "kind": "pair",
+        "label": "③ 差异分析方法 → 多重检验校正",
+        "state": "coherent",
+        "reason": "声明与模型内建程序一致。",
+        "action": null,
+        "inputs": {
+          "differential_method": "deseq2",
+          "correction_method": "BH"
+        }
+      },
+      {
+        "id": "pair_4_correction_to_threshold",
+        "kind": "pair",
+        "label": "④ 多重检验校正 → 显著性/效应量阈值",
+        "state": "coherent",
+        "reason": "阈值取校正后 p，校正声明存在，口径配合。",
+        "action": null,
+        "inputs": {
+          "correction_method": "BH",
+          "threshold_method": "padj_0.05"
+        }
+      },
+      {
+        "id": "global_1_filter_scope_vs_threshold_scope",
+        "kind": "global",
+        "label": "全局 1 · 过滤口径 ↔ 阈值口径",
+        "state": "coherent",
+        "reason": "按计数过滤后按显著性/效应量取阈值，两步各自声明了口径。",
+        "action": null,
+        "inputs": {
+          "filtering_method": "low_count_filter",
+          "filtering_threshold": 6,
+          "threshold_method": "padj_0.05"
+        }
+      },
+      {
+        "id": "global_2_group_sizes_vs_method_sensitivity",
+        "kind": "global",
+        "label": "全局 2 · 样本量 ↔ 方法敏感性",
+        "state": "coherent",
+        "reason": "声明的最小分组样本量为 8，与计数模型的离散度估计相称。",
+        "action": null,
+        "inputs": {
+          "comparison": "treated_vs_control",
+          "n_samples": {
+            "treated": 8,
+            "control": 8
+          },
+          "differential_method": "deseq2"
+        }
+      },
+      {
+        "id": "global_3_sample_rule_vs_method_assumptions",
+        "kind": "global",
+        "label": "全局 3 · 样本规则 ↔ 方法假设",
+        "state": "coherent",
+        "reason": "声明有重复、计数模型要求重复，两者相称。",
+        "action": null,
+        "inputs": {
+          "differential_sample_rule": "at_least_two_samples",
+          "n_samples": {
+            "treated": 8,
+            "control": 8
+          },
+          "differential_method": "deseq2"
+        }
+      }
+    ],
+    "tokens": {
+      "coherent": "衔接一致",
+      "needs_review": "需复核",
+      "incoherent": "衔接矛盾"
+    },
+    "note": "这七条判的是链条上相邻两步之间、以及全局三处声明是否自洽；它不改动任何逐点判定，不构成总评，不产生分数或排名，也不触发任何停止条件——不连贯只会生成补证据或复核类动作。"
+  },
+  "findings_and_limitations": [
+    {
+      "category": "scientific_insufficiency",
+      "consequence": "Point is supportable only as scientifically limited or conflicting; the evidence available does not support the named claim. (This is NOT the same as a fact that could not be verified — see integrity_failure.)"
+    }
+  ],
+  "bounded_use": "This report explains the authoritative account within the named project and analysis only. It is not a release decision, not a lane authority, and not a deployment decision.",
+  "lane_and_release": {
+    "decisions": [
+      {
+        "record_id": "ceiling-ui-demo-1",
+        "acceptance_snapshot_ref": "snapshot:ui-demo-1",
+        "requested_lane": "validated",
+        "decided_lane": "candidate",
+        "decision_outcome": "accepted",
+        "scope": "DP-01..DP-05 filtering slice / research use within this project",
+        "lane_ceiling": "candidate",
+        "ceiling_reason": "the auditable structured result carries explicit limitations or prohibited uses, so at most a restricted `candidate` is supported (C-04 §6 row 4)",
+        "version_currency": "current",
+        "evidence_stale_support": false,
+        "recorded_at": "2026-09-09T12:00:00+00:00",
+        "prohibited_uses": [
+          "clinical or diagnostic use",
+          "any use outside the named project"
+        ],
+        "required_next_evidence_refs": [],
+        "lane_predicate_evidence_refs": [
+          "ev-filtering-observed",
+          "ev-normalization-declared"
+        ],
+        "authorising": true
+      },
+      {
+        "record_id": "ceiling-ui-demo-2",
+        "acceptance_snapshot_ref": "snapshot:ui-demo-1",
+        "requested_lane": "candidate",
+        "decided_lane": "research-draft",
+        "decision_outcome": "return_for_evidence",
+        "scope": "DP-01..DP-05 filtering slice / research use within this project",
+        "lane_ceiling": "candidate",
+        "ceiling_reason": "the auditable structured result carries explicit limitations or prohibited uses, so at most a restricted `candidate` is supported (C-04 §6 row 4)",
+        "version_currency": "current",
+        "evidence_stale_support": false,
+        "recorded_at": "2026-09-11T12:00:00+00:00",
+        "prohibited_uses": [
+          "clinical or diagnostic use"
+        ],
+        "required_next_evidence_refs": [
+          "ev-significance-observed"
+        ],
+        "lane_predicate_evidence_refs": [
+          "ev-significance-declared"
+        ],
+        "authorising": false
+      },
+      {
+        "record_id": "ceiling-ui-demo-3",
+        "acceptance_snapshot_ref": "snapshot:ui-demo-1",
+        "requested_lane": "validated",
+        "decided_lane": "research-draft",
+        "decision_outcome": "rejected",
+        "scope": "normalization only / teaching use",
+        "lane_ceiling": "candidate",
+        "ceiling_reason": "the auditable structured result is a cross-axis vector with no authorised cross-axis ordering, so at most `candidate` is supported (C-04 §6 row 3)",
+        "version_currency": "current",
+        "evidence_stale_support": false,
+        "recorded_at": "2026-09-12T12:00:00+00:00",
+        "prohibited_uses": [],
+        "required_next_evidence_refs": [],
+        "lane_predicate_evidence_refs": [
+          "ev-normalization-declared"
+        ],
+        "authorising": false
+      },
+      {
+        "record_id": "ceiling-ui-demo-4",
+        "acceptance_snapshot_ref": "snapshot:ui-demo-1",
+        "requested_lane": "candidate",
+        "decided_lane": "research-draft",
+        "decision_outcome": "return_for_evidence",
+        "scope": "DP-01..DP-05 filtering slice / research use within this project",
+        "lane_ceiling": "research-draft",
+        "ceiling_reason": "the evidence offered to support this decision is past the validity window its submitter declared, so nothing here actively supports a promotion; supply current supporting evidence, or record the honest outcome (C-04 §6 item 5: freshness facts are required dependencies)",
+        "version_currency": "current",
+        "evidence_stale_support": true,
+        "recorded_at": "2026-09-12T12:00:00+00:00",
+        "prohibited_uses": [],
+        "required_next_evidence_refs": [
+          "ev-filtering-current-run"
+        ],
+        "lane_predicate_evidence_refs": [
+          "ev-filtering-observed"
+        ],
+        "authorising": false
+      }
+    ],
+    "decision_count": 4,
+    "decisions_by_scope": [
+      {
+        "scope": "DP-01..DP-05 filtering slice / research use within this project",
+        "decision_count": 3,
+        "record_ids": [
+          "ceiling-ui-demo-1",
+          "ceiling-ui-demo-2",
+          "ceiling-ui-demo-4"
+        ],
+        "decided_lanes": [
+          "candidate",
+          "research-draft"
+        ],
+        "latest_recorded_at": "2026-09-12T12:00:00+00:00"
+      },
+      {
+        "scope": "normalization only / teaching use",
+        "decision_count": 1,
+        "record_ids": [
+          "ceiling-ui-demo-3"
+        ],
+        "decided_lanes": [
+          "research-draft"
+        ],
+        "latest_recorded_at": "2026-09-12T12:00:00+00:00"
+      }
+    ],
+    "scope_count": 2,
+    "statement": "A lane is a governed use/release ceiling for the named scope. It is not a scientific result, not a score, not a ranking, and not authority for any use beyond the stated scope and restrictions.",
+    "unreachable_lanes_note": "`validated` and `production` are not reachable for this account: they require an authorised cross-axis ordering, and this workline authorises no cross-axis ordering (P-02 §5.2, C-04 §6). Absence of those lanes is NOT a statement that the account is weak.",
+    "recorded_at_note": "The time shown against a decision is when its line was written to the ledger file. It is NOT a decision field: a copied or restored ledger carries the copy time, and the record itself states no decision time.",
+    "not_release_note": "Recording a lane decision is not a release, not a deployment, not a promotion, and not a Package A closure."
+  },
+  "review_and_admin": {
+    "format": 2,
+    "statement": "This report has not itself performed independent review and does not constitute a receipt, approval, or adjudication.",
+    "authority_attribution": {
+      "container_kind": "acceptance_snapshot",
+      "snapshot_id": "snapshot:ui-demo-1",
+      "minimum_meaning": "acceptance_snapshot is the sole result-authority container; stage_package is its pre-snapshot input; the container holds exactly one embedded structured_strength_result. This report explains that account; it is not the container and not a second result.",
+      "stage_package_role": "pre_snapshot_input",
+      "embedded_result_count": 1,
+      "authority_basis": {
+        "confirmed": true,
+        "unconfirmed_domains": [],
+        "basis": "integrity domains confirmed"
+      },
+      "version_binding": {
+        "ruleset_version": "1.8.10",
+        "ontology_version": "0.1.3",
+        "engine_version": "0.3.0",
+        "input_format_version": "1.0",
+        "adapter_version": "1.0"
+      },
+      "not_this_report": true,
+      "not_a_second_container": true
+    },
+    "roles": [],
+    "roles_supplied": false,
+    "roles_recorded": false,
+    "role_categories": {
+      "recorded": [],
+      "not_recorded": [
+        "authored",
+        "reviewed",
+        "receipted",
+        "adjudicated"
+      ],
+      "counts": {
+        "authored": 0,
+        "reviewed": 0,
+        "receipted": 0,
+        "adjudicated": 0
+      }
+    },
+    "roles_statement": "No role records were provided to this report, so it cannot say who authored, independently reviewed, adjudicated, or administratively receipted this account."
+  },
+  "history_and_change": {
+    "format": 1,
+    "statement": "A later audited account is a new bounded judgment related to, not a silent rewrite of, the current account. Prior material keeps its original scope and time meaning and is never current result authority.",
+    "current_account": "acceptance_snapshot:snapshot:ui-demo-1",
+    "earlier_accounts": [],
+    "proposed_change": null,
+    "history_supplied": false,
+    "history_statement": "No change context was provided to this report, so it cannot say what changed relative to any earlier account.",
+    "earlier_scope_time_note": null,
+    "other_changes_note": null
+  },
+  "next_actions": [
+    {
+      "point": "filtering",
+      "action": "request_evidence",
+      "reason": "support execution observation",
+      "target": "evidence_observations",
+      "next_state": "evidence_requested"
+    },
+    {
+      "point": "significance_threshold",
+      "action": "request_evidence",
+      "reason": "support the threshold choice with point-local evidence",
+      "target": "evidence_observations",
+      "next_state": "evidence_requested"
+    },
+    {
+      "point": "significance_threshold",
+      "action": "submit_correction",
+      "reason": "provide a supported threshold choice or rationale",
+      "target": "decision_declaration",
+      "next_state": "correction_submitted"
+    }
+  ],
+  "final_user_instruction": "What can be relied on: each point's judgment as established by the authoritative account (not this explanatory report). What cannot be claimed: this report is not a second result authority, and no total score, ranking, lane, or confidence can be inferred from it. What must stop: where any required identity, evidence, integrity, or authority fact is unverified, reliance on the affected claim must stop and the affected material is isolated. What evidence or review is required next: the per-point evidence gaps and next actions above identify what supporting evidence or review is required before the account can be depended on. Whether human escalation is required: where a conflict, integrity failure, or not-auditable condition persists, the affected decision routes to the named human authority for adjudication. Where the affected decision must stop, it routes to the scientific review authority for adjudication; the accountable role category is named here rather than left unspecified.",
+  "_matched_rules": {
+    "filtering": [
+      "D1.2-DEG-001"
+    ],
+    "normalization": [],
+    "differential_method": [],
+    "multiple_testing_correction": [],
+    "significance_threshold": []
+  }
+}

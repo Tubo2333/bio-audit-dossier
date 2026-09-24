@@ -1,0 +1,1428 @@
+﻿{
+ "taskset_version": "1.0.0",
+ "seed": 42,
+ "n_boot": 2000,
+ "n_tasks_run": 30,
+ "results": [
+  {
+   "trajectory_id": "bmd_deg_001",
+   "act": "deg",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 5,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 5,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 5
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_deg_002",
+   "act": "deg",
+   "difficulty": 3,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 15.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 2,
+    "2": 1,
+    "3": 1,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 3,
+    "correct": 1,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 1,
+    "tn": 1
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 1.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 1.0,
+    "significance_threshold": 1.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_deg_003",
+   "act": "deg",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 42.5,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 0,
+    "2": 0,
+    "3": 4,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 4,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 4
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 1.0,
+    "significance_threshold": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_deg_004",
+   "act": "deg",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 1,
+    "2": 0,
+    "3": 3,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 3,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 3
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 1.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_deg_005",
+   "act": "deg",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 72.5,
+   "verdict": "pass",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 1,
+    "3": 4,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 4,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 1,
+    "tn": 4
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 1.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_deg_006",
+   "act": "deg",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 0,
+    "2": 0,
+    "3": 4,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 3,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 3
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_deg_007",
+   "act": "deg",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 45.0,
+   "verdict": "needs_correction",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 2,
+    "2": 1,
+    "3": 2,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 2,
+    "correct": 2,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 1,
+    "tn": 2
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 1.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 1.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_deg_008",
+   "act": "deg",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 60.0,
+   "verdict": "pass",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 3,
+    "3": 2,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 4,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 4
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_001",
+   "act": "pan",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 16,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 16,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 15,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 15
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 0.0,
+    "cbioportal_projection": 0.0,
+    "immune_correlation_method": 0.0,
+    "purity_confounding": 0.0,
+    "gsea_background": 0.0,
+    "enrichment_correction": 0.0,
+    "ic50_sample_size": 0.0,
+    "expression_survival_consistency": 0.0,
+    "immune_expression_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_002",
+   "act": "pan",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 16,
+   "trajectory_score": 68.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 2,
+    "1": 0,
+    "2": 0,
+    "3": 14,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 13,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 13
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 0.0,
+    "cbioportal_projection": 0.0,
+    "immune_correlation_method": 0.0,
+    "purity_confounding": 1.0,
+    "gsea_background": 0.0,
+    "enrichment_correction": 0.0,
+    "ic50_sample_size": 0.0,
+    "expression_survival_consistency": 0.0,
+    "immune_expression_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_003",
+   "act": "pan",
+   "difficulty": 3,
+   "split": "",
+   "n_decisions": 16,
+   "trajectory_score": 42.5,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 4,
+    "1": 0,
+    "2": 0,
+    "3": 12,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 3,
+    "correct": 11,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 3,
+    "fp": 0,
+    "fn": 0,
+    "tn": 11
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 1.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 1.0,
+    "events_per_variable": 1.0,
+    "cbioportal_projection": 0.0,
+    "immune_correlation_method": 0.0,
+    "purity_confounding": 0.0,
+    "gsea_background": 0.0,
+    "enrichment_correction": 0.0,
+    "ic50_sample_size": 0.0,
+    "expression_survival_consistency": 0.0,
+    "immune_expression_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_004",
+   "act": "pan",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 8,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 0,
+    "3": 8,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 7,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 7
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_005",
+   "act": "pan",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 9,
+   "trajectory_score": 75.8,
+   "verdict": "needs_correction",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 1,
+    "2": 0,
+    "3": 8,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 7,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 7
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 0.0,
+    "expression_survival_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_006",
+   "act": "pan",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 16,
+   "trajectory_score": 51.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 3,
+    "1": 0,
+    "2": 0,
+    "3": 13,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 2,
+    "correct": 12,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 2,
+    "fp": 0,
+    "fn": 0,
+    "tn": 12
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 0.0,
+    "cbioportal_projection": 1.0,
+    "immune_correlation_method": 0.0,
+    "purity_confounding": 0.0,
+    "gsea_background": 0.0,
+    "enrichment_correction": 1.0,
+    "ic50_sample_size": 0.0,
+    "expression_survival_consistency": 0.0,
+    "immune_expression_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_007",
+   "act": "pan",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 16,
+   "trajectory_score": 57.5,
+   "verdict": "needs_correction",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 2,
+    "2": 0,
+    "3": 14,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 13,
+    "edge": 3
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 13
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 0.0,
+    "cbioportal_projection": 0.0,
+    "immune_correlation_method": 0.0,
+    "purity_confounding": 0.0,
+    "gsea_background": 0.0,
+    "enrichment_correction": 0.0,
+    "ic50_sample_size": 0.0,
+    "expression_survival_consistency": 0.0,
+    "immune_expression_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_008",
+   "act": "pan",
+   "difficulty": 1,
+   "split": "",
+   "n_decisions": 5,
+   "trajectory_score": 42.5,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 1,
+    "2": 0,
+    "3": 3,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 2,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 2
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 1.0,
+    "significance_threshold": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_009",
+   "act": "pan",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 16,
+   "trajectory_score": 69.4,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 1,
+    "2": 0,
+    "3": 14,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 13,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 13
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 0.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 1.0,
+    "cbioportal_projection": 0.0,
+    "immune_correlation_method": 0.0,
+    "purity_confounding": 0.0,
+    "gsea_background": 0.0,
+    "enrichment_correction": 0.0,
+    "ic50_sample_size": 0.0,
+    "expression_survival_consistency": 0.0,
+    "immune_expression_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_pan_010",
+   "act": "pan",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 16,
+   "trajectory_score": 75.0,
+   "verdict": "needs_correction",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 1,
+    "2": 3,
+    "3": 12,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 13,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 1,
+    "tn": 13
+   },
+   "decision_type_error_rates": {
+    "filtering": 0.0,
+    "normalization": 1.0,
+    "deg_method": 0.0,
+    "multiple_testing_correction": 0.0,
+    "significance_threshold": 0.0,
+    "cox_ph_assumption": 0.0,
+    "independent_prognostic_claim": 0.0,
+    "events_per_variable": 0.0,
+    "cbioportal_projection": 0.0,
+    "immune_correlation_method": 0.0,
+    "purity_confounding": 0.0,
+    "gsea_background": 0.0,
+    "enrichment_correction": 0.0,
+    "ic50_sample_size": 0.0,
+    "expression_survival_consistency": 0.0,
+    "immune_expression_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_001",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 12,
+   "trajectory_score": 81.4,
+   "verdict": "pass",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 1,
+    "3": 11,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 12,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 12
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "cluster_annotation_consistency": 0.0,
+    "multiple_testing_correction": 0.0,
+    "pca_dimension": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_002",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 12,
+   "trajectory_score": 50.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 1,
+    "2": 1,
+    "3": 9,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 11,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 1,
+    "fn": 0,
+    "tn": 10
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "cluster_annotation_consistency": 0.0,
+    "multiple_testing_correction": 0.0,
+    "pca_dimension": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_003",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 14,
+   "trajectory_score": 81.4,
+   "verdict": "pass",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 0,
+    "2": 1,
+    "3": 13,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 14,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 14
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "batch_correction": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "qc_mito_threshold": 0.0,
+    "pca_dimension": 0.0,
+    "multiple_testing_correction": 0.0,
+    "annotation_validation": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_004",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 14,
+   "trajectory_score": 70.8,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 1,
+    "2": 1,
+    "3": 11,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 12,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 12
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "batch_correction": 1.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "qc_mito_threshold": 0.0,
+    "pca_dimension": 0.0,
+    "multiple_testing_correction": 0.0,
+    "annotation_validation": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_005",
+   "act": "scrna",
+   "difficulty": 3,
+   "split": "",
+   "n_decisions": 20,
+   "trajectory_score": 67.7,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 2,
+    "1": 2,
+    "2": 0,
+    "3": 16,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 16,
+    "edge": 3
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 16
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "batch_correction": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 1.0,
+    "trajectory_inference": 0.0,
+    "cluster_annotation_consistency": 0.0,
+    "qc_mito_threshold": 0.0,
+    "pca_dimension": 0.0,
+    "multiple_testing_correction": 0.0,
+    "annotation_validation": 0.0,
+    "trajectory_validation": 0.0,
+    "annotation_deg_consistency": 0.0,
+    "trajectory_annotation_consistency": 0.0,
+    "clustering_resolution": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_006",
+   "act": "scrna",
+   "difficulty": 3,
+   "split": "",
+   "n_decisions": 20,
+   "trajectory_score": 66.7,
+   "verdict": "needs_correction",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 4,
+    "2": 1,
+    "3": 15,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 18,
+    "edge": 2
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 2,
+    "fn": 0,
+    "tn": 16
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "batch_correction": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "trajectory_inference": 0.0,
+    "cluster_annotation_consistency": 0.0,
+    "qc_mito_threshold": 0.0,
+    "pca_dimension": 0.0,
+    "multiple_testing_correction": 0.0,
+    "annotation_validation": 0.0,
+    "trajectory_validation": 0.0,
+    "annotation_deg_consistency": 0.0,
+    "trajectory_annotation_consistency": 0.0,
+    "clustering_resolution": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_007",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 12,
+   "trajectory_score": 29.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 5,
+    "1": 3,
+    "2": 0,
+    "3": 4,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 8,
+    "edge": 3
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 4,
+    "fn": 0,
+    "tn": 4
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "batch_correction": 1.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "trajectory_inference": 0.0,
+    "cluster_annotation_consistency": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_008",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 12,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 2,
+    "1": 1,
+    "2": 1,
+    "3": 8,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 2,
+    "correct": 10,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 2,
+    "fp": 1,
+    "fn": 0,
+    "tn": 9
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 1.0,
+    "cluster_annotation_consistency": 0.0,
+    "multiple_testing_correction": 1.0,
+    "pca_dimension": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_009",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 12,
+   "trajectory_score": 68.0,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 0,
+    "2": 0,
+    "3": 11,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 11,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 11
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "cluster_annotation_consistency": 0.0,
+    "qc_mito_threshold": 1.0,
+    "multiple_testing_correction": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_010",
+   "act": "scrna",
+   "difficulty": 3,
+   "split": "",
+   "n_decisions": 20,
+   "trajectory_score": 53.1,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 7,
+    "2": 0,
+    "3": 12,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 12,
+    "edge": 8
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 12
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "batch_correction": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "trajectory_inference": 0.0,
+    "cluster_annotation_consistency": 0.0,
+    "qc_mito_threshold": 0.0,
+    "pca_dimension": 0.0,
+    "multiple_testing_correction": 0.0,
+    "annotation_validation": 0.0,
+    "trajectory_validation": 0.0,
+    "annotation_deg_consistency": 0.0,
+    "trajectory_annotation_consistency": 0.0,
+    "clustering_resolution": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_011",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 12,
+   "trajectory_score": 73.6,
+   "verdict": "needs_correction",
+   "level_counts": {
+    "-1": 0,
+    "0": 0,
+    "1": 1,
+    "2": 1,
+    "3": 10,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 0,
+    "correct": 11,
+    "edge": 1
+   },
+   "detection": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 0,
+    "tn": 11
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "cluster_annotation_consistency": 0.0,
+    "multiple_testing_correction": 0.0,
+    "pca_dimension": 0.0
+   }
+  },
+  {
+   "trajectory_id": "bmd_scrna_012",
+   "act": "scrna",
+   "difficulty": 2,
+   "split": "",
+   "n_decisions": 14,
+   "trajectory_score": 70.8,
+   "verdict": "blocked",
+   "level_counts": {
+    "-1": 0,
+    "0": 1,
+    "1": 0,
+    "2": 1,
+    "3": 12,
+    "4": 0
+   },
+   "gold_counts": {
+    "error": 1,
+    "correct": 13,
+    "edge": 0
+   },
+   "detection": {
+    "tp": 1,
+    "fp": 0,
+    "fn": 0,
+    "tn": 13
+   },
+   "decision_type_error_rates": {
+    "api_data_integrity": 0.0,
+    "qc_filtering": 0.0,
+    "doublet_detection": 0.0,
+    "scRNA_normalization": 0.0,
+    "hv_gene_selection": 0.0,
+    "batch_correction": 1.0,
+    "dim_reduction": 0.0,
+    "clustering_method": 0.0,
+    "annotation_method": 0.0,
+    "deg_method": 0.0,
+    "qc_mito_threshold": 0.0,
+    "pca_dimension": 0.0,
+    "multiple_testing_correction": 0.0,
+    "annotation_validation": 0.0
+   }
+  }
+ ],
+ "aggregate": {
+  "overall": {
+   "n_tasks": 30,
+   "n_decisions": 348,
+   "n_gold_error": 24,
+   "n_gold_correct": 280,
+   "detection": {
+    "precision": 0.7142857142857143,
+    "recall": 0.8333333333333334,
+    "f1": 0.7692307692307692,
+    "recall_ci": {
+     "point": 0.8342,
+     "ci": [
+      0.68,
+      0.96
+     ],
+     "n": 30,
+     "aggregation": "pooled（任务级重采样）"
+    },
+    "f1_ci": {
+     "point": 0.7703,
+     "ci": [
+      0.6,
+      0.9032
+     ],
+     "n": 30,
+     "aggregation": "pooled（任务级重采样）"
+    }
+   },
+   "edge_handling": {
+    "n_edge": 44,
+    "n_edge_detected": 32,
+    "edge_detection_rate": 0.7273
+   },
+   "mean_score": {
+    "point": 0.5614,
+    "ci": [
+     0.4751,
+     0.6467
+    ],
+    "n": 30
+   }
+  },
+  "strata": {
+   "act": {
+    "deg": {
+     "point": 0.4,
+     "ci": [
+      0.2,
+      0.6095
+     ],
+     "n": 8
+    },
+    "pan": {
+     "point": 0.6517,
+     "ci": [
+      0.5513,
+      0.7452
+     ],
+     "n": 10
+    },
+    "scrna": {
+     "point": 0.5938,
+     "ci": [
+      0.452,
+      0.7062
+     ],
+     "n": 12
+    }
+   },
+   "difficulty": {
+    "1": {
+     "point": 0.5148,
+     "ci": [
+      0.2833,
+      0.713
+     ],
+     "n": 9
+    },
+    "2": {
+     "point": 0.6099,
+     "ci": [
+      0.4974,
+      0.7003
+     ],
+     "n": 16
+    },
+    "3": {
+     "point": 0.49,
+     "ci": [
+      0.3104,
+      0.6438
+     ],
+     "n": 5
+    }
+   }
+  },
+  "comparisons": [
+   {
+    "grouping": "act",
+    "group_a": "deg",
+    "group_b": "pan",
+    "bootstrap_p": 0.047,
+    "holm_adjusted_p": 0.282,
+    "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+   },
+   {
+    "grouping": "act",
+    "group_a": "deg",
+    "group_b": "scrna",
+    "bootstrap_p": 0.127,
+    "holm_adjusted_p": 0.635,
+    "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+   },
+   {
+    "grouping": "act",
+    "group_a": "pan",
+    "group_b": "scrna",
+    "bootstrap_p": 0.5275,
+    "holm_adjusted_p": 1.0,
+    "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+   },
+   {
+    "grouping": "difficulty",
+    "group_a": "1",
+    "group_b": "2",
+    "bootstrap_p": 0.4055,
+    "holm_adjusted_p": 1.0,
+    "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+   },
+   {
+    "grouping": "difficulty",
+    "group_a": "1",
+    "group_b": "3",
+    "bootstrap_p": 0.885,
+    "holm_adjusted_p": 1.0,
+    "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+   },
+   {
+    "grouping": "difficulty",
+    "group_a": "2",
+    "group_b": "3",
+    "bootstrap_p": 0.296,
+    "holm_adjusted_p": 1.0,
+    "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+   }
+  ],
+  "method": {
+   "bootstrap": {
+    "n_boot": 2000,
+    "seed": 42,
+    "method": "percentile, 任务级重采样"
+   },
+   "multiple_comparison": "Holm-Bonferroni on bootstrap p（两样本置换检验）",
+   "detection_definition": "level ∈ {0,1} = 检出；gold error → TP/FN；gold correct → FP/TN；gold edge 单独报告",
+   "difficulty_independence": "难度标签由 gold 特征预注册 rubric 计算，不依赖审计分数（E4）"
+  }
+ },
+ "gap": {
+  "statistic": "mean(trajectory_score/100) over tasks: public - hidden",
+  "tolerance_interval": [
+   -0.1,
+   0.1
+  ],
+  "delta": -0.1864,
+  "in_tolerance": false,
+  "alarm": true,
+  "n_public": 21,
+  "n_hidden": 9,
+  "note": "gap 只作为泄漏信号登记；不据此修改任何分数或任务"
+ },
+ "generated_at": "2026-08-15"
+}

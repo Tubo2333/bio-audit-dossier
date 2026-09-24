@@ -1,0 +1,128 @@
+{
+ "version": 2,
+ "trajectory_id": "bmd_deg_016",
+ "act": "deg",
+ "provenance": {
+  "source": "benchmark",
+  "migrated_from": null,
+  "migrated_at": null,
+  "migrator": null,
+  "note": "benchmark 任务草稿：语料变换生成（E6：错误注入来自真实语料，非规则反推）；gold/difficulty 由标注管线填充",
+  "base_trajectories": [
+   "deg_correct"
+  ],
+  "error_pattern_sources": [
+   "deg_error",
+   "pan_error"
+  ],
+  "generator": {
+   "model": "deepseek-v4-flash",
+   "prompt_version": "943fc2f11acd",
+   "transform_version": "generator.transform.v1",
+   "reviewed_by": "window-F review",
+   "reviewed_at": "2026-08-16"
+  }
+ },
+ "decisions": [
+  {
+   "step_id": "s1",
+   "decision_type": "filtering",
+   "choice": "no_filtering",
+   "rationale": "Skipping filtering to retain all genes for maximum discovery power.",
+   "context": {
+    "sequencing": "bulk_RNA_seq",
+    "n_replicates": 3
+   }
+  },
+  {
+   "step_id": "s2",
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM normalization as integrated with edgeR pipeline — corrects for RNA composition bias and library size.",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  {
+   "step_id": "s3",
+   "decision_type": "deg_method",
+   "choice": "Student_t_test",
+   "rationale": "t-test is the classic differential test, simple and direct.",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq",
+    "design": "simple_two_group",
+    "n_replicates": 3
+   }
+  },
+  {
+   "step_id": "s4",
+   "decision_type": "multiple_testing_correction",
+   "choice": "BH",
+   "rationale": "Benjamini-Hochberg FDR correction — standard for exploratory genomic studies with ~20,000 parallel tests.",
+   "context": {
+    "analysis_type": "differential_expression"
+   }
+  },
+  {
+   "step_id": "s5",
+   "decision_type": "significance_threshold",
+   "choice": "padj <= 0.05, |logFC| >= 1.0",
+   "rationale": "Dual threshold: FDR<0.05 for statistical significance + |logFC|>=1.0 for biological effect size. Power analysis at n=6 supports detecting logFC>=1.0 with ~80% power.",
+   "context": {
+    "analysis_type": "differential_expression",
+    "n_replicates": 3
+   }
+  }
+ ],
+ "gold": {
+  "version": "annotation.v1.1",
+  "annotated_at": "2026-08-15T13:07:18.130971+00:00",
+  "irr": {
+   "n_items": 275,
+   "n_agreed": 267,
+   "cohen_kappa": 0.9336,
+   "krippendorff_alpha": 0.9336
+  },
+  "labels": [
+   {
+    "step_id": "s1",
+    "label": "edge",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s2",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s3",
+    "label": "error",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s4",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s5",
+    "label": "correct",
+    "consensus": "strong"
+   }
+  ]
+ },
+ "difficulty": {
+  "label": 1,
+  "rubric_version": "difficulty.v1",
+  "features": {
+   "n_decisions": 5,
+   "n_errors": 1,
+   "n_edge": 1,
+   "n_subtle_errors": 0,
+   "n_consistency_family": 0
+  },
+  "note": "按预注册 rubric 由 gold 特征计算（E4：不使用审计分数定义难度）"
+ }
+}

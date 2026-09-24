@@ -1,0 +1,41 @@
+# 分析范式（第 1 层）— ontology-design-v1 §一/§二.4
+# 范式 = 配置（一组决策类型定义），不是硬编码；新增范式 = 新增 YAML 段落。
+# 0.1.3（2026-08-16 窗口 M）：api_data_integrity data_source enum→string
+# （A3 枚举外值误报修复，任务实测 GSE ID 非来源类别）。
+# 0.1.2（2026-08-16 窗口 K1）：immune_correlation_method 决策类型扩至 scRNA 范式
+# （scRNA 版规则 I4.1-IMMU-001_scRNA_correlation_method 落地）。
+# 0.1.1（2026-08-16 窗口 J2）：significance_threshold 决策类型扩至 scRNA 范式 +
+# context_schema 增 padj_cutoff/logfc_cutoff 键（与 M3 签名对齐）。
+ontology_version: 0.1.3
+paradigms:
+  bulk-DEG:
+    display:
+      cn: 差异表达分析（bulk）
+      en: Bulk differential expression
+    description: bulk RNA-seq 差异表达分析（Act 1）
+    # ★ 骨架待补全标记（ontology-design-v1 §二.4 / refactor-plan-v1.1 G2）：
+    # 当前仅 5 决策类型，缺 interpretation / conclusion 阶段；本体不强制补全，
+    # 随 DEG 独立分析场景自然生长。校验器覆盖报告会持续对照该标记。
+    skeleton: true
+    skeleton_note: "仅 5 类型（qc/preprocessing/inference），缺 interpretation/conclusion；随 DEG 独立分析场景自然生长（不强制补全）"
+    declared_stages: [qc, preprocessing, inference]
+  pan-cancer:
+    display:
+      cn: 泛癌分析
+      en: Pan-cancer analysis
+    description: 泛癌多组学分析（Act 2）：DEG 超集 + 生存/预后/免疫/富集/药物
+    skeleton: false
+    # 实际类型推导为 5 阶段（qc/preprocessing/inference/interpretation/conclusion）：
+    # 无 data-acquisition 决策类型（数据获取在 pan 场景由 bulk 侧承担）。
+    # 校验器以类型推导为准（流程正推 vs 规则反推，G2）。
+    declared_stages: [qc, preprocessing, inference, interpretation, conclusion]
+  scRNA:
+    display:
+      cn: 单细胞分析
+      en: Single-cell RNA-seq
+    description: scRNA-seq 全流程（Act 3）：QC → 预处理 → 推断 → 解释 → 结论
+    skeleton: false
+    declared_stages: [data-acquisition, qc, preprocessing, inference, interpretation, conclusion]
+
+# 注册纪律（ontology-design-v1 §二.1）：新增决策类型必须搜索同源 ID 并声明 aliases，
+# 否则评审不通过（规则提取 SOP 写进 CONTRIBUTING.md）。

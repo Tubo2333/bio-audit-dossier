@@ -1,0 +1,79 @@
+rule_id: S1.1-CONS-001_cluster_annotation
+domain: CONSISTENCY
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2019, 2019]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "聚类-注释跨模块一致性 / Cluster-Annotation consistency"
+description: "聚类结果必须与注释结果一致。如果聚类显示15个cluster但注释只覆盖4种细胞类型, 则要么聚类过度分裂(需调整resolution), 要么注释遗漏了细胞类型(需更全面的参考数据集)。两者必须互相印证, 矛盾需要解释。"
+condition:
+  decision_type: cluster_annotation_consistency
+  required_context:
+    integration_type: cross_module
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - consistent_with_cross_validation
+      - cluster_annotation_mapped
+    description: "聚类数与注释细胞类型数合理匹配, 每个cluster都有生物学标识"
+  level_2:
+    methods:
+      - minor_mismatch_documented
+    description: "有小量不匹配但已记录解释(如亚型划分导致的cluster多于cell type)"
+    conditions_when_acceptable: "当额外的cluster可以解释为已有细胞类型的亚型时"
+  level_1:
+    methods:
+      - mismatch_acknowledged
+    description: "聚类-注释不匹配已知但未解决 — 部分cluster无注释"
+    note: "未被注释的cluster可能包含重要的稀有细胞类型或技术伪迹"
+  level_0:
+    methods:
+      - not_checked
+      - clusters_used_without_annotation
+    description: "未检查一致性 — 可能基于错误的注释下结论"
+    rationale: "如果cluster A被注释为'T细胞'但实际是NK细胞, 下游分析全部基于错误前提"
+
+evidence:
+  - source_type: consensus_guideline
+    pmid: "31217225"
+    doi: "10.15252/msb.20188746"
+    title: "Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol"
+    confidence: L-Confirmed
+    excerpt: "The validity of the identified clusters can only be determined by successful annotation of the represented biology; cell identities can be annotated by comparing data-derived marker genes with marker genes from the literature."
+    supports_levels: ["level_3"]
+    # 2026-09-16 收尾核查补核：原文 Cluster annotation 节逐字组合；「cross-referenced between methods」无原文（0 命中）→ 移除
+  - source_type: method_paper
+    pmid: "30643263"
+    doi: "10.1038/s41590-018-0276-y"
+    title: "SingleR — Aran et al. 2019, Nature Immunology"
+    confidence: L-Evidenced
+    excerpt: "In a separate validation, SingleR was applied using the Blueprint and Encode databases as reference comparators; in comparison to marker-based and reference-based approaches, SingleR differentiated cellular subtypes such as memory and naïve B and T cells."
+    supports_levels: ["level_3", "level_2"]
+    # 2026-09-16 收尾核对（窗口自查原文）：Aran 2019 Results 逐字；全文 cross-valid* / confidence 0 命中（原文是平行比较+独立库验证，非「方法间交叉验证提高信心」）→ 换为该文实际主张
+conflicts_with: []

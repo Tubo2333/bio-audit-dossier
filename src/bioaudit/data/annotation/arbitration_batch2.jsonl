@@ -1,0 +1,8 @@
+{"task_id": "bmd_deg_013", "step_id": "s1", "label": "edge", "note": "按 4.2 只评本步：bulk RNA-seq 跳过低表达过滤可辩护但非最优，B 的噪声放大论据主要经由下游 s3 t 检验实现、归他步；与双方在孪生任务 bmd_deg_016 s1 均判 edge 的先例一致。"}
+{"task_id": "bmd_deg_013", "step_id": "s2", "label": "correct", "note": "按 4.1/4.2：TMM 对 raw counts 是标准归一化，且下游为 t 检验（非 counts 类工具、无 DESeq2 式输入冗余），本步选择正确，t 检验不建模计数方差的问题归 s3；与孪生任务 bmd_deg_016 s2 双方均判 correct 一致。"}
+{"task_id": "bmd_pan_017", "step_id": "D1", "label": "edge", "note": "按 4.2 只评本步：跳过过滤可辩护但非最优，不构成该步本身结论失真，低计数噪声问题主要由下游 D3 t 检验承担、归 D3 判定；与 deg 族同类 no_filtering 判 edge 的先例一致。"}
+{"task_id": "bmd_scrna_019", "step_id": "A6", "label": "edge", "note": "按 4.2 一致性族须以其它模块事实支撑本步声明：'DEG 覆盖全部主要类型'是无实证支撑的断言（本任务 S12 明示未做跨模块核查），声明无法核实，既非干净 correct 亦非 error，保守判 edge。"}
+{"task_id": "bmd_scrna_019", "step_id": "A7", "label": "edge", "note": "按 4.2：'轨迹排序与注释细胞状态一致'同为无实证支撑的断言性声明，轨迹模块未见直接佐证，证据不足不构成失真，保守判 edge。"}
+{"task_id": "bmd_scrna_019", "step_id": "S12", "label": "error", "note": "按 4.2 一致性族步骤'要求'检查跨模块事实，choice=not_checked 直接跳过该步的核心必要动作（区别于 4.3 的'发现矛盾未讨论'），属跳过必要工序，判 error。"}
+{"task_id": "bmd_scrna_020", "step_id": "S8", "label": "edge", "note": "Leiden 聚类方法本身标准，但分辨率 1.0 取默认且未做稳定性/剪影分析，属'参数选择随意但可接受'的 edge 信号；与双方对 bmd_scrna_018 A4（默认分辨率无稳定性=edge）的先例一致。"}
+{"task_id": "bmd_scrna_021", "step_id": "S3", "label": "error", "note": "按 4.6 第二款：63K 属大细胞数且下游含细胞级聚类/注释（S8/S9），跳过双细胞去除判 error；rationale 中'<5%'无依据仅削弱辩护，不构成 edge 依据。"}

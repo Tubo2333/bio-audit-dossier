@@ -1,0 +1,190 @@
+{
+ "version": 2,
+ "trajectory_id": "bmd_scrna_014",
+ "act": "scrna",
+ "provenance": {
+  "source": "benchmark",
+  "migrated_from": null,
+  "migrated_at": null,
+  "migrator": null,
+  "note": "benchmark 任务草稿：语料变换生成（E6：错误注入来自真实语料，非规则反推）；gold/difficulty 由标注管线填充",
+  "base_trajectories": [
+   "scrna_crc_correct"
+  ],
+  "error_pattern_sources": [
+   "scrna_error"
+  ],
+  "generator": {
+   "model": "deepseek-v4-flash",
+   "prompt_version": "943fc2f11acd",
+   "transform_version": "generator.transform.v1",
+   "reviewed_by": "window-F review",
+   "reviewed_at": "2026-08-16"
+  }
+ },
+ "decisions": [
+  {
+   "step_id": "S1",
+   "decision_type": "api_data_integrity",
+   "choice": "DETAILED_with_validation",
+   "rationale": "GSE132465 CRC 10X raw UMI matrix validated: 63,689 cells × 25,655 genes, no duplicate barcodes, tumor/normal labels intact across 10 patients (SMC01-SMC10).",
+   "context": {
+    "data_source": "GSE132465",
+    "data_format": "h5ad",
+    "n_cells": 63689,
+    "n_genes": 25655
+   }
+  },
+  {
+   "step_id": "S2",
+   "decision_type": "qc_filtering",
+   "choice": "MAD5_adaptive_threshold",
+   "rationale": "MAD-based adaptive QC with 5 MAD threshold — retains immune and stromal cells while removing debris. CRC TME has diverse cell sizes requiring adaptive rather than fixed thresholds (Luecken & Theis 2019, PMID 31217225（DOI 10.15252/msb.20188746）).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_cells": 63689
+   }
+  },
+  {
+   "step_id": "S3",
+   "decision_type": "doublet_detection",
+   "choice": "scDblFinder",
+   "rationale": "scDblFinder random-forest doublet detection — CRC tumors have high cell density, estimated doublet rate ~5% at 63K cells (Xi & Li 2021, PMID 33541407).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_cells": 63689
+   }
+  },
+  {
+   "step_id": "S4",
+   "decision_type": "scRNA_normalization",
+   "choice": "SCTransform",
+   "rationale": "SCTransform regularized negative-binomial regression — best variance stabilization for scRNA UMI counts. CRC TME has diverse cell types (epithelial, immune, stromal) with different library sizes, making variance stabilization critical (Hafemeister & Satija 2019, PMID 31870423).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "data_category": "umi_counts"
+   }
+  },
+  {
+   "step_id": "S5",
+   "decision_type": "hv_gene_selection",
+   "choice": "vst",
+   "rationale": "Seurat v3 VST selected 3,000 HVGs — standard for scRNA clustering. Sufficient to capture immune and tumor expression programs in CRC TME.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_genes": 25655
+   }
+  },
+  {
+   "step_id": "S7",
+   "decision_type": "dim_reduction",
+   "choice": "PCA_elbow_selection",
+   "rationale": "Elbow plot selected 30 PCs — immune-infiltrated CRC TME has high biological complexity requiring more PCs than simpler tissues.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "method": "PCA",
+    "n_comps": 30
+   }
+  },
+  {
+   "step_id": "S8",
+   "decision_type": "clustering_method",
+   "choice": "Leiden",
+   "rationale": "Leiden algorithm with resolution 1.2, resolution scanned across range, selected by stability analysis — CRC TME requires slightly higher resolution to separate CD4+/CD8+ T cell subsets and monocyte/macrophage populations (Traag et al. 2019, PMID 30914743).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "graph_type": "SNN"
+   }
+  },
+  {
+   "step_id": "S9",
+   "decision_type": "annotation_method",
+   "choice": "SingleR_with_CellTypist_cross_validation",
+   "rationale": "CellTypist (immune-focused model) + SingleR (Blueprint/ENCODE reference) cross-validation. CRC TME is immune-infiltrated — dual immune annotation methods provide robust cell type identification. Marker dotplot verification for all major lineages (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "reference_based": true
+   }
+  },
+  {
+   "step_id": "S10",
+   "decision_type": "deg_method",
+   "choice": "wilcoxon_rank_sum",
+   "rationale": "Wilcoxon rank-sum is the standard scRNA DEG method, Seurat default.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_patients": 10,
+    "pseudobulk": true
+   }
+  }
+ ],
+ "gold": {
+  "version": "annotation.v1.1",
+  "annotated_at": "2026-08-15T13:07:18.137481+00:00",
+  "irr": {
+   "n_items": 275,
+   "n_agreed": 267,
+   "cohen_kappa": 0.9336,
+   "krippendorff_alpha": 0.9336
+  },
+  "labels": [
+   {
+    "step_id": "S1",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S10",
+    "label": "error",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S2",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S3",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S4",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S5",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S7",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S8",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S9",
+    "label": "correct",
+    "consensus": "strong"
+   }
+  ]
+ },
+ "difficulty": {
+  "label": 1,
+  "rubric_version": "difficulty.v1",
+  "features": {
+   "n_decisions": 9,
+   "n_errors": 1,
+   "n_edge": 0,
+   "n_subtle_errors": 0,
+   "n_consistency_family": 0
+  },
+  "note": "按预注册 rubric 由 gold 特征计算（E4：不使用审计分数定义难度）"
+ }
+}

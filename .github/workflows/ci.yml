@@ -1,0 +1,107 @@
+# Bio-Audit CI（B6 回归体系，2026-08-14）
+#
+# 门禁（v1.1 D1/C4/H8；B6 验收项 1/2/4）：
+# 1. 双版本矩阵（Python 3.10 / 3.12，H8）跑 pytest + golden + 校验器
+# 2. golden_replay 接入 CI：diff ≠ 0 → 失败即红（C4），漂移摘要上传 artifact（人工确认门槛）
+# 3. 规则治理三闸 ruleset-validate（清单 semver/哈希 + D2 冲突 + golden，D1）
+# 4. 规则库生命周期检查 check_rule_lifecycle（清单重算一致 / 同名副本逐字节相同 /
+#    空 level_4 必须自述 / 重看窗口报告，D1 补充：规则一变就必须重算清单）
+# 5. 数据管线锚定：scrna_r0.json 确定性重生成逐字节一致（B6-5）
+#
+# 规则变更流程（D1）：改规则 → 本 workflow 全绿才可合并（失败即"自动回退"= 不合并）。
+# 注意：改任何规则文件后必须重跑清单生成器（bioaudit.rules.manifest.generate_manifest），
+# 否则上面第 4 步会以"哈希与清单不符"失败——这正是它存在的目的。
+
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test:
+    name: pytest+golden (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.12"]
+
+    steps:
+      # 2026-08-15：v4/v5 基于 Node 20，GitHub 弃用警告 → 升级 v7（Node 24 runtime）
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install locked deps + package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.lock -r requirements-dev.lock
+          # N-c（2026-08-19，台账 §2.2 收口）：test_demo_smoke.py（AppTest）
+          # 上 CI 需要 streamlit——demo extra 加装（范围 >=1.33,<2 由 pyproject
+          # 锁定）；streamlit 依赖树较大不并入 requirements 锁
+          # （requirements-dev.lock 注释同款理由），以 extra 加装（未精确
+          # 锁版本，上限 <2 防 2.x 破坏 data-testid CSS 注入）
+          pip install -e ".[demo]"
+
+      - name: 本体校验器（P1 三职责：覆盖/语义边界/冲突）
+        run: bio-audit validate-ontology --json
+
+      - name: 规则治理三闸（清单 + D2 冲突 + golden，D1）
+        run: bio-audit ruleset-validate --json
+
+      # DP-RULE-LIFECYCLE：规则库的生命周期闸。C1/C2/C3/C5 为硬项——哈希必须与清单
+      # 一致（改规则忘了重算清单即红）、同名副本必须逐字节相同、空的 level_4 必须自述。
+      # C4 只报告"哪些规则逾期未复核"，不判罪、不失败。
+      - name: 规则库生命周期（清单一致 + 副本一致 + 占位自述 + 重看窗口）
+        run: python scripts/check_rule_lifecycle.py
+
+      - name: 采集层自检（C2/C6：签名表校验 + 样例 notebook 解析冒烟）
+        run: bio-audit capture-validate --notebook tests/fixtures/sample_scrna_notebook.ipynb
+
+      - name: benchmark 三闸（D5/E8：清单 + 污染 + 覆盖）+ golden（窗口 D）
+        run: bio-audit benchmark-validate --json
+
+      - name: reward 自检（窗口 E：映射/确定性/spike-in 锚点/消融/分层检验 + golden）
+        run: bio-audit reward-validate --json
+
+      - name: MCP server 自检（C4：独立启动 + 端到端 audit_decision）
+        run: python -m mcp.server --selfcheck
+
+      - name: pytest 全套（含采集/交叉验证/M1 hook/MCP/可观测，C6-18）
+        run: python -m pytest -q
+
+      - name: Golden replay（20 轨迹 137 决策，失败即红；C4）
+        run: |
+          bio-audit golden --json > golden-summary.json || { echo "::error::GOLDEN DIFF — 分数漂移必须逐条人工确认（v1.1 C4）"; cat golden-summary.json; exit 1; }
+          python -c "import json; s=json.load(open('golden-summary.json')); print('n_diffs =', s['n_diffs'], '| n_decisions =', s['n_decisions_replayed'])"
+
+      - name: 漂移报告 artifact（有变化必须人工确认）
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: golden-summary-${{ matrix.python-version }}
+          path: golden-summary.json
+
+      - name: 数据管线锚定（scrna_r0 确定性重生成，B6-5）
+        run: |
+          python scripts/generate_scrna_r0.py --output /tmp/scrna_r0_regen.json
+          python - <<'EOF'
+          import hashlib
+          from pathlib import Path
+          from bioaudit.paths import VALIDATION_DIR
+          a = hashlib.sha256(Path('/tmp/scrna_r0_regen.json').read_bytes()).hexdigest()
+          b = hashlib.sha256((VALIDATION_DIR / 'scrna_r0.json').read_bytes()).hexdigest()
+          print('regen   :', a)
+          print('packaged:', b)
+          assert a == b, 'scrna_r0.json 与确定性重生成不一致 — 数据管线漂移'
+          print('OK: scrna_r0.json 锚定一致')
+          EOF
+
+      - name: ruff lint（H13；N-c 起含 demo/——pyproject extend-exclude 仅排除 demo/data）
+        run: |
+          ruff check src tests scripts demo || true

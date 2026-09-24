@@ -1,0 +1,84 @@
+rule_id: A1.1-ANNO-001_method
+domain: ANNOTATION
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2019, 2022]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "细胞类型注释方法 / Cell type annotation method"
+description: "自动注释方法 (SingleR/CellTypist/Azimuth) 基于参考数据集提供可复现的细胞类型标注。SingleR 基于相关性 (Aran et al. 2019), CellTypist 基于逻辑回归+层级分类 (Domínguez Conde et al. 2022)。手工marker注释依赖专家知识, 可复现性差。建议自动+手工交叉验证。"
+condition:
+  decision_type: annotation_method
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - SingleR_with_CellTypist_cross_validation
+      - multi_method_consensus
+      - reference_based_with_marker_validation
+    description: "多种自动方法交叉验证 + marker基因验证 — 注释可信度最高"
+    rationale: "不同方法基于不同原理, 结果一致→可信度高; 不一致→需要人工审查"
+  level_2:
+    methods:
+      - SingleR
+      - CellTypist
+      - Azimuth
+    description: "单一自动方法 — 可复现但可能有系统性偏差"
+    conditions_when_acceptable: "当使用的参考数据集与目标组织匹配良好时"
+  level_1:
+    methods:
+      - manual_marker
+      - marker_based
+    description: "纯手工marker注释 — 依赖专家, 可复现性低"
+    note: "手工注释可能遗漏稀有细胞类型, 且不同研究者可能给出不同标注"
+    conditions_when_acceptable: "当有详尽的marker基因panel且研究者是领域专家时"
+  level_0:
+    methods:
+      - cluster_number_only
+      - no_annotation
+      - visual_guess
+    description: "无注释/仅聚类编号 — 无生物学意义的纯数学分组"
+    rationale: "没有细胞类型注释, 聚类结果无法转化为生物学结论"
+
+evidence:
+  - source_type: method_paper
+    pmid: "30643263"
+    doi: "10.1038/s41590-018-0276-y"
+    title: "Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology"
+    confidence: L-Confirmed
+    excerpt: "SingleR provides reference-based cell type annotation by comparing each cell to reference transcriptomic datasets."
+    supports_levels: ["level_3", "level_2"]
+  - source_type: method_paper
+    pmid: "35549406"
+    doi: "10.1126/science.abl5197"
+    title: "Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science"
+    confidence: L-Confirmed
+    excerpt: "CellTypist uses logistic regression with hierarchical classification for robust cell type annotation."
+    supports_levels: ["level_3", "level_2"]
+conflicts_with: []

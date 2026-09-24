@@ -1,0 +1,19 @@
+# 决策类型：enrichment_correction（富集多重检验校正）— interpretation / pan-cancer
+decision_type: enrichment_correction
+display:
+  cn: 富集分析多重检验校正
+  en: Enrichment correction
+stage: interpretation
+paradigms: [pan-cancer]
+dimension: statistical_rigor
+optional: true
+when_not_applicable: no_enrichment_analysis
+aliases: []
+depends_on: [gsea_background, deg_method]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [pathway_enrichment, differential_expression, survival_analysis, immune_expression_correlation, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（E5.1）引用 → 禁止 fail-open
+    missing: fail-closed

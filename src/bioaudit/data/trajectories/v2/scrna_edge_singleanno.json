@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "trajectory_id": "scrna_edge_singleanno",
+  "act": "scrna",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "scrna_edge_singleanno.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "E9",
+      "decision_type": "annotation_method",
+      "choice": "SingleR",
+      "rationale": "SingleR with the Blueprint/ENCODE reference provides correlation-based cell type annotation. It is well-cited (Aran et al. 2019) and widely used in the field — a single robust method is sufficient for this dataset given the well-characterized tumor microenvironment cell types.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "reference_based": true
+      }
+    }
+  ]
+}

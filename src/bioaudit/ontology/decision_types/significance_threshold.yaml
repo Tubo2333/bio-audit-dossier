@@ -1,0 +1,34 @@
+# 决策类型：significance_threshold（显著性阈值）— inference / bulk-DEG, pan-cancer, scRNA
+decision_type: significance_threshold
+display:
+  cn: 显著性阈值
+  en: Significance threshold
+stage: inference
+paradigms: [bulk-DEG, pan-cancer, scRNA]
+dimension: statistical_rigor
+optional: false
+aliases: []
+depends_on: [deg_method, multiple_testing_correction]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [differential_expression, survival_analysis, immune_expression_correlation, pathway_enrichment, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（M1.3）引用 → 禁止 fail-open
+    missing: fail-closed
+  - key: n_replicates
+    type: int
+    min: 0
+    required: false
+    missing: fail-closed
+  # 窗口 J2（2026-08-16）：M3 签名对 significance_threshold 输出的事实键（padj_cutoff/
+  # logfc_cutoff，capture/signatures.yaml）登记入 context_schema——捕获层键与本体键对齐；
+  # 信息性键（不参与规则门控，G1.4 以 choice 词表评级），missing 档位 fail-open。
+  - key: padj_cutoff
+    type: float
+    required: false
+    missing: fail-open
+  - key: logfc_cutoff
+    type: float
+    required: false
+    missing: fail-open

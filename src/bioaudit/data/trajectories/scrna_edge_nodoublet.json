@@ -1,0 +1,12 @@
+[
+  {
+    "step_id": "E7",
+    "decision_type": "doublet_detection",
+    "choice": "no_doublet_detection",
+    "rationale": "The estimated doublet rate for this 10X dataset (~8,500 cells) is under 3%. At this low rate, doublets are unlikely to form distinct clusters or significantly affect downstream DEG results. We skip doublet detection to save computation time and avoid accidentally removing rare cell types that may resemble doublet profiles.",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_cells": 8500
+    }
+  }
+]

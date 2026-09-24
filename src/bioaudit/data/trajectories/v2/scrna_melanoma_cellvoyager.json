@@ -1,0 +1,143 @@
+{
+  "version": 2,
+  "trajectory_id": "scrna_melanoma_cellvoyager",
+  "act": "scrna",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "scrna_melanoma_cellvoyager.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "S1",
+      "decision_type": "api_data_integrity",
+      "choice": "DETAILED_with_validation",
+      "rationale": "GSE115978 loaded and validated: 7,186 cells x 22,454 genes. Raw counts detected (max expression > 100).",
+      "context": {
+        "data_source": "GEO",
+        "data_format": "h5ad",
+        "n_cells": 7186,
+        "n_genes": 22454
+      }
+    },
+    {
+      "step_id": "S2",
+      "decision_type": "qc_filtering",
+      "choice": "hard_threshold",
+      "rationale": "Fixed QC thresholds: sc.pp.filter_cells(min_genes=200), sc.pp.filter_genes(min_cells=3). No adaptive thresholding.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 7186,
+        "min_genes": 200,
+        "min_cells": 3
+      }
+    },
+    {
+      "step_id": "S3",
+      "decision_type": "doublet_detection",
+      "choice": "no_doublet_detection",
+      "rationale": "No doublet detection performed. Notebook does not call scDblFinder, scrublet, or any doublet detection method.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 7186
+      }
+    },
+    {
+      "step_id": "S4",
+      "decision_type": "scRNA_normalization",
+      "choice": "LogNormalize",
+      "rationale": "sc.pp.normalize_total(target_sum=1e4) + sc.pp.log1p() — LogNormalize pipeline. 'Filtered cells/genes, normalized, and log-transformed.' No SCTransform or scran.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "data_category": "umi_counts",
+        "target_sum": 10000,
+        "log_transformed": true
+      }
+    },
+    {
+      "step_id": "S5",
+      "decision_type": "hv_gene_selection",
+      "choice": "vst",
+      "rationale": "sc.pp.highly_variable_genes(flavor='seurat', n_top_genes=2000) — VST method for 2,000 HVGs.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_top_genes": 2000,
+        "n_genes": 22454
+      }
+    },
+    {
+      "step_id": "S6",
+      "decision_type": "batch_correction",
+      "choice": "no_integration",
+      "rationale": "No explicit batch correction performed. Dataset contains cells from multiple patients but notebook does not call Harmony, scVI, BBKNN, or any integration method.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "has_batch": true,
+        "n_patients": 12
+      }
+    },
+    {
+      "step_id": "S7",
+      "decision_type": "dim_reduction",
+      "choice": "PCA_arbitrary",
+      "rationale": "sc.tl.pca(n_comps=50) — fixed 50 PCs without elbow plot or explained variance justification. n_neighbors=15, n_pcs=30 for graph construction.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "method": "PCA",
+        "n_comps": 50
+      }
+    },
+    {
+      "step_id": "S8",
+      "decision_type": "clustering_method",
+      "choice": "Leiden",
+      "rationale": "sc.tl.leiden(resolution=1.0, random_state=0). Standard Leiden clustering with default resolution 1.0 — no clustree stability analysis or silhouette optimization mentioned.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "graph_type": "SNN",
+        "resolution": 1.0
+      }
+    },
+    {
+      "step_id": "S9",
+      "decision_type": "annotation_method",
+      "choice": "manual_marker",
+      "rationale": "Cell types identified via CD45 status parsed from cell barcodes (CD45_neg = tumor, CD45+ = immune) + melanoma marker scoring (MITF, MLANA, PMEL, TYR). No SingleR, CellTypist, or reference-based annotation used.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "markers_used": "CD45, MITF, MLANA, PMEL, TYR"
+      }
+    },
+    {
+      "step_id": "S10",
+      "decision_type": "deg_method",
+      "choice": "Kruskal_Wallis_cell_level",
+      "rationale": "Kruskal-Wallis H-test (non-parametric ANOVA) on cell-level log-normalized data — comparing immune evasion gene expression across G1/S/G2M cell-cycle phases. Cell-level test without pseudobulk aggregation.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_patients": 12,
+        "pseudobulk": false
+      }
+    },
+    {
+      "step_id": "S11",
+      "decision_type": "trajectory_inference",
+      "choice": "no_trajectory",
+      "rationale": "No trajectory inference performed. Notebook focuses on cell-cycle phase analysis and correlation tests rather than pseudotime trajectory inference.",
+      "context": {
+        "sequencing": "10X_scRNA_seq"
+      }
+    },
+    {
+      "step_id": "S12",
+      "decision_type": "cluster_annotation_consistency",
+      "choice": "consistent_with_cross_validation",
+      "rationale": "CD45-based tumor/immune separation consistent with melanoma marker scores (tumor cells show higher MITF/MLANA/PMEL scores). Cluster 0 validated as tumor via marker expression. Cell-cycle phase distribution consistent across clusters.",
+      "context": {
+        "integration_type": "cross_module"
+      }
+    }
+  ]
+}

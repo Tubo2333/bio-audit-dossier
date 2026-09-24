@@ -1,0 +1,75 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bio-audit"
+version = "0.3.0"
+description = "Bio-Audit: 生信 AI Agent 方法学决策的确定性审计层（Scientific Decision CI）— 规则驱动的科学决策 lint / benchmark / reward 引擎"
+readme = "README.md"
+requires-python = ">=3.10"   # H8: 最低 Python（引擎使用 PEP 604 联合类型）；CI 双版本矩阵在 B6 落地
+license = { text = "Apache-2.0" }   # 拍板 #3（H13）
+authors = [{ name = "Bio-Audit Contributors" }]
+keywords = ["bioinformatics", "audit", "scientific-decision", "rules-engine", "mcp"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+# H8/H9: 依赖声明（核心 = pydantic + pyyaml；UI/脚本依赖为 optional extra）
+dependencies = [
+    "pydantic>=2.0,<3",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+# N-a/N-b（窗口 N，2026-08-16/19）：Streamlit 版本锁定 <2——防 2.x 改 data-testid
+# 使 demo theme.css 的 CSS 注入静默失效（demo-redesign-design §5；台账 §2.2）
+# N-b：下限 1.31 → 1.33——split_button 下拉使用 st.popover（1.33.0 首发，
+# 1.31/1.32 wheel 无此 API；双轴审查实证）；本机 1.60.0 满足
+# 说明：demo/scripts 下 export/verify 脚本除 stdlib 外，N-d 起会调用
+#       `python -m pytest --collect-only`（engineering_summary 的 n_tests 实测，
+#       台账 §12.1；pytest 属 dev extra，构建 demo/data 的机器需已装）；
+#       streamlit 仅 demo 运行时与 N-c 的 AppTest smoke 需要。
+ui = ["streamlit>=1.33,<2"]        # Streamlit 薄壳（ui/）
+demo = ["streamlit>=1.33,<2"]      # 新演示（demo/，窗口 N 重建）
+a1 = ["flask>=3,<4"]               # A1 输入面 Web 表单（ui/a1_submit_app.py；Flask 现已经 streamlit 传递存在，此处显式声明）
+scripts = ["numpy>=1.24", "scipy>=1.10"]  # 验证数据重算脚本（B6 数据管线）
+dev = ["pytest>=7.0", "ruff>=0.4"]
+
+[project.scripts]
+bio-audit = "bioaudit.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+# 包内数据资产（规则/轨迹/验证/mappings/本体/tasks/标注）随包分发 —— 路径锚定见 bioaudit/paths.py
+[tool.setuptools.package-data]
+"bioaudit.rules" = ["data/**/*.yaml", "ruleset.json"]
+"bioaudit" = ["data/**/*"]
+"bioaudit.ontology" = ["*.yaml", "decision_types/*.yaml"]
+"bioaudit.benchmark" = ["*.md", "*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+# demo/data 为 export 脚本生成的数据产物（executed.py 提炼副本保持源原样，
+# 供 M3 解析），不入 lint
+extend-exclude = ["demo/data"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+# ui/generate_report.py + ui/zh_terms.py are the static HTML/CSS template and the
+# EN→ZH reading table. Wrapping their long lines to 100 chars would break the
+# template markup and the bilingual term table, so line length is not applied
+# there (the checker ui/verify_report.py stays linted).
+extend-per-file-ignores = { "ui/generate_report.py" = ["E501"], "ui/zh_terms.py" = ["E501"], "ui/zh_bi.py" = ["E501"] }

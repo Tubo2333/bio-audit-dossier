@@ -1,0 +1,24 @@
+# 决策类型：cox_ph_assumption（Cox PH 假设检验）— inference / pan-cancer
+decision_type: cox_ph_assumption
+display:
+  cn: Cox 比例风险假设检验
+  en: Cox PH assumption
+stage: inference
+paradigms: [pan-cancer]
+dimension: statistical_rigor
+optional: true
+when_not_applicable: no_survival_analysis
+aliases: []
+depends_on: []
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [survival_analysis, differential_expression, immune_expression_correlation, pathway_enrichment, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（P2.1）引用 → 禁止 fail-open
+    missing: fail-closed
+  - key: method
+    type: enum
+    values: [Cox_regression, logrank_test]
+    required: false
+    missing: skip

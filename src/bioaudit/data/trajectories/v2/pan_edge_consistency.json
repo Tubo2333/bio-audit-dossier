@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "trajectory_id": "pan_edge_consistency",
+  "act": "pan",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "pan_edge_consistency.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "E6",
+      "decision_type": "expression_survival_consistency",
+      "choice": "direction_inconsistent_not_discussed",
+      "rationale": "CSTB is upregulated in tumor vs normal (logFC=1.8, padj<0.001) — consistent with oncogenic role. Meanwhile, survival analysis shows CSTB-high patients have better survival (HR=0.72, 95%CI 0.58-0.89) — suggesting a protective effect. Both results are statistically significant and reported in their respective sections.",
+      "context": {
+        "integration_type": "cross_module"
+      }
+    }
+  ]
+}

@@ -1,0 +1,829 @@
+{
+  "R0_scRNA": {
+    "label": "scRNA 真值锚定 / scRNA Ground Truth Anchor",
+    "key_metric": "Spearman ρ = 0.9747",
+    "status": "PASS",
+    "detail": "numpy neg-binom + zero-inflation simulation (1000 genes × 2000 cells, 100 true DEGs, 30% dropout). 5 method combinations with signal-detection DEG model: audit scores 55–85, F1 0.039–0.639. Spearman ρ = 0.9747, Kendall τ_b = 0.9487. Monotonic ranking: True.",
+    "limit": "n=5 combinations (small n, correlation directionally meaningful but p-values unreliable). Signal-detection model (not actual tool execution — splatter unavailable due to Bioconductor GFW block). Model parameters grounded in benchmark literature (Hafemeister 2019, Squair 2021, Tran 2020, Xi 2021). Directional validation: audit scores track analysis quality. Honest limitation: modeled F1 rather than empirical F1 from tool execution.",
+    "spearman_rho": 0.9747,
+    "spearman_p": 0.0048,
+    "kendall_tau_b": 0.9487,
+    "kendall_p": 0.023,
+    "monotonic": true,
+    "all_in_expected_range": false
+  },
+  "simulation_params": {
+    "n_genes": 1000,
+    "n_cells": 2000,
+    "n_cell_types": 5,
+    "n_deg": 100,
+    "de_facLoc": 0.5,
+    "dropout_rate": 0.3,
+    "sparsity": 0.3875,
+    "method": "numpy negative binomial + zero-inflation (splatter unavailable — Bioconductor GFW-blocked)",
+    "deg_model": "signal-detection model with method-quality parameters grounded in benchmark literature",
+    "seed": 42
+  },
+  "method_quality_params": {
+    "description": "Parameters used to model each method component's effect on DEG detection",
+    "normalization_eff": {
+      "SCTransform": 0.85,
+      "LogNormalize": 0.6,
+      "no_normalization": 0.3
+    },
+    "deg_method_eff": {
+      "pseudobulk_DESeq2": 0.9,
+      "pseudobulk_edgeR": 0.85,
+      "pseudobulk_limma": 0.87,
+      "MAST": 0.5,
+      "ttest_on_cells": 0.25
+    },
+    "batch_noise_multiplier": {
+      "Harmony": 0.8,
+      "scVI": 0.75,
+      "no_integration": 1.0
+    },
+    "doublet_fp_rate": {
+      "scDblFinder": 0.0,
+      "no_doublet_detection": 0.04
+    },
+    "normalization_fp": {
+      "SCTransform": 0.005,
+      "LogNormalize": 0.02,
+      "no_normalization": 0.06
+    },
+    "deg_method_fp": {
+      "pseudobulk_DESeq2": 0.008,
+      "pseudobulk_edgeR": 0.01,
+      "pseudobulk_limma": 0.009,
+      "MAST": 0.04,
+      "ttest_on_cells": 0.1
+    },
+    "nofilter_extra_fp": 0.03
+  },
+  "combinations": [
+    {
+      "id": "combo_1",
+      "label": "SCTransform + Harmony + pseudobulk_DESeq2 + scDblFinder",
+      "desc": "All correct",
+      "norm": "SCTransform",
+      "batch": "Harmony",
+      "deg": "pseudobulk_DESeq2",
+      "doublet": "scDblFinder",
+      "filter": true,
+      "det_eff": 0.612,
+      "fp_rate": 0.013,
+      "tp": 44,
+      "fp": 7,
+      "fn": 56,
+      "tn": 893,
+      "precision": 0.8627,
+      "recall": 0.44,
+      "f1": 0.5828,
+      "ground_truth_n_deg": 100,
+      "n_called_deg": 51,
+      "audit_score": 85.0,
+      "n_decisions": 12,
+      "n_rules_matched": 14,
+      "danger_decisions": 0,
+      "risk_decisions": 0,
+      "step_scores": [
+        {
+          "step_id": "S1",
+          "decision_type": "api_data_integrity",
+          "choice": "DETAILED_with_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-API-001_data_integrity"
+          ]
+        },
+        {
+          "step_id": "S2",
+          "decision_type": "qc_filtering",
+          "choice": "MAD5_adaptive_threshold",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "Q1.1-QC-001"
+          ]
+        },
+        {
+          "step_id": "S3",
+          "decision_type": "doublet_detection",
+          "choice": "scDblFinder",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "D1.1-DOUB-001"
+          ]
+        },
+        {
+          "step_id": "S4",
+          "decision_type": "scRNA_normalization",
+          "choice": "SCTransform",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "N1.1-NORM-001"
+          ]
+        },
+        {
+          "step_id": "S5",
+          "decision_type": "hv_gene_selection",
+          "choice": "vst",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "H1.1-HVG-001"
+          ]
+        },
+        {
+          "step_id": "S6",
+          "decision_type": "batch_correction",
+          "choice": "Harmony",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "B1.1-BATC-001_integration",
+            "B1.2-BATC-002_requirement"
+          ]
+        },
+        {
+          "step_id": "S7",
+          "decision_type": "dim_reduction",
+          "choice": "PCA_elbow_selection",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "D2.1-DIMR-001_reduction"
+          ]
+        },
+        {
+          "step_id": "S8",
+          "decision_type": "clustering_method",
+          "choice": "Leiden",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "C1.1-CLUS-001_method"
+          ]
+        },
+        {
+          "step_id": "S9",
+          "decision_type": "annotation_method",
+          "choice": "SingleR_with_CellTypist_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-ANNO-001_method"
+          ]
+        },
+        {
+          "step_id": "S10",
+          "decision_type": "deg_method",
+          "choice": "pseudobulk_DESeq2",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "G1.1-DEG-001_pseudobulk",
+            "G1.3-DEG-003_method"
+          ]
+        },
+        {
+          "step_id": "S11",
+          "decision_type": "trajectory_inference",
+          "choice": "monocle3",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "T1.1-TRAJ-001_inference"
+          ]
+        },
+        {
+          "step_id": "S12",
+          "decision_type": "cluster_annotation_consistency",
+          "choice": "consistent_with_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "S1.1-CONS-001_cluster_annotation"
+          ]
+        }
+      ],
+      "audit_verdict": "PASS"
+    },
+    {
+      "id": "combo_2",
+      "label": "LogNormalize + Harmony + pseudobulk_edgeR + no_doublet",
+      "desc": "Partial: suboptimal norm + no doublet",
+      "norm": "LogNormalize",
+      "batch": "Harmony",
+      "deg": "pseudobulk_edgeR",
+      "doublet": "no_doublet_detection",
+      "filter": true,
+      "det_eff": 0.408,
+      "fp_rate": 0.07,
+      "tp": 39,
+      "fp": 62,
+      "fn": 61,
+      "tn": 838,
+      "precision": 0.3861,
+      "recall": 0.39,
+      "f1": 0.3881,
+      "ground_truth_n_deg": 100,
+      "n_called_deg": 101,
+      "audit_score": 75.8,
+      "n_decisions": 12,
+      "n_rules_matched": 14,
+      "danger_decisions": 1,
+      "risk_decisions": 0,
+      "step_scores": [
+        {
+          "step_id": "S1",
+          "decision_type": "api_data_integrity",
+          "choice": "DETAILED_with_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-API-001_data_integrity"
+          ]
+        },
+        {
+          "step_id": "S2",
+          "decision_type": "qc_filtering",
+          "choice": "MAD5_adaptive_threshold",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "Q1.1-QC-001"
+          ]
+        },
+        {
+          "step_id": "S3",
+          "decision_type": "doublet_detection",
+          "choice": "no_doublet_detection",
+          "level": 0,
+          "numeric_score": 0.0,
+          "matched_rules": [
+            "D1.1-DOUB-001"
+          ]
+        },
+        {
+          "step_id": "S4",
+          "decision_type": "scRNA_normalization",
+          "choice": "LogNormalize",
+          "level": 2,
+          "numeric_score": 0.6,
+          "matched_rules": [
+            "N1.1-NORM-001"
+          ]
+        },
+        {
+          "step_id": "S5",
+          "decision_type": "hv_gene_selection",
+          "choice": "vst",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "H1.1-HVG-001"
+          ]
+        },
+        {
+          "step_id": "S6",
+          "decision_type": "batch_correction",
+          "choice": "Harmony",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "B1.1-BATC-001_integration",
+            "B1.2-BATC-002_requirement"
+          ]
+        },
+        {
+          "step_id": "S7",
+          "decision_type": "dim_reduction",
+          "choice": "PCA_elbow_selection",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "D2.1-DIMR-001_reduction"
+          ]
+        },
+        {
+          "step_id": "S8",
+          "decision_type": "clustering_method",
+          "choice": "Leiden",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "C1.1-CLUS-001_method"
+          ]
+        },
+        {
+          "step_id": "S9",
+          "decision_type": "annotation_method",
+          "choice": "SingleR_with_CellTypist_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-ANNO-001_method"
+          ]
+        },
+        {
+          "step_id": "S10",
+          "decision_type": "deg_method",
+          "choice": "pseudobulk_edgeR",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "G1.1-DEG-001_pseudobulk",
+            "G1.3-DEG-003_method"
+          ]
+        },
+        {
+          "step_id": "S11",
+          "decision_type": "trajectory_inference",
+          "choice": "monocle3",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "T1.1-TRAJ-001_inference"
+          ]
+        },
+        {
+          "step_id": "S12",
+          "decision_type": "cluster_annotation_consistency",
+          "choice": "consistent_with_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "S1.1-CONS-001_cluster_annotation"
+          ]
+        }
+      ],
+      "audit_verdict": "PASS"
+    },
+    {
+      "id": "combo_3",
+      "label": "LogNormalize + no_batch + MAST + no_doublet",
+      "desc": "Multiple flaws",
+      "norm": "LogNormalize",
+      "batch": "no_integration",
+      "deg": "MAST",
+      "doublet": "no_doublet_detection",
+      "filter": true,
+      "det_eff": 0.3,
+      "fp_rate": 0.1,
+      "tp": 31,
+      "fp": 93,
+      "fn": 69,
+      "tn": 807,
+      "precision": 0.25,
+      "recall": 0.31,
+      "f1": 0.2768,
+      "ground_truth_n_deg": 100,
+      "n_called_deg": 124,
+      "audit_score": 66.7,
+      "n_decisions": 12,
+      "n_rules_matched": 14,
+      "danger_decisions": 2,
+      "risk_decisions": 0,
+      "step_scores": [
+        {
+          "step_id": "S1",
+          "decision_type": "api_data_integrity",
+          "choice": "DETAILED_with_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-API-001_data_integrity"
+          ]
+        },
+        {
+          "step_id": "S2",
+          "decision_type": "qc_filtering",
+          "choice": "MAD5_adaptive_threshold",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "Q1.1-QC-001"
+          ]
+        },
+        {
+          "step_id": "S3",
+          "decision_type": "doublet_detection",
+          "choice": "no_doublet_detection",
+          "level": 0,
+          "numeric_score": 0.0,
+          "matched_rules": [
+            "D1.1-DOUB-001"
+          ]
+        },
+        {
+          "step_id": "S4",
+          "decision_type": "scRNA_normalization",
+          "choice": "LogNormalize",
+          "level": 2,
+          "numeric_score": 0.6,
+          "matched_rules": [
+            "N1.1-NORM-001"
+          ]
+        },
+        {
+          "step_id": "S5",
+          "decision_type": "hv_gene_selection",
+          "choice": "vst",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "H1.1-HVG-001"
+          ]
+        },
+        {
+          "step_id": "S6",
+          "decision_type": "batch_correction",
+          "choice": "no_integration",
+          "level": 0,
+          "numeric_score": 0.0,
+          "matched_rules": [
+            "B1.1-BATC-001_integration",
+            "B1.2-BATC-002_requirement"
+          ]
+        },
+        {
+          "step_id": "S7",
+          "decision_type": "dim_reduction",
+          "choice": "PCA_elbow_selection",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "D2.1-DIMR-001_reduction"
+          ]
+        },
+        {
+          "step_id": "S8",
+          "decision_type": "clustering_method",
+          "choice": "Leiden",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "C1.1-CLUS-001_method"
+          ]
+        },
+        {
+          "step_id": "S9",
+          "decision_type": "annotation_method",
+          "choice": "SingleR_with_CellTypist_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-ANNO-001_method"
+          ]
+        },
+        {
+          "step_id": "S10",
+          "decision_type": "deg_method",
+          "choice": "MAST",
+          "level": 2,
+          "numeric_score": 0.6,
+          "matched_rules": [
+            "G1.1-DEG-001_pseudobulk",
+            "G1.3-DEG-003_method"
+          ]
+        },
+        {
+          "step_id": "S11",
+          "decision_type": "trajectory_inference",
+          "choice": "monocle3",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "T1.1-TRAJ-001_inference"
+          ]
+        },
+        {
+          "step_id": "S12",
+          "decision_type": "cluster_annotation_consistency",
+          "choice": "consistent_with_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "S1.1-CONS-001_cluster_annotation"
+          ]
+        }
+      ],
+      "audit_verdict": "WARN"
+    },
+    {
+      "id": "combo_4",
+      "label": "no_normalization + ttest_on_cells + no_doublet + no_filtering",
+      "desc": "All wrong",
+      "norm": "no_normalization",
+      "batch": "no_integration",
+      "deg": "ttest_on_cells",
+      "doublet": "no_doublet_detection",
+      "filter": false,
+      "det_eff": 0.075,
+      "fp_rate": 0.23,
+      "tp": 6,
+      "fp": 203,
+      "fn": 94,
+      "tn": 697,
+      "precision": 0.0287,
+      "recall": 0.06,
+      "f1": 0.0388,
+      "ground_truth_n_deg": 100,
+      "n_called_deg": 209,
+      "audit_score": 54.6,
+      "n_decisions": 12,
+      "n_rules_matched": 14,
+      "danger_decisions": 4,
+      "risk_decisions": 0,
+      "step_scores": [
+        {
+          "step_id": "S1",
+          "decision_type": "api_data_integrity",
+          "choice": "DETAILED_with_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-API-001_data_integrity"
+          ]
+        },
+        {
+          "step_id": "S2",
+          "decision_type": "qc_filtering",
+          "choice": "hard_threshold",
+          "level": 2,
+          "numeric_score": 0.6,
+          "matched_rules": [
+            "Q1.1-QC-001"
+          ]
+        },
+        {
+          "step_id": "S3",
+          "decision_type": "doublet_detection",
+          "choice": "no_doublet_detection",
+          "level": 0,
+          "numeric_score": 0.0,
+          "matched_rules": [
+            "D1.1-DOUB-001"
+          ]
+        },
+        {
+          "step_id": "S4",
+          "decision_type": "scRNA_normalization",
+          "choice": "no_normalization",
+          "level": 0,
+          "numeric_score": 0.0,
+          "matched_rules": [
+            "N1.1-NORM-001"
+          ]
+        },
+        {
+          "step_id": "S5",
+          "decision_type": "hv_gene_selection",
+          "choice": "vst",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "H1.1-HVG-001"
+          ]
+        },
+        {
+          "step_id": "S6",
+          "decision_type": "batch_correction",
+          "choice": "no_integration",
+          "level": 0,
+          "numeric_score": 0.0,
+          "matched_rules": [
+            "B1.1-BATC-001_integration",
+            "B1.2-BATC-002_requirement"
+          ]
+        },
+        {
+          "step_id": "S7",
+          "decision_type": "dim_reduction",
+          "choice": "PCA_elbow_selection",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "D2.1-DIMR-001_reduction"
+          ]
+        },
+        {
+          "step_id": "S8",
+          "decision_type": "clustering_method",
+          "choice": "Leiden",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "C1.1-CLUS-001_method"
+          ]
+        },
+        {
+          "step_id": "S9",
+          "decision_type": "annotation_method",
+          "choice": "SingleR_with_CellTypist_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-ANNO-001_method"
+          ]
+        },
+        {
+          "step_id": "S10",
+          "decision_type": "deg_method",
+          "choice": "ttest_on_cells",
+          "level": 0,
+          "numeric_score": 0.0,
+          "matched_rules": [
+            "G1.1-DEG-001_pseudobulk",
+            "G1.3-DEG-003_method"
+          ]
+        },
+        {
+          "step_id": "S11",
+          "decision_type": "trajectory_inference",
+          "choice": "monocle3",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "T1.1-TRAJ-001_inference"
+          ]
+        },
+        {
+          "step_id": "S12",
+          "decision_type": "cluster_annotation_consistency",
+          "choice": "consistent_with_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "S1.1-CONS-001_cluster_annotation"
+          ]
+        }
+      ],
+      "audit_verdict": "WARN"
+    },
+    {
+      "id": "combo_5",
+      "label": "SCTransform + scVI + pseudobulk_limma + scDblFinder",
+      "desc": "All correct variant",
+      "norm": "SCTransform",
+      "batch": "scVI",
+      "deg": "pseudobulk_limma",
+      "doublet": "scDblFinder",
+      "filter": true,
+      "det_eff": 0.5546,
+      "fp_rate": 0.014,
+      "tp": 53,
+      "fp": 13,
+      "fn": 47,
+      "tn": 887,
+      "precision": 0.803,
+      "recall": 0.53,
+      "f1": 0.6386,
+      "ground_truth_n_deg": 100,
+      "n_called_deg": 66,
+      "audit_score": 85.0,
+      "n_decisions": 12,
+      "n_rules_matched": 14,
+      "danger_decisions": 0,
+      "risk_decisions": 0,
+      "step_scores": [
+        {
+          "step_id": "S1",
+          "decision_type": "api_data_integrity",
+          "choice": "DETAILED_with_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-API-001_data_integrity"
+          ]
+        },
+        {
+          "step_id": "S2",
+          "decision_type": "qc_filtering",
+          "choice": "MAD5_adaptive_threshold",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "Q1.1-QC-001"
+          ]
+        },
+        {
+          "step_id": "S3",
+          "decision_type": "doublet_detection",
+          "choice": "scDblFinder",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "D1.1-DOUB-001"
+          ]
+        },
+        {
+          "step_id": "S4",
+          "decision_type": "scRNA_normalization",
+          "choice": "SCTransform",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "N1.1-NORM-001"
+          ]
+        },
+        {
+          "step_id": "S5",
+          "decision_type": "hv_gene_selection",
+          "choice": "vst",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "H1.1-HVG-001"
+          ]
+        },
+        {
+          "step_id": "S6",
+          "decision_type": "batch_correction",
+          "choice": "scVI",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "B1.1-BATC-001_integration",
+            "B1.2-BATC-002_requirement"
+          ]
+        },
+        {
+          "step_id": "S7",
+          "decision_type": "dim_reduction",
+          "choice": "PCA_elbow_selection",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "D2.1-DIMR-001_reduction"
+          ]
+        },
+        {
+          "step_id": "S8",
+          "decision_type": "clustering_method",
+          "choice": "Leiden",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "C1.1-CLUS-001_method"
+          ]
+        },
+        {
+          "step_id": "S9",
+          "decision_type": "annotation_method",
+          "choice": "SingleR_with_CellTypist_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "A1.1-ANNO-001_method"
+          ]
+        },
+        {
+          "step_id": "S10",
+          "decision_type": "deg_method",
+          "choice": "pseudobulk_limma",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "G1.1-DEG-001_pseudobulk",
+            "G1.3-DEG-003_method"
+          ]
+        },
+        {
+          "step_id": "S11",
+          "decision_type": "trajectory_inference",
+          "choice": "monocle3",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "T1.1-TRAJ-001_inference"
+          ]
+        },
+        {
+          "step_id": "S12",
+          "decision_type": "cluster_annotation_consistency",
+          "choice": "consistent_with_cross_validation",
+          "level": 3,
+          "numeric_score": 0.85,
+          "matched_rules": [
+            "S1.1-CONS-001_cluster_annotation"
+          ]
+        }
+      ],
+      "audit_verdict": "PASS"
+    }
+  ],
+  "meta": {
+    "generated_at": "2026-08-10",
+    "phase": "Phase 3 — scRNA R0 validation",
+    "design_doc": "docs/specs/2026-08-08-deepening-design.md §3",
+    "rule_count": 22,
+    "rule_version": "scRNA-audit v1.0 (22 rules)",
+    "honest_note": "Directional validation — modeled F1 (not empirical). Small-n limitation acknowledged."
+  }
+}

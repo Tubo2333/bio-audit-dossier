@@ -1,0 +1,13 @@
+{
+  "key_metric": "Spearman ρ = 0.9747",
+  "status": "PASS",
+  "detail": "numpy neg-binom + zero-inflation simulation (1000 genes × 2000 cells, 100 true DEGs, 30% dropout). 5 method combinations with signal-detection DEG model: audit scores 55–85, F1 0.039–0.639. Spearman ρ = 0.9747, Kendall τ_b = 0.9487. Monotonic ranking: True.",
+  "limit": "n=5 combinations (small n, correlation directionally meaningful but p-values unreliable). Signal-detection model (not actual tool execution — splatter unavailable due to Bioconductor GFW block). Model parameters grounded in benchmark literature (Hafemeister 2019, Squair 2021, Tran 2020, Xi 2021). Directional validation: audit scores track analysis quality. Honest limitation: modeled F1 rather than empirical F1 from tool execution.",
+  "provenance": {
+    "source": "scrna_r0.json",
+    "source_sha256": "9065f289c7a9fcbf96c5d491cc9e32c9e5cb1ec49116062f4baf8ae62e1ca1c4",
+    "generated_at": "",
+    "exported_at": "2026-09-23T04:59:51+00:00",
+    "note": "现行版本（复核后更新）"
+  }
+}

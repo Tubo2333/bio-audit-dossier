@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "trajectory_id": "pan_edge_epv",
+  "act": "pan",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "pan_edge_epv.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "E5",
+      "decision_type": "events_per_variable",
+      "choice": "EPV_less_than_5",
+      "rationale": "Multivariate Cox model includes CSTB + Age + Stage + Grade + Smoking history (5 covariates). Only 3 death events occurred in this cohort. Since the gene is highly significant in univariate analysis, we proceed with the full multivariate model.",
+      "context": {
+        "analysis_type": "survival_analysis"
+      }
+    }
+  ]
+}

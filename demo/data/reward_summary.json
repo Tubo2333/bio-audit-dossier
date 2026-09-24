@@ -1,0 +1,53 @@
+{
+  "mapping": {
+    "4": 1.0,
+    "3": 0.85,
+    "2": 0.6,
+    "1": 0.3,
+    "0": 0.0
+  },
+  "mask": {
+    "level": -1,
+    "semantic": "mask（None）——不参与分子也不参与分母；全 mask → trajectory_reward=None（不给 0 虚假信号）"
+  },
+  "aggregation": "mean（未 mask 步骤均值）+ 配方 B 硬惩罚 γ=0.30（任一未 mask L0，二元不复利）",
+  "spike_in": [
+    {
+      "paradigm": "scrna",
+      "trajectory": "scrna_correct",
+      "injection": "no_doublet_detection",
+      "before": 0.85,
+      "after": 0.2354,
+      "drop": 0.6146,
+      "threshold": 0.3
+    },
+    {
+      "paradigm": "deg",
+      "trajectory": "deg_correct",
+      "injection": "no_correction",
+      "before": 0.85,
+      "after": 0.2125,
+      "drop": 0.6375,
+      "threshold": 0.3
+    },
+    {
+      "paradigm": "pan",
+      "trajectory": "pan_correct",
+      "injection": "no_ph_test",
+      "before": 0.85,
+      "after": 0.24,
+      "drop": 0.61,
+      "threshold": 0.3
+    }
+  ],
+  "spike_threshold": 0.3,
+  "status": "experimental_uncalibrated",
+  "status_note": "reward 是训练信号候选，未经过 RLHF 校准；任何消费方不得把 reward 当校准信号用于生产决策（reward 校准报告 §六）",
+  "provenance": {
+    "source": "reward 校准报告 §三.9 + reward-protocol.md §七.2 + reward-mapping.md §2",
+    "source_sha256": "e1f3fd46c8fcf882cbc2eaa3e3a1f68fd687ea273432b9dbbfa0bd288dc96315",
+    "generated_at": "",
+    "exported_at": "2026-09-23T04:59:51+00:00",
+    "note": "mapping/mask/γ 锚点 = reward-mapping.md（宪法）；spike-in 实测 = reward 校准报告 + reward-protocol"
+  }
+}

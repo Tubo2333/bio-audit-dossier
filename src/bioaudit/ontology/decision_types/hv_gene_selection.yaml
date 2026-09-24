@@ -1,0 +1,28 @@
+# 决策类型：hv_gene_selection（高变基因选择）— preprocessing / scRNA
+decision_type: hv_gene_selection
+display:
+  cn: 高变基因选择
+  en: HVG selection
+stage: preprocessing
+paradigms: [scRNA]
+dimension: method_selection
+optional: false
+aliases: []
+depends_on: [scRNA_normalization]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: n_genes
+    type: int
+    min: 0
+    required: false
+    # A2：被罚分规则（H1.1，约束 n_genes>=1000）引用 → 禁止 fail-open
+    missing: fail-closed
+  - key: n_top_genes
+    type: int
+    min: 0
+    required: false
+    missing: fail-open

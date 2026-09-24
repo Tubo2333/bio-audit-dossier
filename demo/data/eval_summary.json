@@ -1,0 +1,64 @@
+{
+  "runs": [
+    {
+      "id": "cellvoyager_g",
+      "label": "CellVoyager 真实评测（复核后重评）",
+      "trajectory_score": 30.0,
+      "eval_verdict": "needs_correction",
+      "n_decisions": 20,
+      "level_counts": {
+        "-1": 0,
+        "0": 0,
+        "1": 19,
+        "2": 0,
+        "3": 1,
+        "4": 0
+      },
+      "note": "30.0 · needs_correction（L1×19/L3×1）——复核后重评口径（windowK1_reeval.json，ruleset 1.5.0）；更早一次重评同分 30.0 但 L1×7/L3×1/L-1×12（windowG_reeval.json，ruleset 1.2.0）",
+      "cost": {
+        "amount": 2.55,
+        "currency": "CNY",
+        "caliber": "平台余额差（权威口径），预算 ¥5 内未超支",
+        "source": "评测报告 §2（余额 39.53 → 36.98）+ 其补充报告 §1"
+      },
+      "provenance": {
+        "source": "windowG_reeval.json + windowK1_reeval.json",
+        "source_sha256": "55ad1189b2124283474736d89fa9f4decd0d22ff82d97ba26227a5e6b4eb350e",
+        "generated_at": "2026-08-16T18:36:44",
+        "exported_at": "2026-09-23T04:59:51+00:00",
+        "note": "分数两版同 30.0；level 分布以复核后重评为准"
+      }
+    },
+    {
+      "id": "cellvoyager_lb",
+      "label": "CellVoyager 短评测",
+      "trajectory_score": 30.0,
+      "eval_verdict": "needs_correction",
+      "n_decisions": 5,
+      "level_counts": {
+        "1": 4,
+        "2": 1
+      },
+      "note": "30.0 · needs_correction（L1×4/L2×1，5 决策）",
+      "cost": {
+        "amount": 0.43,
+        "currency": "CNY",
+        "caliber": "平台余额差（权威口径），预算 ¥5 内未超支",
+        "source": "评测报告 §7.2（余额 22.53 → 22.10；usage 换算口径 ¥0.90 留档）"
+      },
+      "provenance": {
+        "source": "windowLb_analysis.json",
+        "source_sha256": "645c1b72d6131cb8a4fdb0d0434aa4010bb14a5e782dc6f70fd511dea0834532",
+        "generated_at": "2026-08-16T21:27:23",
+        "exported_at": "2026-09-23T04:59:51+00:00"
+      }
+    }
+  ],
+  "provenance": {
+    "source": "windowG_reeval + windowK1_reeval + windowLb_analysis",
+    "source_sha256": "645c1b72d6131cb8a4fdb0d0434aa4010bb14a5e782dc6f70fd511dea0834532",
+    "generated_at": "",
+    "exported_at": "2026-09-23T04:59:51+00:00",
+    "note": "真实评测两轮 30.0 均 needs_correction；29/30 双口径页内注释见审计工坊页"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "trajectory_id": "pan_edge_claim",
+  "act": "pan",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "pan_edge_claim.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "E4",
+      "decision_type": "independent_prognostic_claim",
+      "choice": "univariate_Cox_claiming_independent",
+      "rationale": "CSTB HR=1.38, 95%CI 1.09-1.75, p=0.008 in univariate Cox regression. This demonstrates CSTB is an independent prognostic factor for overall survival in NSCLC patients.",
+      "context": {
+        "analysis_type": "survival_analysis"
+      }
+    }
+  ]
+}

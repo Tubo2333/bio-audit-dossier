@@ -1,0 +1,23 @@
+# 决策类型：filtering（低表达基因过滤）— qc / bulk-DEG, pan-cancer
+decision_type: filtering
+display:
+  cn: 低表达基因过滤
+  en: Low-expression filtering
+stage: qc
+paradigms: [bulk-DEG, pan-cancer]
+dimension: data_handling
+optional: false
+# 同源声明（跨范式，非匹配通道）：scRNA 的 qc_filtering
+aliases: [qc_filtering]
+depends_on: []
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: n_replicates
+    type: int
+    min: 0
+    required: false
+    missing: fail-closed

@@ -1,0 +1,24 @@
+# 决策类型：multiple_testing_correction（多重检验校正）— inference / 三范式
+# 真·跨范式共享共识（BH/FDR 普适）— 共享证据块机制的样板（ontology-design-v1 §二.3）
+decision_type: multiple_testing_correction
+display:
+  cn: 多重检验校正
+  en: Multiple testing correction
+stage: inference
+paradigms: [bulk-DEG, pan-cancer, scRNA]
+dimension: statistical_rigor
+optional: false
+aliases: []
+depends_on: [deg_method]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [differential_expression, survival_analysis, immune_expression_correlation, pathway_enrichment, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（M1.2/G1.2）引用 → 禁止 fail-open
+    missing: fail-closed
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: false
+    missing: fail-closed

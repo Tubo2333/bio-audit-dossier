@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "trajectory_id": "deg_correct",
+  "act": "deg",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "deg_correct.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "s1",
+      "decision_type": "filtering",
+      "choice": "filterByExpr",
+      "rationale": "Using edgeR filterByExpr() to automatically determine data-driven filtering threshold based on experimental design and library sizes.",
+      "context": {
+        "sequencing": "bulk_RNA_seq",
+        "n_replicates": 6
+      }
+    },
+    {
+      "step_id": "s2",
+      "decision_type": "normalization",
+      "choice": "TMM",
+      "rationale": "TMM normalization as integrated with edgeR pipeline — corrects for RNA composition bias and library size.",
+      "context": {
+        "data_category": "raw_counts",
+        "sequencing": "bulk_RNA_seq"
+      }
+    },
+    {
+      "step_id": "s3",
+      "decision_type": "deg_method",
+      "choice": "DESeq2",
+      "rationale": "DESeq2 Wald test — best FDR control for bulk RNA-seq with n>=3. Verified negative binomial assumption via dispersion-mean plot.",
+      "context": {
+        "data_category": "raw_counts",
+        "sequencing": "bulk_RNA_seq",
+        "design": "simple_two_group",
+        "n_replicates": 6
+      }
+    },
+    {
+      "step_id": "s4",
+      "decision_type": "multiple_testing_correction",
+      "choice": "BH",
+      "rationale": "Benjamini-Hochberg FDR correction — standard for exploratory genomic studies with ~20,000 parallel tests.",
+      "context": {
+        "analysis_type": "differential_expression"
+      }
+    },
+    {
+      "step_id": "s5",
+      "decision_type": "significance_threshold",
+      "choice": "padj <= 0.05, |logFC| >= 1.0",
+      "rationale": "Dual threshold: FDR<0.05 for statistical significance + |logFC|>=1.0 for biological effect size. Power analysis at n=6 supports detecting logFC>=1.0 with ~80% power.",
+      "context": {
+        "analysis_type": "differential_expression",
+        "n_replicates": 6
+      }
+    }
+  ]
+}

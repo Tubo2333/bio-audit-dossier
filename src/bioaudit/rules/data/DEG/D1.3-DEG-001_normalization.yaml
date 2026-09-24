@@ -1,0 +1,90 @@
+rule_id: "D1.3-DEG-001"
+domain: "data_handling.normalization"
+status: "active"
+version: 2
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-13"  # 领域复核已定：本条规则依据全部已判定（domain_review 只表示人工/领域判断过，不表示逐条读过原文）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [2010, 2016]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "该规则所属分析家族；适用范围的正式声明待领域复核填写（本字段在家族副本之间保持一致）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "Bulk RNA-seq 归一化方法选择"
+description: >
+  选择下游 DEG 方法兼容的归一化方式。
+
+condition:
+  decision_type: "normalization"
+  required_context:
+    data_category: "raw_counts"
+    sequencing: "bulk_RNA_seq"
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+    description: "v0.2 — 由模型给出理由的评估"
+  level_3:
+    methods:
+      - "TMM"
+      - "RLE"
+      - "DESeq2_median_of_ratios"
+      - "upper_quartile"
+    description: "方法内置归一化 (edgeR TMM / DESeq2 median-of-ratios)"
+    rationale: "与下游方法原生集成，假设验证自动处理"
+  level_2:
+    methods:
+      - "TPM"
+      - "CPM_no_log"
+    note: "TPM 在 limma-trend + log-TPM 场景下可接受，但不匹配 DESeq2/edgeR 的输入要求"
+    conditions_when_acceptable: "下游方法明确接受 TPM (如 limma-trend 对 log-TPM 可用)"
+  level_1:
+    methods:
+      - "FPKM"
+      - "RPKM"
+    note: "存在已知的组成偏差 (composition bias) — Dillies et al. 2013 证实 FPKM/RPKM 在样本间比较时有偏"
+  level_0:
+    methods:
+      - "raw_counts_no_normalization"
+    note: "完全不做归一化 → 测序深度差异会主导结果"
+
+evidence:
+  - source_type: "consensus_guideline"
+    doi: "10.1186/s13059-016-0881-8"
+    pmid: "26813401"
+    title: "Conesa et al. (2016) Genome Biology — RNA-seq best practices survey"
+    confidence: "L-Consensus"
+    excerpt: "Normalization methods that account for heterogeneous transcript distributions (composition bias) include TMM, DESeq, PoissonSeq and UpperQuartile, which ignore highly variable and/or highly expressed features."
+    supports_levels: ["level_3"]
+    # 2026-09-16 收尾核查补核：原文 Normalization 一段逐字；「RLE」无字面（DESeq 方法即 RLE），措辞随原文收紧
+
+  - source_type: "benchmark_paper"
+    doi: "10.1093/bib/bbs046"
+    pmid: "22988256"
+    title: "Dillies et al. (2013) Briefings in Bioinformatics — Normalization method comparison"
+    confidence: "L-Consensus"
+    excerpt: "FPKM/RPKM do not correct for RNA composition bias and should be avoided for between-sample comparisons."
+    supports_levels: ["level_1"]
+
+  - source_type: "method_paper"
+    doi: "10.1186/gb-2010-11-3-r25"
+    pmid: "20196867"
+    title: "Robinson & Oshlack (2010) — TMM normalization"
+    confidence: "L-Consensus"
+    excerpt: "TMM normalization robustly corrects for RNA composition bias."
+    supports_levels: ["level_3"]

@@ -1,0 +1,63 @@
+rule_id: S1.3-CONS-003_trajectory_annotation
+domain: CONSISTENCY
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2019, 2019]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "轨迹推断-注释跨模块一致性 / Trajectory-Annotation consistency"
+description: "轨迹推断所基于的细胞类型必须与注释步骤(S9)中的细胞类型一致。如果注释步骤将cluster 5标注为'成纤维细胞', 但轨迹推断将其作为EMT轨迹的起点(意味着它应该是'上皮细胞'), 则存在矛盾。轨迹的起点和终点细胞类型必须在注释中得到独立验证。"
+condition:
+  decision_type: trajectory_annotation_consistency
+  required_context:
+    integration_type: cross_module
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - trajectory_annotation_validated
+      - start_end_cell_types_verified
+    description: "轨迹起点/终点细胞类型经过独立marker验证, 与注释一致"
+  level_2:
+    methods:
+      - trajectory_annotation_consistent
+    description: "轨迹使用的细胞类型与注释一致, 但未做额外验证"
+    conditions_when_acceptable: "当注释已有交叉验证时, 额外验证可省略"
+  level_1:
+    methods:
+      - annotation_mismatch_noted
+    description: "注释与轨迹所用细胞类型有差异, 已记录但未解决"
+    note: "如果轨迹说'EMT from Cluster A to Cluster B'但注释说Cluster A是免疫细胞, 存在根本矛盾"
+  level_0:
+    methods:
+      - trajectory_contradicts_annotation
+      - trajectory_on_wrong_cells
+    description: "轨迹推断使用的细胞类型与注释冲突且未解释 — 结论无效"
+    rationale: "EMT轨迹只能在同谱系细胞间有意义; 跨谱系'伪轨迹'是技术伪迹"
+
+evidence: []   # 2026-09-16 收尾核查补核（窗口自查原文）：Luecken & Theis 2019 无「轨迹起点/终点须与注释细胞类型一致」主张（start/end 表述 0 命中；最邻近为 pseudotime 与 root cell 转录距离的语境，不等价）→ 删槽位；Saelens 2019 亦无（前批已删）→ 本主张为规则自身综合（轨迹-注释跨模块一致性检查属审计设计，非文献命题）
+conflicts_with: []

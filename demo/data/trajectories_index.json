@@ -1,0 +1,172 @@
+{
+  "n_trajectories": 20,
+  "trajectories": [
+    {
+      "trajectory_id": "deg_correct",
+      "act": "deg",
+      "n_decisions": 5,
+      "golden_score": 85.0,
+      "golden_verdict": "pass",
+      "source_file": "deg_correct.json"
+    },
+    {
+      "trajectory_id": "deg_edge_n2",
+      "act": "deg",
+      "n_decisions": 1,
+      "golden_score": 0.0,
+      "golden_verdict": "blocked",
+      "source_file": "deg_edge_n2.json"
+    },
+    {
+      "trajectory_id": "deg_edge_nofilter",
+      "act": "deg",
+      "n_decisions": 3,
+      "golden_score": 15.0,
+      "golden_verdict": "blocked",
+      "source_file": "deg_edge_nofilter.json"
+    },
+    {
+      "trajectory_id": "deg_error",
+      "act": "deg",
+      "n_decisions": 5,
+      "golden_score": 15.0,
+      "golden_verdict": "blocked",
+      "source_file": "deg_error.json"
+    },
+    {
+      "trajectory_id": "pan_correct",
+      "act": "pan",
+      "n_decisions": 16,
+      "golden_score": 85.0,
+      "golden_verdict": "pass",
+      "source_file": "pan_correct.json"
+    },
+    {
+      "trajectory_id": "pan_edge_claim",
+      "act": "pan",
+      "n_decisions": 1,
+      "golden_score": 0.0,
+      "golden_verdict": "blocked",
+      "source_file": "pan_edge_claim.json"
+    },
+    {
+      "trajectory_id": "pan_edge_consistency",
+      "act": "pan",
+      "n_decisions": 1,
+      "golden_score": 30.0,
+      "golden_verdict": "needs_correction",
+      "source_file": "pan_edge_consistency.json"
+    },
+    {
+      "trajectory_id": "pan_edge_epv",
+      "act": "pan",
+      "n_decisions": 1,
+      "golden_score": 0.0,
+      "golden_verdict": "blocked",
+      "source_file": "pan_edge_epv.json"
+    },
+    {
+      "trajectory_id": "pan_edge_purity",
+      "act": "pan",
+      "n_decisions": 1,
+      "golden_score": 0.0,
+      "golden_verdict": "blocked",
+      "source_file": "pan_edge_purity.json"
+    },
+    {
+      "trajectory_id": "pan_error",
+      "act": "pan",
+      "n_decisions": 16,
+      "golden_score": 15.0,
+      "golden_verdict": "blocked",
+      "source_file": "pan_error.json"
+    },
+    {
+      "trajectory_id": "scrna_correct",
+      "act": "scrna",
+      "n_decisions": 12,
+      "golden_score": 85.0,
+      "golden_verdict": "pass",
+      "source_file": "scrna_correct.json"
+    },
+    {
+      "trajectory_id": "scrna_crc_correct",
+      "act": "scrna",
+      "n_decisions": 12,
+      "golden_score": 85.0,
+      "golden_verdict": "pass",
+      "source_file": "scrna_crc_correct.json"
+    },
+    {
+      "trajectory_id": "scrna_crc_error",
+      "act": "scrna",
+      "n_decisions": 12,
+      "golden_score": 29.0,
+      "golden_verdict": "blocked",
+      "source_file": "scrna_crc_error.json"
+    },
+    {
+      "trajectory_id": "scrna_edge_default",
+      "act": "scrna",
+      "n_decisions": 1,
+      "golden_score": 30.0,
+      "golden_verdict": "needs_correction",
+      "source_file": "scrna_edge_default.json"
+    },
+    {
+      "trajectory_id": "scrna_edge_nodoublet",
+      "act": "scrna",
+      "n_decisions": 1,
+      "golden_score": 0.0,
+      "golden_verdict": "blocked",
+      "source_file": "scrna_edge_nodoublet.json"
+    },
+    {
+      "trajectory_id": "scrna_edge_singleanno",
+      "act": "scrna",
+      "n_decisions": 1,
+      "golden_score": 60.0,
+      "golden_verdict": "pass",
+      "source_file": "scrna_edge_singleanno.json"
+    },
+    {
+      "trajectory_id": "scrna_error",
+      "act": "scrna",
+      "n_decisions": 12,
+      "golden_score": 40.0,
+      "golden_verdict": "blocked",
+      "source_file": "scrna_error.json"
+    },
+    {
+      "trajectory_id": "scrna_melanoma_cellvoyager",
+      "act": "scrna",
+      "n_decisions": 12,
+      "golden_score": 29.0,
+      "golden_verdict": "blocked",
+      "source_file": "scrna_melanoma_cellvoyager.json"
+    },
+    {
+      "trajectory_id": "scrna_melanoma_correct",
+      "act": "scrna",
+      "n_decisions": 12,
+      "golden_score": 85.0,
+      "golden_verdict": "pass",
+      "source_file": "scrna_melanoma_correct.json"
+    },
+    {
+      "trajectory_id": "scrna_nsclc_correct",
+      "act": "scrna",
+      "n_decisions": 12,
+      "golden_score": 85.0,
+      "golden_verdict": "pass",
+      "source_file": "scrna_nsclc_correct.json"
+    }
+  ],
+  "provenance": {
+    "source": "golden_expected_output_after.json + trajectories/v2",
+    "source_sha256": "932d53e12e06f17e336b3f7a1add9f235296b48265cfcaa992d69d680bd89716",
+    "generated_at": "",
+    "exported_at": "2026-09-23T04:59:54+00:00",
+    "note": "分数/verdict 来自 golden 基线（当前引擎实测，golden 0 差异）；轨迹本体运行时读 bioaudit 包内 v2 目录"
+  }
+}

@@ -1,0 +1,32 @@
+{"task_id": "bmd_deg_002", "step_id": "s1", "label": "edge", "note": "跳过显式预过滤可依赖 DESeq2 内置 independent filtering 部分补偿，属可辩护但非最优（理由中『最大化发现能力』为误解，但不构成方法错误）。"}
+{"task_id": "bmd_deg_003", "step_id": "s2", "label": "correct", "note": "TMM 作为 edgeR 管线内建归一化是 bulk counts 的主流标准做法，rationale 与工具链匹配，无失真风险。"}
+{"task_id": "bmd_deg_008", "step_id": "s5", "label": "correct", "note": "放宽阈值（padj≤0.1, |logFC|≥0.5）明确用于候选筛选并计划后续验证，是常见的探索性设计，不构成结论失真。"}
+{"task_id": "bmd_pan_001", "step_id": "D2", "label": "edge", "note": "TMM 本身是主流归一化，但 rationale 声称『适用于 DESeq2 下游』存在工具链混淆（DESeq2 自行估计 size factors、需原始 counts），联用冗余，可辩护但非最优。"}
+{"task_id": "bmd_pan_002", "step_id": "D2", "label": "edge", "note": "TMM 选择本身标准，但与 DESeq2 联用冗余/不匹配（DESeq2 需原始 counts 自行归一化），做法可辩护但概念不够严谨。"}
+{"task_id": "bmd_pan_003", "step_id": "D12", "label": "correct", "note": "以实际表达基因集（约 13.8K）作 GSEA 背景、避免未检测基因稀释富集零分布，是规范做法。"}
+{"task_id": "bmd_pan_003", "step_id": "D13", "label": "correct", "note": "对 236 条通路做 BH FDR 多重检验校正正是标准做法；A 的 note 实际支持校正、与其 error 标签自相矛盾，以 choice 与 rubric 为准判 correct。"}
+{"task_id": "bmd_pan_003", "step_id": "D2", "label": "edge", "note": "TMM 本身主流，但 rationale 与 DESeq2 输入混用、工具链概念不清，可辩护但非最优。"}
+{"task_id": "bmd_pan_003", "step_id": "D9", "label": "correct", "note": "选择 DETAILED 投影确保完整基因符号、规避 SUMMARY 模式返回 '?' 的已知问题，是稳健正确的 API 参数选择。"}
+{"task_id": "bmd_pan_004", "step_id": "D2", "label": "edge", "note": "TMM 本身标准，但与 DESeq2 联用冗余（DESeq2 需原始 counts 并自行归一化），edge。"}
+{"task_id": "bmd_pan_005", "step_id": "A1", "label": "edge", "note": "表达方向与保护性 HR 矛盾未讨论属报告/解释不足而非方法本身错误；仅当据此下促癌结论才会失真，本步保守判 edge。"}
+{"task_id": "bmd_pan_005", "step_id": "D2", "label": "edge", "note": "TMM 本身主流但与 DESeq2 联用冗余/不匹配，可辩护但非最优。"}
+{"task_id": "bmd_pan_006", "step_id": "D2", "label": "edge", "note": "TMM 对 bulk counts 标准，但 rationale 与 DESeq2 输入混用，工具链概念不清，edge。"}
+{"task_id": "bmd_pan_006", "step_id": "D9", "label": "error", "note": "已知 SUMMARY 投影会返回 '?'/不完整基因符号（同任务族 D9 已用 DETAILED 规避），为省流量选 SUMMARY 会导致基因级投影静默失败、下游关联分析失真。"}
+{"task_id": "bmd_pan_007", "step_id": "D15", "label": "edge", "note": "表达-生存方向矛盾未讨论属解释/报告不足而非方法错误，结论失真与否取决于最终论断，保守判 edge。"}
+{"task_id": "bmd_pan_007", "step_id": "D2", "label": "edge", "note": "TMM 本身主流但与 DESeq2 联用冗余/不匹配，edge。"}
+{"task_id": "bmd_pan_008", "step_id": "D2", "label": "edge", "note": "TMM 对 bulk counts 主流，但与 DESeq2 搭配时需注意 DESeq2 自带尺寸因子，联用冗余，edge。"}
+{"task_id": "bmd_pan_009", "step_id": "D16", "label": "edge", "note": "免疫-表达方向矛盾未讨论属报告不足而非方法错误，保守判 edge。"}
+{"task_id": "bmd_pan_009", "step_id": "D2", "label": "edge", "note": "TMM 本身主流但与 DESeq2 联用冗余/不匹配，edge。"}
+{"task_id": "bmd_pan_010", "step_id": "D11", "label": "edge", "note": "显式将肿瘤纯度声明为局限优于无视，但已知强混杂未在相关分析中校正仍可能影响结果，属可辩护但非最优。"}
+{"task_id": "bmd_pan_010", "step_id": "D5", "label": "correct", "note": "放宽阈值做候选筛选并计划外部验证是合理的探索性设计，不构成失真。"}
+{"task_id": "bmd_scrna_001", "step_id": "S1", "label": "correct", "note": "数据完整性校验是标准前置步骤；rationale 中 GSE131907 与 context GSE149614 不一致为模板笔误（同一文本复现于多任务），不构成方法错误。"}
+{"task_id": "bmd_scrna_002", "step_id": "S1", "label": "correct", "note": "校验做法标准；数据集号不一致（GSE131907 vs GSE115978）属 rationale 笔误，按规则不应判 error。"}
+{"task_id": "bmd_scrna_002", "step_id": "S10", "label": "correct", "note": "多患者（11 例）scRNA DEG 用患者级 pseudobulk+DESeq2 是标准做法、避免伪重复；B 的 note 描述的是『细胞级 Wilcoxon』与本步 choice 不符，以 choice 为准。"}
+{"task_id": "bmd_scrna_002", "step_id": "S3", "label": "edge", "note": "85K 细胞跳过双细胞去除可辩护（下游为患者级 pseudobulk DEG、影响有限）但非最优，『<5%』无依据，保守判 edge。"}
+{"task_id": "bmd_scrna_004", "step_id": "S1", "label": "correct", "note": "数据完整性校验是标准前置步骤；GSE 号不一致（GSE131907 vs GSE132465）为模板笔误，不判 error。"}
+{"task_id": "bmd_scrna_006", "step_id": "A1", "label": "edge", "note": "固定 25% mito 阈值偏高但属常见默认（肿瘤数据常用 20-25%），自适应/knee-point 更优，可辩护但非最优。"}
+{"task_id": "bmd_scrna_006", "step_id": "A8", "label": "correct", "note": "分辨率 0.8 是 Seurat 常用默认，本步选择标准可接受；与 S8 的 1.2 出入属轨迹内不一致，按『只评本步』不牵连。"}
+{"task_id": "bmd_scrna_006", "step_id": "S12", "label": "correct", "note": "双方法注释一致性核查（CellTypist+SingleR、marker dotplot）是标准做法；B 指出的 S9 内部不一致属轨迹层面问题，不牵连本步。"}
+{"task_id": "bmd_scrna_007", "step_id": "S10", "label": "edge", "note": "细胞级 K-W 比较细胞周期阶段属样本内探索性比较、文献常见，但 12 例患者细胞非独立存在伪重复、显著性强膨胀，可辩护但非最优（两标注者置信度均低，保守取 edge）。"}
+{"task_id": "bmd_scrna_008", "step_id": "S1", "label": "correct", "note": "数据完整性校验是标准前置步骤；GSE 号不一致（GSE131907 vs GSE149614）为模板笔误，不判 error。"}
+{"task_id": "bmd_scrna_008", "step_id": "S12", "label": "correct", "note": "注释一致性核查（41 亚簇映射 8 大细胞类型）是标准做法；B 的轨迹内不一致指控属跨步牵连，本步选择正确。"}

@@ -1,0 +1,22 @@
+# bio-audit 开发/验证依赖锁（B6-3，2026-08-14）
+# 生成：pip-compile pyproject.toml -o requirements-dev.lock --extra dev --extra scripts \
+#       -c <numpy<2.3, scipy<1.16 约束> --no-annotate --no-header
+# 解析目标：Python >= 3.10（numpy 2.2.6 / scipy 1.15.3 为支持 3.10 的版本线）
+# 说明：UI extra（streamlit）未入锁——CI 不安装 UI；如需要可另行
+#       pip-compile --extra ui 生成 ui.lock（streamlit 依赖树较大，勿并入 CI 锁）。
+# 用法：pip install -r requirements.lock -r requirements-dev.lock
+annotated-types==0.8.0
+colorama==0.4.6
+iniconfig==2.3.0
+numpy==2.2.6
+packaging==26.3
+pluggy==1.6.0
+pydantic==2.13.4
+pydantic-core==2.46.4
+pygments==2.20.0
+pytest==9.1.1
+pyyaml==6.0.3
+ruff==0.16.3
+scipy==1.15.3
+typing-extensions==4.16.0
+typing-inspection==0.4.4

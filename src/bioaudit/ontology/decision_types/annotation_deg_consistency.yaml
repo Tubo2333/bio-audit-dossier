@@ -1,0 +1,21 @@
+# 决策类型：annotation_deg_consistency（注释-DEG 一致性）— conclusion / scRNA
+# 一致性族（L4 概念）成员：联合上游决策评分（G1 internal_ref）
+decision_type: annotation_deg_consistency
+display:
+  cn: 注释与差异分析一致性
+  en: Annotation-DEG consistency
+stage: conclusion
+paradigms: [scRNA]
+dimension: method_selection
+optional: true
+when_not_applicable: claim_not_made
+aliases: []
+depends_on: [annotation_method, deg_method]
+internal_ref: [annotation_method, deg_method]
+context_schema:
+  - key: integration_type
+    type: enum
+    values: [cross_module]
+    required: true
+    # A2：被罚分规则（S1.2）引用 → 禁止 fail-open
+    missing: fail-closed

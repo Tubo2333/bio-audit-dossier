@@ -1,0 +1,141 @@
+{
+  "ok": true,
+  "variant": "B",
+  "session_id": "golden_winI_B_20260816",
+  "generated_at": "2026-08-16T01:02:54",
+  "expected_types": null,
+  "cross_validate": {
+    "stats": {
+      "consistent": 10,
+      "false_positive": 0,
+      "false_negative": 0,
+      "unverified": 0
+    },
+    "n_added": 0
+  },
+  "final_trajectory": {
+    "n_decisions": 10,
+    "decision_types": null
+  },
+  "audit": {
+    "trajectory_score": 63.0,
+    "eval_verdict": "blocked",
+    "dimension_scores": {
+      "method_selection": 0.63,
+      "data_handling": 0.85,
+      "statistical_rigor": 0.85
+    },
+    "critical_issues": [
+      "[Level 0] Step deg_method: wilcoxon_rank_sum — 危险 — 方法选择将导致错误结论"
+    ],
+    "per_decision": [
+      {
+        "step_id": "annotation_method",
+        "decision_type": "annotation_method",
+        "choice": "CellTypist",
+        "level": 2,
+        "matched_rules": [
+          "A1.1-ANNO-001_method"
+        ],
+        "explanation": "可接受 — 有微小瑕疵"
+      },
+      {
+        "step_id": "batch_correction",
+        "decision_type": "batch_correction",
+        "choice": "Harmony",
+        "level": 3,
+        "matched_rules": [
+          "B1.1-BATC-001_integration",
+          "B1.2-BATC-002_requirement"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "clustering_method",
+        "decision_type": "clustering_method",
+        "choice": "Leiden",
+        "level": 3,
+        "matched_rules": [
+          "C1.1-CLUS-001_method"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "deg_method",
+        "decision_type": "deg_method",
+        "choice": "wilcoxon_rank_sum",
+        "level": 0,
+        "matched_rules": [
+          "G1.1-DEG-001_pseudobulk",
+          "G1.3-DEG-003_method"
+        ],
+        "explanation": "危险 — 方法选择将导致错误结论"
+      },
+      {
+        "step_id": "dim_reduction",
+        "decision_type": "dim_reduction",
+        "choice": "PCA_elbow_selection",
+        "level": 3,
+        "matched_rules": [
+          "D2.1-DIMR-001_reduction"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "hv_gene_selection",
+        "decision_type": "hv_gene_selection",
+        "choice": "vst",
+        "level": 3,
+        "matched_rules": [
+          "H1.1-HVG-001"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "multiple_testing_correction",
+        "decision_type": "multiple_testing_correction",
+        "choice": "BH",
+        "level": 3,
+        "matched_rules": [
+          "G1.2-DEG-002_multiple_testing"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "qc_filtering",
+        "decision_type": "qc_filtering",
+        "choice": "MAD5_adaptive_threshold",
+        "level": 3,
+        "matched_rules": [
+          "Q1.1-QC-001"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "scRNA_normalization",
+        "decision_type": "scRNA_normalization",
+        "choice": "SCTransform",
+        "level": 3,
+        "matched_rules": [
+          "N1.1-NORM-001"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "significance_threshold",
+        "decision_type": "significance_threshold",
+        "choice": "padj <= 0.05, |logFC| >= 1.0",
+        "level": -1,
+        "matched_rules": [],
+        "explanation": "无法评估 — 没有适用的规则。此分数为占位值，不可作为质量判断依据。"
+      }
+    ]
+  },
+  "provenance": {
+    "source": "windowI_B.json",
+    "source_sha256": "817df161c001047438c43658252af30cf8337d24f363ec864bcef3b100ab88db",
+    "generated_at": "2026-08-16T01:02:54",
+    "exported_at": "2026-09-23T04:59:54+00:00",
+    "note": "采集链路断言基准提炼副本（63.7 复现链路说明 §6；断言读本副本）"
+  }
+}

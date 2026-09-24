@@ -1,0 +1,82 @@
+rule_id: N1.1-NORM-001
+domain: NORM
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2016, 2019]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "单细胞 RNA-seq 归一化方法 / scRNA-seq normalization method"
+description: "单细胞归一化必须在方差稳定化和生物学变异保留之间平衡。SCTransform (Hafemeister & Satija 2019) 使用正则化负二项回归, 优于 LogNormalize 因为它消除了技术变异与基因丰度的相关性。scran 的池化反卷积是内存高效的替代方案。"
+condition:
+  decision_type: scRNA_normalization
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+    data_category: [umi_counts, raw_counts]
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - SCTransform
+      - sctransform
+    description: "SCTransform — 正则化负二项回归, 方差稳定化最佳"
+    rationale: "消除技术变异(测序深度)与基因丰度的相关性, 保留生物学异质性"
+  level_2:
+    methods:
+      - scran
+      - scran_norm
+    description: "scran 池化反卷积 — 对大型数据集内存效率更高"
+    conditions_when_acceptable: "当数据集非常大(>100K cells)时, scran比SCTransform更快"
+  level_1:
+    methods:
+      - LogNormalize
+      - lognormalize
+    description: "LogNormalize — 经典方法但有已知缺陷"
+    note: "LogNormalize(CPM+log1p)不消除技术变异-基因丰度相关性, 可能导致假阳性DEG"
+    conditions_when_acceptable: "仅当分析目标为探索性可视化且后续用非参数方法"
+  level_0:
+    methods:
+      - no_normalization
+      - raw_counts
+      - TPM_norm
+    description: "无归一化或bulk RNA-seq归一化方法 — 单细胞数据特性不匹配"
+    rationale: "单细胞UMI counts与bulk counts的分布特性不同, bulk方法不适用"
+
+evidence:
+  - source_type: method_paper
+    pmid: "31870423"
+    title: "Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology"
+    confidence: L-Confirmed
+    excerpt: "SCTransform outperforms log-normalization for variance stabilization in scRNA-seq data."
+    supports_levels: ["level_3"]
+  - source_type: method_paper
+    pmid: "27122128"
+    doi: "10.1186/s13059-016-0947-7"
+    title: "Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology"
+    confidence: L-Confirmed
+    excerpt: "scran pooling-based size factor estimation provides robust normalization for scRNA-seq."
+    supports_levels: ["level_2"]
+conflicts_with: []

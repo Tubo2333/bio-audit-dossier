@@ -1,0 +1,18 @@
+{
+  "n_tests": 848,
+  "note": "pytest --collect-only -q 实测（本机 .[dev,a1] 口径；CI 的 .[demo] 环境为 838，差额即 flask 门）",
+  "ci_matrix": "Python 3.10 / 3.12 双矩阵（pytest 全量 + golden 重放 + 三/四/五闸 + reward-validate；.github/workflows/ci.yml）",
+  "ci_matrix_versions": [
+    "3.10",
+    "3.12"
+  ],
+  "golden": "20 轨迹 137 决策重放 0 差异（tests/golden/golden_expected_output_after.json 冻结基线；提交级守卫）",
+  "golden_diff": 0,
+  "provenance": {
+    "source": "pytest --collect-only -q + ci.yml + golden 基线",
+    "source_sha256": "932d53e12e06f17e336b3f7a1add9f235296b48265cfcaa992d69d680bd89716",
+    "generated_at": "",
+    "exported_at": "2026-09-23T04:59:54+00:00",
+    "note": "工程数字提炼；n_tests 与 pytest 实跑同源；ci_matrix_versions 读 ci.yml 锚点"
+  }
+}

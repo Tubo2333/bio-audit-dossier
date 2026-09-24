@@ -1,0 +1,86 @@
+[
+  {
+    "step_id": "S1",
+    "decision_type": "api_data_integrity",
+    "choice": "DETAILED_with_validation",
+    "rationale": "GSE132465 CRC raw UMI matrix loaded: 63,689 cells. Cell barcodes and metadata verified against GEO entry.",
+    "context": {"data_source": "GEO", "data_format": "h5ad", "n_cells": 63689}
+  },
+  {
+    "step_id": "S2",
+    "decision_type": "qc_filtering",
+    "choice": "hard_threshold",
+    "rationale": "Fixed QC thresholds: min_genes=200, min_cells=3, max_mito=25%. Simple and reproducible — widely used in published CRC studies.",
+    "context": {"sequencing": "10X_scRNA_seq", "n_cells": 63689}
+  },
+  {
+    "step_id": "S3",
+    "decision_type": "doublet_detection",
+    "choice": "no_doublet_detection",
+    "rationale": "Doublet rate estimated below 5% at 63K cells. Doublet removal risks eliminating rare cell doublets that may represent biologically meaningful co-expression patterns (e.g. T cell-tumor cell interactions). Skipping to preserve all cells.",
+    "context": {"sequencing": "10X_scRNA_seq", "n_cells": 63689}
+  },
+  {
+    "step_id": "S4",
+    "decision_type": "scRNA_normalization",
+    "choice": "LogNormalize",
+    "rationale": "LogNormalize (log(CPM+1)) — the most widely used scRNA normalization in published CRC studies. Simpler and faster than SCTransform, sufficient for exploratory immune profiling.",
+    "context": {"sequencing": "10X_scRNA_seq", "data_category": "umi_counts"}
+  },
+  {
+    "step_id": "S5",
+    "decision_type": "hv_gene_selection",
+    "choice": "vst",
+    "rationale": "VST selected 3,000 HVGs for downstream clustering.",
+    "context": {"sequencing": "10X_scRNA_seq", "n_genes": 25655}
+  },
+  {
+    "step_id": "S6",
+    "decision_type": "batch_correction",
+    "choice": "no_integration",
+    "rationale": "10 patients analyzed together without explicit batch correction. Biological differences (tumor vs normal, patient-specific immune profiles) are the primary signals of interest — integration might over-correct these genuine biological variations.",
+    "context": {"sequencing": "10X_scRNA_seq", "has_batch": true, "n_patients": 10}
+  },
+  {
+    "step_id": "S7",
+    "decision_type": "dim_reduction",
+    "choice": "PCA_elbow_selection",
+    "rationale": "Elbow method selected 30 PCs.",
+    "context": {"sequencing": "10X_scRNA_seq", "method": "PCA"}
+  },
+  {
+    "step_id": "S8",
+    "decision_type": "clustering_method",
+    "choice": "Leiden",
+    "rationale": "Leiden algorithm — standard for graph-based scRNA clustering.",
+    "context": {"sequencing": "10X_scRNA_seq", "graph_type": "SNN"}
+  },
+  {
+    "step_id": "S9",
+    "decision_type": "annotation_method",
+    "choice": "manual_marker",
+    "rationale": "Manual marker-based annotation using canonical CRC markers: EPCAM (epithelial), CD3D (T cells), CD19 (B cells), CD14 (myeloid), COL1A1 (fibroblasts). More intuitive and controllable — automated methods may misclassify CRC-specific cell states.",
+    "context": {"sequencing": "10X_scRNA_seq"}
+  },
+  {
+    "step_id": "S10",
+    "decision_type": "deg_method",
+    "choice": "wilcoxon_rank_sum",
+    "rationale": "Seurat FindMarkers default Wilcoxon rank-sum test. Cell-level DEG is standard in CRC scRNA-seq literature — widely validated and computationally efficient for 63K cells.",
+    "context": {"sequencing": "10X_scRNA_seq", "n_patients": 10, "pseudobulk": false}
+  },
+  {
+    "step_id": "S11",
+    "decision_type": "trajectory_inference",
+    "choice": "monocle3",
+    "rationale": "monocle3 trajectory inference on Epithelial cells.",
+    "context": {"sequencing": "10X_scRNA_seq", "cell_type": "Epithelial"}
+  },
+  {
+    "step_id": "S12",
+    "decision_type": "cluster_annotation_consistency",
+    "choice": "not_checked",
+    "rationale": "Each module (clustering, annotation, DEG) analyzed independently. Results reported in separate sections — cross-module consistency check deferred to discussion.",
+    "context": {"integration_type": "cross_module"}
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "trajectory_id": "scrna_edge_nodoublet",
+  "act": "scrna",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "scrna_edge_nodoublet.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "E7",
+      "decision_type": "doublet_detection",
+      "choice": "no_doublet_detection",
+      "rationale": "The estimated doublet rate for this 10X dataset (~8,500 cells) is under 3%. At this low rate, doublets are unlikely to form distinct clusters or significantly affect downstream DEG results. We skip doublet detection to save computation time and avoid accidentally removing rare cell types that may resemble doublet profiles.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 8500
+      }
+    }
+  ]
+}

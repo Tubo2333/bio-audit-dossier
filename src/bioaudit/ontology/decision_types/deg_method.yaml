@@ -1,0 +1,54 @@
+# 决策类型：deg_method（差异分析方法）— inference / 三范式（样板，ontology-design-v1 §三）
+decision_type: deg_method
+display:
+  cn: 差异分析方法
+  en: DEG method
+stage: inference
+paradigms: [bulk-DEG, pan-cancer, scRNA]
+dimension: method_selection
+optional: false
+# 同名异构：scRNA 为 pseudobulk 体系，共识不同 → 不声明 aliases，仅同源注释
+# （ontology-design-v1 §二.2 / diagrams §图 2 虚线）
+aliases: []
+homology_note: "scRNA 同名异构（pseudobulk 体系），共识不同，不声明 aliases"
+# 错误传播依赖（error_tracer 数据源）：范式有效子集
+#   bulk-DEG / pan-cancer → [filtering, normalization]
+#   scRNA                → [qc_filtering, scRNA_normalization, batch_correction]
+depends_on: [filtering, normalization, qc_filtering, scRNA_normalization, batch_correction]
+context_schema:
+  - key: data_category
+    type: enum
+    values: [raw_counts, tpm, fpkm, rpkm, normalized_counts, umi_counts]
+    required: true
+    missing: fail-closed
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: design
+    type: enum
+    values: [simple_two_group, paired, multi_factor]
+    required: false
+    # A4 裁决（v1.1）：paired 误用是最常见严重 DEG 错误 → 必须 fail-closed（样板原 skip 已改）
+    missing: fail-closed
+  - key: n_replicates
+    type: int
+    min: 0
+    required: false
+    missing: fail-closed
+  - key: n_patients
+    type: int
+    min: 0
+    required: false
+    missing: fail-closed
+  - key: pseudobulk
+    type: bool
+    required: false
+    missing: fail-open
+  # G3 裁决（v1.1）：分析单位（生物学/技术重复、cell/sample）— scRNA 伪重复判定的根
+  - key: unit
+    type: enum
+    values: [cell, sample, pseudobulk, biological_replicate, technical_replicate]
+    required: false
+    missing: fail-closed

@@ -1,0 +1,96 @@
+rule_id: I4.1-IMMU-001_scRNA_correlation_method
+domain: IMMUNE
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正）；**未决 1 条**：Kowalski 1972 无持久标识（原 PMID 指错 → 置 null），按口径登记「未核对」挂账
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [1999, 2026]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "单细胞免疫-表达相关性方法（scRNA）/ scRNA immune-expression correlation method"
+description: "scRNA 版免疫浸润评分与基因表达的相关性检验（既往裁定）。两个独立风险轴：① 方法选择轴——Pearson 要求双变量正态（免疫评分与基因表达常非正态），Spearman 秩相关更稳健；② 单位轴——细胞级相关性检验把每个细胞当作独立观察（伪重复），与 G1.1-DEG-001 同原则：细胞级 = L1 有风险（Squair 2021 证伪重复使 FPR 膨胀）。范式隔离各自锚定：本规则为 scRNA 范式独立词表，与 pan 范式 I4.1-IMMU-001 不共享评级（决策类型本体 paradigms 扩至 [pan-cancer, scRNA]）。"
+condition:
+  decision_type: immune_correlation_method
+  # G1.4 先例：M3 签名对 immune_correlation_method 只产出 choice（无 analysis_type/sequencing
+  # 等事实 context），故以 decision_type 为唯一门 + per-paradigm registry 隔离（与 pan I4.1 不冲突）。
+  required_context: {}
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - Spearman_on_samples
+      - Spearman_sample_level
+      - Spearman_patient_level
+      - Kendall_tau_on_samples
+    description: "样本/患者级秩相关 — 细胞先聚合到样本单位再检验，无伪重复"
+    rationale: "Spearman 秩相关不要求正态假设、对离群值稳健，适合免疫评分-基因表达关联分析；且以样本/患者为观察单位，正确处理细胞间非独立性 (Hollander & Wolfe 1999; Squair et al. 2021)"
+  level_2:
+    methods:
+      - Pearson_with_normality_test
+      - Pearson_after_transformation
+    description: "Pearson 但先检验正态性（样本级）— 可接受但需证明"
+    note: "如 Shapiro-Wilk 或 QQ 图确认双变量正态，或 Box-Cox 变换后正态，Pearson 可以使用；仍须以样本/患者为单位"
+  level_1:
+    methods:
+      - Spearman
+      - Spearman_rank_correlation
+      - rank_correlation
+      - Kendall_tau
+      - Spearman_cell_level
+      - Kendall_cell_level
+      - Pearson_cell_level
+      - Pearson_default
+      - Pearson_no_normality_check
+    description: "细胞级相关性检验（伪重复）或 Pearson 未检验正态性 — 有风险"
+    note: "① 细胞级相关性检验把细胞当独立观察 = 伪重复，与 G1.1 同原则（Squair 2021 PMID 34584091：细胞级检验假阳性膨胀）→ L1；② scRNA 范式下 choice 未声明样本单位（unit 缺失）时按保守默认细胞级处理——裸 Spearman/Kendall 评 L1（样本级使用需显式 choice 后缀如 Spearman_on_samples 或 unit 上下文）；③ Pearson 未检验正态性 → p 值不可靠（Kowalski 1972）→ L1；④ 方向检验语义：单侧检验需先验方向假设，双侧默认"
+  level_0:
+    methods:
+      - Pearson_on_clearly_non_normal
+      - linear_regression_R2_on_ranks
+    description: "已知非正态仍用 Pearson（且未聚合到样本单位）— 结论不可靠"
+
+evidence:
+  - source_type: benchmark_paper
+    pmid: "34584091"
+    doi: "10.1038/s41467-021-25960-2"
+    title: "Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications"
+    confidence: L-Confirmed
+    excerpt: "Statistical methods for differential expression must account for the intrinsic variability of biological replicates; failing to account for biological replicates causes single-cell methods to systematically underestimate the variance of gene expression."
+    supports_levels: ["level_3", "level_1"]
+    # 2026-09-16 收尾核对（窗口自查原文）：该文 Results「DE analysis of single-cell data must account for biological replicates」节逐字；「pseudoreplication」一词正文未出现（仅见于参考文献题名）→ 去掉该词与「patient/sample」措辞
+  - source_type: method_paper
+    doi: "10.1002/9781119196037"
+    url: "https://onlinelibrary.wiley.com/doi/book/10.1002/9781119196037"
+    title: "Nonparametric Statistical Methods (3rd ed.) — Hollander, Wolfe & Chicken 2014, Wiley"   # 2026-09-14 处置：原「3rd ed. — 1999」自相矛盾（第 3 版 2014，1999 是第 2 版）；现改挂现行第 3 版并补 DOI/URL（教科书无 PMID 属正常）
+    confidence: L-Confirmed
+    excerpt: "Spearman rank correlation is robust to non-normality and outliers, making it preferred for non-normal biological data."
+    supports_levels: ["level_3"]
+  - source_type: method_paper
+    pmid: null   # 2026-09-15 事实核查：原 PMID 5043289 指向 Dermatol Monatsschr 1972（德文，灰黄霉素皮疹）；该文按标题在 PubMed 检索 0 命中 → 置 null 挂账（见 DP-scRNA-REVIEW-WORKSHEET.md #35；与 pancancer 族同款处置）
+    title: "The effects of nonnormality on the product moment correlation coefficient — Kowalski 1972, Biometrika"
+    confidence: L-Consensus
+    excerpt: "Pearson correlation p-values are unreliable when the bivariate normality assumption is violated."
+    supports_levels: ["level_1", "level_0"]
+conflicts_with: []

@@ -1,0 +1,80 @@
+rule_id: H1.1-HVG-001
+domain: HVG
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2015, 2019]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "高变基因选择方法 / HVG selection method"
+description: "高变基因(HVG)选择是降维和聚类的前置步骤。Seurat 的 HVG 选择基于方差-均值关系：Satija 2015 用 mean+dispersion 分箱 z 检验；variance-stabilizing 变换（VST）为 SCTransform 的 Pearson 残差方案（Hafemeister & Satija 2019）。HVG数量通常建议2000-3000。"
+condition:
+  decision_type: hv_gene_selection
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+  forbidden_context: {}
+  context_constraints:
+    - "n_genes >= 1000"
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - vst
+      - seurat_vst
+    description: "VST — 方差稳定化变换, 最广泛应用于scRNA-seq"
+    rationale: "Seurat默认方法, 经广泛验证, 稳健性好"
+  level_2:
+    methods:
+      - dispersion
+      - mean_var_plot
+    description: "Dispersion/mean.var.plot — 经典方法, 选择基因可能偏向高表达基因"
+    conditions_when_acceptable: "当使用旧版Seurat或需要与历史结果对比时"
+  level_1:
+    methods:
+      - top_n_variable
+      - sd_based
+    description: "简单方差/标准差排序 — 不考虑均值-方差关系"
+    note: "SD-based选择偏向高表达基因, 可能遗漏在低表达范围有生物学意义的基因"
+  level_0:
+    methods:
+      - no_hvg_selection
+      - all_genes
+    description: "无HVG选择 — 使用全部基因降维会引入噪声, 稀释生物学信号"
+
+evidence:
+  - source_type: method_paper
+    pmid: "25867923"
+    doi: "10.1038/nbt.3192"
+    title: "Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology"
+    confidence: L-Confirmed
+    excerpt: "Seurat identified highly variable genes by calculating the mean and a dispersion measure (variance/mean) for each gene, placing genes into 20 bins based on average expression, and z-scoring the dispersion within each bin (cutoff z > 2)."
+    supports_levels: ["level_3"]
+    # 2026-09-16 收尾核对（窗口自查原文）：Satija 2015 Methods 逐字；全文（含官方补充材料）VST / variance-stabiliz* 0 命中（VST 系 Hafemeister 2019 引入的说法）→ 换为该文实际做法
+  - source_type: benchmark_paper
+    pmid: "31870423"
+    title: "Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology"
+    confidence: L-Evidenced
+    excerpt: "Proper HVG selection based on variance-mean relationship is critical for downstream analysis."
+    supports_levels: ["level_3", "level_2"]
+conflicts_with: []

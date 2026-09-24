@@ -1,0 +1,19 @@
+# 决策类型：events_per_variable（每变量事件数 EPV）— inference / pan-cancer
+decision_type: events_per_variable
+display:
+  cn: 每变量事件数（EPV）
+  en: Events per variable
+stage: inference
+paradigms: [pan-cancer]
+dimension: statistical_rigor
+optional: true
+when_not_applicable: no_survival_analysis
+aliases: []
+depends_on: []
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [survival_analysis, differential_expression, immune_expression_correlation, pathway_enrichment, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（P2.3）引用 → 禁止 fail-open
+    missing: fail-closed

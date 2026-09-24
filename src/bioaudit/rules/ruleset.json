@@ -1,0 +1,236 @@
+{
+ "ruleset_version": "1.8.18",
+ "engine_version": "0.3.0",
+ "ontology_version": "0.1.3",
+ "generated_at": "2026-09-16",
+ "n_rule_files": 45,
+ "n_unique_rule_ids": 40,
+ "note": "B5 规则治理：清单由 bioaudit.rules.manifest.generate_manifest 生成",
+ "files": [
+  {
+   "path": "DEG/D1.2-DEG-001_filtering.yaml",
+   "sha256": "aa9b122deb468bfa45c3dd81aef5e43ca0d531bb47cc4dce3f910c6ea0aaed92",
+   "size": 4328
+  },
+  {
+   "path": "DEG/D1.3-DEG-001_normalization.yaml",
+   "sha256": "1429aa0aa5af47f5bbe19218b96de8bc1d76787f14cea64b35c49edfc35efb2a",
+   "size": 4154
+  },
+  {
+   "path": "DEG/M1.1-DEG-001_method_selection.yaml",
+   "sha256": "807e89e1657571c01f058cf8e69e4f7d08f703eca95d850bec5c71c312649fb2",
+   "size": 5639
+  },
+  {
+   "path": "DEG/M1.2-DEG-001_multiple_testing.yaml",
+   "sha256": "c21849b8abbd4d6422de8642497938c69a6b455ecb3c2b581b53dd08d8fba616",
+   "size": 3921
+  },
+  {
+   "path": "DEG/M1.3-DEG-001_threshold.yaml",
+   "sha256": "77220e55ac596a3c9bedb710d237cf93bc3d315bd4c0ce866a8f0f0ffa201711",
+   "size": 3987
+  },
+  {
+   "path": "pancancer/D1.2-DEG-001_filtering.yaml",
+   "sha256": "aa9b122deb468bfa45c3dd81aef5e43ca0d531bb47cc4dce3f910c6ea0aaed92",
+   "size": 4328
+  },
+  {
+   "path": "pancancer/D1.3-DEG-001_normalization.yaml",
+   "sha256": "1429aa0aa5af47f5bbe19218b96de8bc1d76787f14cea64b35c49edfc35efb2a",
+   "size": 4154
+  },
+  {
+   "path": "pancancer/D6.1-DRUG-001_ic50_sample_size.yaml",
+   "sha256": "01ad3ee9e49bc07f200c0176f3fce6384285209cfb4a70460b9867c704e16288",
+   "size": 3707
+  },
+  {
+   "path": "pancancer/E5.1-ENRI-001_ora_correction.yaml",
+   "sha256": "39eaf7e03f229e8460affd66ab23da85883e66b5c8ab939e5c388efb07c394d9",
+   "size": 3291
+  },
+  {
+   "path": "pancancer/E5.2-ENRI-001_gsea_background.yaml",
+   "sha256": "9c0bd462024f94e3dce69a8a9416e79b6ee82a7660291f9f571e18539ea87685",
+   "size": 3864
+  },
+  {
+   "path": "pancancer/G3.1-GENE-001_cbioportal_projection.yaml",
+   "sha256": "c504967a8ed9a0973dca68cd7706ad338a50d2f984f046bd704adab274a315f2",
+   "size": 3387
+  },
+  {
+   "path": "pancancer/I4.1-IMMU-001_correlation_method.yaml",
+   "sha256": "6d0f27fa30fa973eff6318bb058dbd2cc62bf0318b385a09e5e2394a4bd0ff47",
+   "size": 4191
+  },
+  {
+   "path": "pancancer/I4.2-IMMU-001_purity_confounding.yaml",
+   "sha256": "3b9dd4f3827feb311f0ff14b39bef9d67083f522bfba56db00db9f7b5cb9df27",
+   "size": 3563
+  },
+  {
+   "path": "pancancer/M1.1-DEG-001_method_selection.yaml",
+   "sha256": "807e89e1657571c01f058cf8e69e4f7d08f703eca95d850bec5c71c312649fb2",
+   "size": 5639
+  },
+  {
+   "path": "pancancer/M1.2-DEG-001_multiple_testing.yaml",
+   "sha256": "c21849b8abbd4d6422de8642497938c69a6b455ecb3c2b581b53dd08d8fba616",
+   "size": 3921
+  },
+  {
+   "path": "pancancer/M1.3-DEG-001_threshold.yaml",
+   "sha256": "77220e55ac596a3c9bedb710d237cf93bc3d315bd4c0ce866a8f0f0ffa201711",
+   "size": 3987
+  },
+  {
+   "path": "pancancer/N7.1-INTE-001_expr_survival_consistency.yaml",
+   "sha256": "a66982ba5522772fe7024ad374d569690166098e6d19bac88c2ba304bb22e07e",
+   "size": 4339
+  },
+  {
+   "path": "pancancer/N7.2-INTE-001_immune_expr_consistency.yaml",
+   "sha256": "4d385026acb40d4f0d3a40de36196fa02b660f130fe0c16ca138229ef10a5d1c",
+   "size": 3584
+  },
+  {
+   "path": "pancancer/P2.1-PROG-001_cox_ph.yaml",
+   "sha256": "be5e275679b5b1407ecda7bb7a5c532433e0e78a32b81c817887ae5a1e0487c8",
+   "size": 3837
+  },
+  {
+   "path": "pancancer/P2.2-PROG-001_independent_claim.yaml",
+   "sha256": "56a589cb560d63a48787a60bdbbfccb6080dac809fec8c183b43b453d92989f3",
+   "size": 4178
+  },
+  {
+   "path": "pancancer/P2.3-PROG-001_epv.yaml",
+   "sha256": "4ceb5a2d9d7d74304a1d01999985cb74148ab406439c9ab9c1e5b89eff38cca1",
+   "size": 3792
+  },
+  {
+   "path": "scRNA/A1.1-ANNO-001_method.yaml",
+   "sha256": "b5171239fc7ffc0e2f1785f94a0c9a784eea44f7b25f980cd4691baa1db8d82c",
+   "size": 4362
+  },
+  {
+   "path": "scRNA/A1.1-API-001_data_integrity.yaml",
+   "sha256": "4ec258e3af3adbeacf383d8e975738850929970e0b01abd2320f86e5cb9572e7",
+   "size": 3777
+  },
+  {
+   "path": "scRNA/A1.2-ANNO-002_marker_validation.yaml",
+   "sha256": "d68611a784d1a65ab2837b40584a4abebed07192cbd8e8a1fa01335d8408689b",
+   "size": 4030
+  },
+  {
+   "path": "scRNA/B1.1-BATC-001_integration.yaml",
+   "sha256": "078755ccad5289ed1c7705264e2f38baf516256684894a15b36e29b418d4655b",
+   "size": 4037
+  },
+  {
+   "path": "scRNA/B1.2-BATC-002_requirement.yaml",
+   "sha256": "943b472b824acb2b218c139d4de5615f1f21a5d63f4c6212a9db49ea92d5fdea",
+   "size": 4209
+  },
+  {
+   "path": "scRNA/C1.1-CLUS-001_method.yaml",
+   "sha256": "a4e26e9c2c30f4fe0304c2713eefd6a58025f8c595491d4754f089f5ed435453",
+   "size": 4251
+  },
+  {
+   "path": "scRNA/C1.2-CLUS-002_resolution.yaml",
+   "sha256": "68b5e762a9a5f69fb62e2da11db09bbb269feeea6193833d0fcaac28521cf743",
+   "size": 4419
+  },
+  {
+   "path": "scRNA/D1.1-DOUB-001_detection.yaml",
+   "sha256": "5c2d6c695d047f043cb758f5c5658f2976fc55c60cb5f012151d7b4689048421",
+   "size": 4105
+  },
+  {
+   "path": "scRNA/D2.1-DIMR-001_reduction.yaml",
+   "sha256": "16aede0e7c34ef5100c515f3a4e5d07ef408b1ae7930ffb431aee641c6842e69",
+   "size": 4285
+  },
+  {
+   "path": "scRNA/D2.2-DIMR-002_pca_dimension.yaml",
+   "sha256": "922a67168a4911e3785628b70d5411733aea4b78eda6a19ba8d0652bdeed1513",
+   "size": 4106
+  },
+  {
+   "path": "scRNA/G1.1-DEG-001_pseudobulk.yaml",
+   "sha256": "ee8e7b2ac07d835ff19cdc14d0a6fe80f55207270159109cb627b7fd68bd7d89",
+   "size": 6352
+  },
+  {
+   "path": "scRNA/G1.2-DEG-002_multiple_testing.yaml",
+   "sha256": "260a9970def16d305aedfc80ea07803e9381130472064333a0ccc2c3af0ae848",
+   "size": 4815
+  },
+  {
+   "path": "scRNA/G1.3-DEG-003_method.yaml",
+   "sha256": "25ac0ca917064546a8cc801eaf3b8b37855e67afd209c71ca2b54582777707a6",
+   "size": 6352
+  },
+  {
+   "path": "scRNA/G1.4-DEG-004_significance_threshold.yaml",
+   "sha256": "2c17b5e2963139394c881b790345bc02698a0b1120518e7532aa1d21450ce8ec",
+   "size": 5919
+  },
+  {
+   "path": "scRNA/H1.1-HVG-001_selection.yaml",
+   "sha256": "6b9db1005d114de4f8f7f6b7b2ac25fe9c2f9126b77ed1f1f0af8763ddf8d95c",
+   "size": 4256
+  },
+  {
+   "path": "scRNA/I4.1-IMMU-001_scRNA_correlation_method.yaml",
+   "sha256": "a687714d8e2b4f1d58b30468c311aba4b8587f8d097c6a8883c510bccc85be5d",
+   "size": 6888
+  },
+  {
+   "path": "scRNA/N1.1-NORM-001_normalization.yaml",
+   "sha256": "4f7f1254ea8d7c620f0337213062a1e54570b67cda3aaf7675ae39377f484ea6",
+   "size": 4200
+  },
+  {
+   "path": "scRNA/Q1.1-QC-001_filtering.yaml",
+   "sha256": "0d512e7f4fb6c592e3cad4fc32c7558dbb045b808b56e1f1608b15507f0e99b4",
+   "size": 4528
+  },
+  {
+   "path": "scRNA/Q1.2-QC-002_mito.yaml",
+   "sha256": "6bce91b2c2e7d5fbbea23e72c3f0fdcfe0833908b7f7090a3614596ead945b1a",
+   "size": 4393
+  },
+  {
+   "path": "scRNA/S1.1-CONS-001_cluster_annotation.yaml",
+   "sha256": "e2d123ea612aaabe3d5bd210c703e4e57535a02bef328d5d27ce2e297c9e58ee",
+   "size": 4642
+  },
+  {
+   "path": "scRNA/S1.2-CONS-002_annotation_deg.yaml",
+   "sha256": "31e8cce6bbeddb9a8226f3f1bedc220418a8c69bdaef8d55b7ccbbf0942c1433",
+   "size": 3601
+  },
+  {
+   "path": "scRNA/S1.3-CONS-003_trajectory_annotation.yaml",
+   "sha256": "151491fd29c1e8fc48c10545a7df47c77ca08b8cea7dc93b09ffd03c5b400099",
+   "size": 3756
+  },
+  {
+   "path": "scRNA/T1.1-TRAJ-001_inference.yaml",
+   "sha256": "52a4897b76f9a4cae6716aff0c140f4ee37c77f96d6f952ae3d92af377a0c93d",
+   "size": 4565
+  },
+  {
+   "path": "scRNA/T1.2-TRAJ-002_annotation_precondition.yaml",
+   "sha256": "e3780e5b3ff0b167b562342cc4e3c3e903f84ec2d1870f914df1e1f5c7e9b874",
+   "size": 4524
+  }
+ ]
+}

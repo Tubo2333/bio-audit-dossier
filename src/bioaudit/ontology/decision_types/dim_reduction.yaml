@@ -1,0 +1,27 @@
+# 决策类型：dim_reduction（降维方法）— inference / scRNA
+decision_type: dim_reduction
+display:
+  cn: 降维方法
+  en: Dimensionality reduction
+stage: inference
+paradigms: [scRNA]
+dimension: method_selection
+optional: false
+aliases: []
+depends_on: [scRNA_normalization, hv_gene_selection, batch_correction]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: method
+    type: enum
+    values: [PCA, UMAP, tSNE, PHATE]
+    required: false
+    missing: skip
+  - key: n_comps
+    type: int
+    min: 0
+    required: false
+    missing: fail-open

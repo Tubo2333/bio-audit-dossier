@@ -1,0 +1,11 @@
+[
+  {
+    "step_id": "E6",
+    "decision_type": "expression_survival_consistency",
+    "choice": "direction_inconsistent_not_discussed",
+    "rationale": "CSTB is upregulated in tumor vs normal (logFC=1.8, padj<0.001) — consistent with oncogenic role. Meanwhile, survival analysis shows CSTB-high patients have better survival (HR=0.72, 95%CI 0.58-0.89) — suggesting a protective effect. Both results are statistically significant and reported in their respective sections.",
+    "context": {
+      "integration_type": "cross_module"
+    }
+  }
+]

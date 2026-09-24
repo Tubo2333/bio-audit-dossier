@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "trajectory_id": "scrna_edge_default",
+  "act": "scrna",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "scrna_edge_default.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "E8",
+      "decision_type": "clustering_resolution",
+      "choice": "default_0_8",
+      "rationale": "We used the Seurat default resolution of 0.8 for Leiden clustering. This is the standard setting used in most published scRNA-seq studies and produces a reasonable number of clusters for downstream annotation.",
+      "context": {
+        "sequencing": "10X_scRNA_seq"
+      }
+    }
+  ]
+}

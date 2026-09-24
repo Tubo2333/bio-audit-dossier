@@ -1,0 +1,26 @@
+# 分析阶段骨架（第 2 层，跨范式共享 6 阶段）— ontology-design-v1 §一
+stages:
+  data-acquisition:
+    cn: 数据获取
+    en: Data acquisition
+    description: 数据源选择、获取与完整性核验（API/下载/格式）
+  qc:
+    cn: 质量控制
+    en: Quality control
+    description: 数据质量过滤（低质量细胞/基因、线粒体、doublet）
+  preprocessing:
+    cn: 预处理
+    en: Preprocessing
+    description: 归一化、HVG 选择、批次校正等分析前处理
+  inference:
+    cn: 推断
+    en: Inference
+    description: 核心统计推断（差异分析、多重检验、聚类、轨迹等）
+  interpretation:
+    cn: 解释
+    en: Interpretation
+    description: 结果解释（富集、免疫相关、投影、注释）
+  conclusion:
+    cn: 结论
+    en: Conclusion
+    description: 跨模块一致性核验与结论稳健性声明（L4 一致性族）

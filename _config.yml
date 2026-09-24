@@ -1,0 +1,15 @@
+title: "Bio-Audit Dossier"
+description: "可随稿件交付的决策级审计记录——五个 RNA-seq 方法学决策点，逐点给出依据、限制、可用范围与停止条件；不对分析评分"
+theme: jekyll-theme-cayman
+show_downloads: false
+google_analytics:
+lang: zh-CN
+github_repo: "https://github.com/Tubo2333/bio-audit-dossier"
+# 站点只发布文档与首页；代码目录不进 Pages（冻结资产不进站点）
+exclude:
+  - src
+  - tests
+  - scripts
+  - mcp
+  - ui
+  - demo

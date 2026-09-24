@@ -1,0 +1,6 @@
+# Decision type to evaluation dimension mapping (B8: moved from code to data)
+filtering: data_handling
+normalization: data_handling
+deg_method: method_selection
+multiple_testing_correction: statistical_rigor
+significance_threshold: statistical_rigor

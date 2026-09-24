@@ -1,0 +1,22 @@
+# 决策类型：expression_survival_consistency（表达-生存一致性）— conclusion / pan-cancer
+# 一致性族（L4 概念）成员：联合上游决策评分（G1 internal_ref）
+decision_type: expression_survival_consistency
+display:
+  cn: 表达-生存关联一致性
+  en: Expression-survival consistency
+stage: conclusion
+paradigms: [pan-cancer]
+dimension: statistical_rigor
+optional: true
+when_not_applicable: claim_not_made
+aliases: []
+depends_on: [deg_method, cox_ph_assumption]
+# G1 裁决（v1.1）：联合上游决策评分结果，避免退化为等级复述（机制在阶段 2+ 落地）
+internal_ref: [deg_method, cox_ph_assumption, significance_threshold]
+context_schema:
+  - key: integration_type
+    type: enum
+    values: [cross_module]
+    required: true
+    # A2：被罚分规则（N7.1）引用 → 禁止 fail-open
+    missing: fail-closed

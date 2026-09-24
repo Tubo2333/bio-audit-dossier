@@ -1,0 +1,73 @@
+rule_id: P2.3-PROG-001
+domain: PROGNOSIS
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：本条依据全部有结论（人类 2026-09-15 裁定「仍成立」）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [1995, 1996]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "泛癌分析链路（含 DEG / 富集 / 生存 / 免疫浸润等）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "事件数每变量比 (EPV) / Events Per Variable ratio"
+description: "多变量Cox回归模型需要足够的事件数(死亡/复发)来支持估计。EPV<10时模型严重过拟合,回归系数不稳定,HR置信区间极宽。这是样本量不足时最常见的过度解释。"
+condition:
+  decision_type: events_per_variable
+  required_context:
+    analysis_type: survival_analysis
+
+scoring:
+  level_3:
+    methods:
+      - EPV_gte_10_verified
+      - EPV_gte_15
+      - events_per_variable_gte_10
+    description: "EPV ≥ 10-15 — 模型稳定"
+    rationale: "模拟研究表明EPV≥10-15可以保证Cox回归系数的稳定估计 (Peduzzi et al. 1995; Concato et al. 1995)"
+  level_2:
+    methods:
+      - EPV_5_to_10_with_penalized
+      - Firth_penalized_Cox
+      - ridge_Cox_low_EPV
+    description: "EPV 5-10 但使用惩罚或Firth校正 — 可接受"
+    note: "Firth惩罚似然或岭回归Cox在低EPV时提供更稳健的估计"
+  level_1:
+    methods:
+      - EPV_5_to_10_unadjusted
+    description: "EPV 5-10 但未做校正 — 有风险"
+  level_0:
+    methods:
+      - EPV_less_than_5
+      - EPV_less_than_10_no_correction
+      - events_per_variable_low_no_disclosure
+    description: "EPV < 5-10 且未披露限制 — 结果不可靠"
+    rationale: "当事件数<10/变量时,HR估计偏差显著,模型可能过拟合到数据中的噪声 (Peduzzi et al. 1995)"
+
+evidence:
+  - source_type: method_paper
+    pmid: "8543964"
+    title: "Importance of events per independent variable in proportional hazards regression analysis — Peduzzi et al. 1995, Journal of Clinical Epidemiology"
+    confidence: L-Confirmed
+    excerpt: "EPV < 10 leads to unstable Cox regression coefficients and inflated Type I error."
+    supports_levels: ["level_3", "level_0"]
+  - source_type: method_paper
+    doi: "10.1016/s0895-4356(96)00236-3"   # 2026-09-15 更正：原 DOI 解析为 Stat Med 1995「A hybrid paired and unpaired analysis…」(Thomson)，非本文
+    title: "A simulation study of the number of events per variable in logistic regression analysis — Peduzzi et al. 1996, Statistics in Medicine"
+    confidence: L-Consensus
+    excerpt: "At EPV < 10, regression coefficients are biased and confidence intervals are unreliable."
+    supports_levels: ["level_0"]

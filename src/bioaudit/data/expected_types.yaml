@@ -1,0 +1,40 @@
+# 预期决策点清单（评测配置，窗口 M / M1.1 裁决 2026-08-16）
+#
+# - 清单放评测配置（per 范式×平台），**不放引擎硬编码**（M1.1 纪律）；
+# - 默认清单 = 该平台标准管线的决策点（10X 11 决策 / Smart-seq2 10 决策，
+#   L 窗口黄金 A 版实证：A 版最终轨迹 11/10 决策；execution-plan M1.1 举例
+#   10/9 为冻结时预估，以实证为准；api_data_integrity 未入 A 版决策集
+#   （M3 无确定性签名，属 uncertain 类）→ 不进默认清单）；
+# - 可选类型（optional:true，如 trajectory_inference）**不进默认清单**；
+#   评测者按任务显式追加，并声明 when_not_applicable 谓词事实（B7 保守豁免）；
+# - 缺失预期决策 → 补入 provenance=expected，按 missing 档位参与评分
+#   （仅显式 optional 且 when_not_applicable 满足才豁免，B7/G5 原则）；
+# - 变更走评审（与任务集变更同门禁风格）。
+version: 1
+defaults:
+  scrna_10x:
+    - qc_filtering
+    - doublet_detection
+    - scRNA_normalization
+    - hv_gene_selection
+    - dim_reduction
+    - batch_correction
+    - clustering_method
+    - annotation_method
+    - deg_method
+    - multiple_testing_correction
+    - significance_threshold
+  scrna_smartseq2:
+    - qc_filtering
+    - scRNA_normalization
+    - hv_gene_selection
+    - dim_reduction
+    - batch_correction
+    - clustering_method
+    - annotation_method
+    - deg_method
+    - multiple_testing_correction
+    - significance_threshold
+  # pan / deg：骨架预留（范式清单随任务集/评测扩展显式声明，当前不启用强制）
+  pan: []
+  deg: []

@@ -1,0 +1,14 @@
+[
+  {
+    "step_id": "E1",
+    "decision_type": "deg_method",
+    "choice": "DESeq2",
+    "rationale": "DESeq2 is the gold standard for differential expression. Although we only have n=2 per group, DESeq2 can still estimate dispersion using pooled information across genes.",
+    "context": {
+      "data_category": "raw_counts",
+      "sequencing": "bulk_RNA_seq",
+      "design": "simple_two_group",
+      "n_replicates": 2
+    }
+  }
+]

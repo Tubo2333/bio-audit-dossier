@@ -1,0 +1,10 @@
+# bio-audit 运行时依赖锁（B6-3，2026-08-14）
+# 生成：pip-compile pyproject.toml -o requirements.lock --no-annotate --no-header
+# 解析目标：Python >= 3.10（CI 双版本矩阵下限）
+# 用法：pip install -r requirements.lock
+annotated-types==0.8.0
+pydantic==2.13.4
+pydantic-core==2.46.4
+pyyaml==6.0.3
+typing-extensions==4.16.0
+typing-inspection==0.4.4

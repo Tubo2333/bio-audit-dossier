@@ -1,0 +1,126 @@
+[
+  {
+    "step_id": "S1",
+    "decision_type": "api_data_integrity",
+    "choice": "DETAILED_with_validation",
+    "rationale": "GSE131907 NSCLC 10X raw UMI matrix validated: 208,506 cells × 27,578 genes. Verified cell barcodes include patient ID, tissue source (LUNG_N/LUNG_T/LN/NS). 11 patients, no duplicate barcodes.",
+    "context": {
+      "data_source": "GEO",
+      "data_format": "h5ad",
+      "n_cells": 208506,
+      "n_genes": 27578
+    }
+  },
+  {
+    "step_id": "S2",
+    "decision_type": "qc_filtering",
+    "choice": "MAD5_adaptive_threshold",
+    "rationale": "MAD-based adaptive QC — NSCLC is an immune-desert TME with sparse immune cells. Adaptive thresholding preserves rare immune populations that fixed thresholds might incorrectly remove (Luecken & Theis 2019, PMID 31841116).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_cells": 208506
+    }
+  },
+  {
+    "step_id": "S3",
+    "decision_type": "doublet_detection",
+    "choice": "scDblFinder",
+    "rationale": "scDblFinder random-forest doublet detection — 208K cells with estimated doublet rate ~7.8%. Large dataset size makes probabilistic doublet scoring essential; scDblFinder scales well to >200K cells (Xi & Li 2021, PMID 33541407).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_cells": 208506
+    }
+  },
+  {
+    "step_id": "S4",
+    "decision_type": "scRNA_normalization",
+    "choice": "SCTransform",
+    "rationale": "SCTransform variance-stabilizing normalization — NSCLC data has extreme library size variation (tumor cells have higher RNA content than sparse immune cells). SCTransform removes the technical variation-gene abundance correlation that LogNormalize cannot (Hafemeister & Satija 2019, PMID 31870423).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "data_category": "umi_counts"
+    }
+  },
+  {
+    "step_id": "S5",
+    "decision_type": "hv_gene_selection",
+    "choice": "vst",
+    "rationale": "VST selected 3,000 HVGs. In immune-desert NSCLC, many HVGs come from tumor-intrinsic programs (EMT, proliferation) — sufficient to capture both tumor heterogeneity and sparse immune signals.",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_genes": 27578
+    }
+  },
+  {
+    "step_id": "S6",
+    "decision_type": "batch_correction",
+    "choice": "Harmony",
+    "rationale": "Harmony batch integration for 11 patients with diverse tissue sources (tumor/normal/lymph node). NSCLC samples have significant patient-specific tumor expression programs — Harmony's soft-clustering preserves biological heterogeneity while aligning shared cell types (Korsunsky et al. 2019, PMID 31740819).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "has_batch": true,
+      "n_patients": 11
+    }
+  },
+  {
+    "step_id": "S7",
+    "decision_type": "dim_reduction",
+    "choice": "PCA_elbow_selection",
+    "rationale": "Elbow method selected 30 PCs. Large dataset (208K cells) with tumor-dominated landscape — sufficient PCs needed to capture rare immune population variance (~5% of cells).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "method": "PCA",
+      "n_comps": 30
+    }
+  },
+  {
+    "step_id": "S8",
+    "decision_type": "clustering_method",
+    "choice": "Leiden",
+    "rationale": "Leiden algorithm with resolution 1.0 determined via clustree stability analysis across 0.4-1.6 range. NSCLC immune-desert TME: too-high resolution fragments rare immune clusters, too-low merges distinct tumor subclones. Resolution 1.0 identified 32 clusters with stable immune-tumor separation (Traag et al. 2019, PMID 30914743).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "graph_type": "SNN"
+    }
+  },
+  {
+    "step_id": "S9",
+    "decision_type": "annotation_method",
+    "choice": "SingleR_with_CellTypist_cross_validation",
+    "rationale": "CellTypist (immune-focused) + SingleR (Human Primary Cell Atlas reference) cross-validation. NSCLC immune-desert: immune cells are ~5% of total — dual-method annotation prevents misclassification of tumor cells as immune types. Marker validation with canonical lung markers (SFTPC, AGER for alveolar; EPCAM, KRT19 for epithelial) (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "reference_based": true
+    }
+  },
+  {
+    "step_id": "S10",
+    "decision_type": "deg_method",
+    "choice": "pseudobulk_DESeq2",
+    "rationale": "Pseudobulk at patient level + DESeq2. NSCLC tumor vs normal DEG: 11 patients provide adequate biological replicates. Pseudobulk avoids the extreme pseudoreplication that would occur with 208K single cells (Squair et al. 2021, PMID 34433851).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_patients": 11,
+      "pseudobulk": true
+    }
+  },
+  {
+    "step_id": "S11",
+    "decision_type": "trajectory_inference",
+    "choice": "monocle3",
+    "rationale": "monocle3 on Epithelial subset for EMT trajectory inference — NSCLC progression involves EMT with transition from epithelial to mesenchymal states. Trajectory on Epithelial cells captures this continuum (Saelens et al. 2019, PMID 30643263).",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "cell_type": "Epithelial"
+    }
+  },
+  {
+    "step_id": "S12",
+    "decision_type": "cluster_annotation_consistency",
+    "choice": "consistent_with_cross_validation",
+    "rationale": "CellTypist and SingleR concordant on 89% of cells. 32 clusters map to 9 major cell types. Key finding: rare immune clusters (CD8+ T cells, NK cells) validated by both methods despite representing <2% of cells each. Epithelial/tumor clusters verified with lung-specific markers (SFTPC, KRT19).",
+    "context": {
+      "integration_type": "cross_module"
+    }
+  }
+]

@@ -1,0 +1,3043 @@
+{
+ "n_trajectories": 20,
+ "n_decisions": 137,
+ "trajectories": [
+  {
+   "trajectory": "deg_correct",
+   "act": "deg",
+   "n_decisions": 5,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "dimension_scores": {
+    "data_handling": 0.85,
+    "method_selection": 0.85,
+    "statistical_rigor": 0.85
+   },
+   "step_scores": [
+    {
+     "step_id": "s1",
+     "decision_type": "filtering",
+     "agent_choice": "filterByExpr",
+     "agent_rationale": "Using edgeR filterByExpr() to automatically determine data-driven filtering threshold based on experimental design and library sizes.",
+     "matched_rules": [
+      "D1.2-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] edgeR User's Guide §2.7 Filtering (filterByExpr) — **[查看原文](https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)**",
+      "[L-Consensus] Bourgon et al. (2010) PNAS — Independent filtering increases detection power — **[PMID: 20460310](https://pubmed.ncbi.nlm.nih.gov/20460310/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "s2",
+     "decision_type": "normalization",
+     "agent_choice": "TMM",
+     "agent_rationale": "TMM normalization as integrated with edgeR pipeline — corrects for RNA composition bias and library size.",
+     "matched_rules": [
+      "D1.3-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Dillies et al. (2013) Briefings in Bioinformatics — Normalization method comparison — **[PMID: 22988256](https://pubmed.ncbi.nlm.nih.gov/22988256/)**",
+      "[L-Consensus] Robinson & Oshlack (2010) — TMM normalization — **[PMID: 20196867](https://pubmed.ncbi.nlm.nih.gov/20196867/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "s3",
+     "decision_type": "deg_method",
+     "agent_choice": "DESeq2",
+     "agent_rationale": "DESeq2 Wald test — best FDR control for bulk RNA-seq with n>=3. Verified negative binomial assumption via dispersion-mean plot.",
+     "matched_rules": [
+      "M1.1-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Love et al. (2014) DESeq2, Genome Biology — **[PMID: 25516281](https://pubmed.ncbi.nlm.nih.gov/25516281/)**",
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Soneson & Delorenzi (2013) BMC Bioinformatics — HISTORICAL REFERENCE — **[PMID: 24115176](https://pubmed.ncbi.nlm.nih.gov/24115176/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "s4",
+     "decision_type": "multiple_testing_correction",
+     "agent_choice": "BH",
+     "agent_rationale": "Benjamini-Hochberg FDR correction — standard for exploratory genomic studies with ~20,000 parallel tests.",
+     "matched_rules": [
+      "M1.2-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Bonferroni inequality — mathematical fact (not a publication)",
+      "[L-Consensus] Benjamini & Hochberg (1995) — Controlling the FDR — **[查看原文](https://www.jstor.org/stable/2346101)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "s5",
+     "decision_type": "significance_threshold",
+     "agent_choice": "padj <= 0.05, |logFC| >= 1.0",
+     "agent_rationale": "Dual threshold: FDR<0.05 for statistical significance + |logFC|>=1.0 for biological effect size. Power analysis at n=6 supports detecting logFC>=1.0 with ~80% power.",
+     "matched_rules": [
+      "M1.3-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Wang & Gao (2026) Human Genomics 20:63 — pipeline DE reporting recommendations — **[查看原文](https://doi.org/10.1186/s40246-026-00930-1)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    }
+   ]
+  },
+  {
+   "trajectory": "deg_edge_n2",
+   "act": "deg",
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "method_selection": 0.0
+   },
+   "step_scores": [
+    {
+     "step_id": "E1",
+     "decision_type": "deg_method",
+     "agent_choice": "DESeq2",
+     "agent_rationale": "DESeq2 is the gold standard for differential expression. Although we only have n=2 per group, DESeq2 can still estimate dispersion using pooled information across genes.",
+     "matched_rules": [
+      "M1.1-DEG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论 — override: the observed sample size is too small to reliably estimate biological variability; the conclusion is downgraded to reporting fold change only, without statistical inference.",
+     "evidence_citations": [
+      "[L-Confirmed] Love et al. (2014) DESeq2, Genome Biology — **[PMID: 25516281](https://pubmed.ncbi.nlm.nih.gov/25516281/)**",
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Soneson & Delorenzi (2013) BMC Bioinformatics — HISTORICAL REFERENCE — **[PMID: 24115176](https://pubmed.ncbi.nlm.nih.gov/24115176/)**"
+     ],
+     "alternatives": [
+      "DESeq2",
+      "edgeR",
+      "limma-voom",
+      "limma-trend",
+      "voom-with-quality-weights"
+     ],
+     "reward_signal": 0.0
+    }
+   ]
+  },
+  {
+   "trajectory": "deg_edge_nofilter",
+   "act": "deg",
+   "n_decisions": 3,
+   "trajectory_score": 15.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.3,
+    "statistical_rigor": 0.15
+   },
+   "step_scores": [
+    {
+     "step_id": "E3a",
+     "decision_type": "filtering",
+     "agent_choice": "no_filtering",
+     "agent_rationale": "Retaining all genes maximizes discovery power. Even low-expressed genes may be biologically relevant in specific contexts — we prefer to let the statistical model handle the uncertainty rather than pre-filtering.",
+     "matched_rules": [
+      "D1.2-DEG-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Consensus] edgeR User's Guide §2.7 Filtering (filterByExpr) — **[查看原文](https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)**",
+      "[L-Consensus] Bourgon et al. (2010) PNAS — Independent filtering increases detection power — **[PMID: 20460310](https://pubmed.ncbi.nlm.nih.gov/20460310/)**"
+     ],
+     "alternatives": [
+      "filterByExpr",
+      "independent_filtering",
+      "DESeq2_independentFiltering",
+      "CPM_filter_min_samples",
+      "counts_per_million_min",
+      "mean_expression_filter"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "E3b",
+     "decision_type": "multiple_testing_correction",
+     "agent_choice": "no_correction",
+     "agent_rationale": "This is an exploratory analysis — we are generating hypotheses, not testing them definitively. Multiple testing correction is too conservative for discovery-phase work; we will validate top hits in an independent cohort.",
+     "matched_rules": [
+      "M1.2-DEG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Bonferroni inequality — mathematical fact (not a publication)",
+      "[L-Consensus] Benjamini & Hochberg (1995) — Controlling the FDR — **[查看原文](https://www.jstor.org/stable/2346101)**"
+     ],
+     "alternatives": [
+      "BH",
+      "Benjamini-Hochberg",
+      "FDR",
+      "BY",
+      "Benjamini-Yekutieli",
+      "q_value_storey"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "E3c",
+     "decision_type": "significance_threshold",
+     "agent_choice": "p_raw <= 0.05",
+     "agent_rationale": "Using raw p<0.05 as the DEG selection threshold. The top 50 genes by p-value will be carried forward for functional enrichment analysis.",
+     "matched_rules": [
+      "M1.3-DEG-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Wang & Gao (2026) Human Genomics 20:63 — pipeline DE reporting recommendations — **[查看原文](https://doi.org/10.1186/s40246-026-00930-1)**"
+     ],
+     "alternatives": [
+      "padj <= 0.05, |logFC| >= 1.0",
+      "FDR < 0.05, |logFC| >= 1.0",
+      "padj <= 0.05, |logFC| >= 0.5",
+      "padj <= 0.1, |logFC| >= 0.5"
+     ],
+     "reward_signal": 0.3
+    }
+   ]
+  },
+  {
+   "trajectory": "deg_error",
+   "act": "deg",
+   "n_decisions": 5,
+   "trajectory_score": 15.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.45,
+    "method_selection": 0.85,
+    "statistical_rigor": 0.15
+   },
+   "step_scores": [
+    {
+     "step_id": "s1",
+     "decision_type": "filtering",
+     "agent_choice": "no_filtering",
+     "agent_rationale": "Skipping filtering to retain all genes for maximum discovery power.",
+     "matched_rules": [
+      "D1.2-DEG-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Consensus] edgeR User's Guide §2.7 Filtering (filterByExpr) — **[查看原文](https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)**",
+      "[L-Consensus] Bourgon et al. (2010) PNAS — Independent filtering increases detection power — **[PMID: 20460310](https://pubmed.ncbi.nlm.nih.gov/20460310/)**"
+     ],
+     "alternatives": [
+      "filterByExpr",
+      "independent_filtering",
+      "DESeq2_independentFiltering",
+      "CPM_filter_min_samples",
+      "counts_per_million_min",
+      "mean_expression_filter"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "s2",
+     "decision_type": "normalization",
+     "agent_choice": "TPM",
+     "agent_rationale": "TPM is the standard normalization for RNA-seq data.",
+     "matched_rules": [
+      "D1.3-DEG-001"
+     ],
+     "level": 2,
+     "numeric_score": 0.6,
+     "explanation": "可接受 — 有微小瑕疵",
+     "evidence_citations": [
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Dillies et al. (2013) Briefings in Bioinformatics — Normalization method comparison — **[PMID: 22988256](https://pubmed.ncbi.nlm.nih.gov/22988256/)**",
+      "[L-Consensus] Robinson & Oshlack (2010) — TMM normalization — **[PMID: 20196867](https://pubmed.ncbi.nlm.nih.gov/20196867/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.6
+    },
+    {
+     "step_id": "s3",
+     "decision_type": "deg_method",
+     "agent_choice": "DESeq2",
+     "agent_rationale": "DESeq2 is the most cited method for differential expression.",
+     "matched_rules": [
+      "M1.1-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Love et al. (2014) DESeq2, Genome Biology — **[PMID: 25516281](https://pubmed.ncbi.nlm.nih.gov/25516281/)**",
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Soneson & Delorenzi (2013) BMC Bioinformatics — HISTORICAL REFERENCE — **[PMID: 24115176](https://pubmed.ncbi.nlm.nih.gov/24115176/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "s4",
+     "decision_type": "multiple_testing_correction",
+     "agent_choice": "no_correction",
+     "agent_rationale": "We only care about the top genes, correction is too conservative.",
+     "matched_rules": [
+      "M1.2-DEG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Bonferroni inequality — mathematical fact (not a publication)",
+      "[L-Consensus] Benjamini & Hochberg (1995) — Controlling the FDR — **[查看原文](https://www.jstor.org/stable/2346101)**"
+     ],
+     "alternatives": [
+      "BH",
+      "Benjamini-Hochberg",
+      "FDR",
+      "BY",
+      "Benjamini-Yekutieli",
+      "q_value_storey"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "s5",
+     "decision_type": "significance_threshold",
+     "agent_choice": "p_raw <= 0.05",
+     "agent_rationale": "Using raw p<0.05 as the cutoff for DEG selection.",
+     "matched_rules": [
+      "M1.3-DEG-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Wang & Gao (2026) Human Genomics 20:63 — pipeline DE reporting recommendations — **[查看原文](https://doi.org/10.1186/s40246-026-00930-1)**"
+     ],
+     "alternatives": [
+      "padj <= 0.05, |logFC| >= 1.0",
+      "FDR < 0.05, |logFC| >= 1.0",
+      "padj <= 0.05, |logFC| >= 0.5",
+      "padj <= 0.1, |logFC| >= 0.5"
+     ],
+     "reward_signal": 0.3
+    }
+   ]
+  },
+  {
+   "trajectory": "pan_correct",
+   "act": "pan",
+   "n_decisions": 16,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "dimension_scores": {
+    "data_handling": 0.85,
+    "method_selection": 0.85,
+    "statistical_rigor": 0.85
+   },
+   "step_scores": [
+    {
+     "step_id": "D1",
+     "decision_type": "filtering",
+     "agent_choice": "filterByExpr",
+     "agent_rationale": "使用 edgeR filterByExpr() 根据实验设计自适应过滤低表达基因,保留有足够counts进行统计检验的基因 (Conesa et al. 2016, PMID 26813401)",
+     "matched_rules": [
+      "D1.2-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] edgeR User's Guide §2.7 Filtering (filterByExpr) — **[查看原文](https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)**",
+      "[L-Consensus] Bourgon et al. (2010) PNAS — Independent filtering increases detection power — **[PMID: 20460310](https://pubmed.ncbi.nlm.nih.gov/20460310/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D2",
+     "decision_type": "normalization",
+     "agent_choice": "TMM",
+     "agent_rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+     "matched_rules": [
+      "D1.3-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Dillies et al. (2013) Briefings in Bioinformatics — Normalization method comparison — **[PMID: 22988256](https://pubmed.ncbi.nlm.nih.gov/22988256/)**",
+      "[L-Consensus] Robinson & Oshlack (2010) — TMM normalization — **[PMID: 20196867](https://pubmed.ncbi.nlm.nih.gov/20196867/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D3",
+     "decision_type": "deg_method",
+     "agent_choice": "DESeq2",
+     "agent_rationale": "DESeq2 Wald test — 负二项分布模型,最佳FDR控制。验证了离散度-均值诊断图 (Love et al. 2014, PMID 25516281)",
+     "matched_rules": [
+      "M1.1-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Love et al. (2014) DESeq2, Genome Biology — **[PMID: 25516281](https://pubmed.ncbi.nlm.nih.gov/25516281/)**",
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Soneson & Delorenzi (2013) BMC Bioinformatics — HISTORICAL REFERENCE — **[PMID: 24115176](https://pubmed.ncbi.nlm.nih.gov/24115176/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D4",
+     "decision_type": "multiple_testing_correction",
+     "agent_choice": "BH",
+     "agent_rationale": "Benjamini-Hochberg FDR校正 — 基因组学探索性分析标准,在~450K检验中控制期望FDR在5% (Benjamini & Hochberg 1995)",
+     "matched_rules": [
+      "M1.2-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Bonferroni inequality — mathematical fact (not a publication)",
+      "[L-Consensus] Benjamini & Hochberg (1995) — Controlling the FDR — **[查看原文](https://www.jstor.org/stable/2346101)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D5",
+     "decision_type": "significance_threshold",
+     "agent_choice": "padj <= 0.05, |logFC| >= 1.0",
+     "agent_rationale": "双阈值: FDR<0.05保证统计显著性, |logFC|≥1保证生物学效应量。符合ENCODE标准推荐",
+     "matched_rules": [
+      "M1.3-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Wang & Gao (2026) Human Genomics 20:63 — pipeline DE reporting recommendations — **[查看原文](https://doi.org/10.1186/s40246-026-00930-1)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D6",
+     "decision_type": "cox_ph_assumption",
+     "agent_choice": "Schoenfeld_residuals_test",
+     "agent_rationale": "使用 cox.zph() 进行 Schoenfeld 残差检验,验证比例风险假设是否成立 (Grambsch & Therneau 1994)",
+     "matched_rules": [
+      "P2.1-PROG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Proportional hazards tests and diagnostics based on weighted residuals — Grambsch & Therneau 1994, Biometrika — **[DOI: 10.1093/biomet/81.3.515](https://doi.org/10.1093/biomet/81.3.515)**",
+      "[L-Consensus] Survival analysis part II: multivariate data analysis — Bradburn et al. 2003, British Journal of Cancer — **[PMID: 12888808](https://pubmed.ncbi.nlm.nih.gov/12888808/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D7",
+     "decision_type": "independent_prognostic_claim",
+     "agent_choice": "multivariate_Cox_with_clinical_covariates",
+     "agent_rationale": "多变量Cox回归调整年龄+分期+分级后CSTB仍显著(HR=1.42, p=0.0002),可声称独立预后因素 (Bradburn et al. 2003, PMID 12578478)",
+     "matched_rules": [
+      "P2.2-PROG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] Tumor marker utility grading system: a framework to evaluate clinical utility of tumor markers — Hayes et al. 1996, JNCI (updated by Simon et al. 2009) — **[PMID: 8841020](https://pubmed.ncbi.nlm.nih.gov/8841020/)**",
+      "[L-Consensus] Survival analysis part II: multivariate data analysis — Bradburn et al. 2003, British Journal of Cancer — **[PMID: 12888808](https://pubmed.ncbi.nlm.nih.gov/12888808/)**",
+      "[L-Consensus] Regression Modeling Strategies, 2nd ed. — Harrell 2015, Springer — **[DOI: 10.1007/978-3-319-19425-7](https://doi.org/10.1007/978-3-319-19425-7)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D8",
+     "decision_type": "events_per_variable",
+     "agent_choice": "EPV_gte_10_verified",
+     "agent_rationale": "死亡事件数48,协变量4个,EPV=12≥10,多变量Cox模型估计稳定 (Peduzzi et al. 1995, PMID 7474269)",
+     "matched_rules": [
+      "P2.3-PROG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Importance of events per independent variable in proportional hazards regression analysis — Peduzzi et al. 1995, Journal of Clinical Epidemiology — **[PMID: 8543964](https://pubmed.ncbi.nlm.nih.gov/8543964/)**",
+      "[L-Consensus] A simulation study of the number of events per variable in logistic regression analysis — Peduzzi et al. 1996, Statistics in Medicine — **[DOI: 10.1016/s0895-4356(96)00236-3](https://doi.org/10.1016/s0895-4356(96)00236-3)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D9",
+     "decision_type": "cbioportal_projection",
+     "agent_choice": "DETAILED",
+     "agent_rationale": "使用 projection=DETAILED 确保返回完整 hugoGeneSymbol,避免 SUMMARY 模式返回'?' (cBioPortal API文档)",
+     "matched_rules": [
+      "G3.1-GENE-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] cBioPortal Web API Documentation — projection parameter — **[查看原文](https://docs.cbioportal.org/web-api-and-clients/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D10",
+     "decision_type": "immune_correlation_method",
+     "agent_choice": "Spearman",
+     "agent_rationale": "免疫评分和基因表达数据非正态分布,Spearman秩相关更稳健,不要求双变量正态假设 (Hollander & Wolfe 1999)",
+     "matched_rules": [
+      "I4.1-IMMU-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Nonparametric Statistical Methods (3rd ed.) — Hollander, Wolfe & Chicken 2014, Wiley — **[查看原文](https://onlinelibrary.wiley.com/doi/book/10.1002/9781119196037)**",
+      "[L-Consensus] The effects of nonnormality on the product moment correlation coefficient — Kowalski 1972, Biometrika"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D11",
+     "decision_type": "purity_confounding",
+     "agent_choice": "ESTIMATE_purity_correction",
+     "agent_rationale": "使用偏相关控制ESTIMATE肿瘤纯度后评估免疫-表达关联,减少虚假关联 (Aran et al. 2015, PMID 26573719)",
+     "matched_rules": [
+      "I4.2-IMMU-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Systematic pan-cancer analysis of tumour purity — Aran et al. 2015, Nature Communications — **[PMID: 26634437](https://pubmed.ncbi.nlm.nih.gov/26634437/)**",
+      "[L-Confirmed] Inferring tumour purity and stromal and immune cell admixture from expression data — Yoshihara et al. 2013, Nature Communications — **[PMID: 24113773](https://pubmed.ncbi.nlm.nih.gov/24113773/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D12",
+     "decision_type": "gsea_background",
+     "agent_choice": "expressed_genes_background",
+     "agent_rationale": "使用实际表达的13,847个基因作为GSEA背景基因集(非全基因组~20,000个),避免未检测基因影响富集分数的零分布 (Subramanian et al. 2005, PMID 16199512)",
+     "matched_rules": [
+      "E5.2-ENRI-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles — Subramanian et al. 2005, PNAS — **[PMID: 16199517](https://pubmed.ncbi.nlm.nih.gov/16199517/)**",
+      "[L-Confirmed] GSEA User Guide — gene set background and universe — **[查看原文](https://docs.gsea-msigdb.org/GSEA/GSEA_User_Guide/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D13",
+     "decision_type": "enrichment_correction",
+     "agent_choice": "BH_FDR",
+     "agent_rationale": "对236条通路做BH FDR多重检验校正,控制通路富集分析的假阳性率 (Huang et al. 2009, PMID 19131956)",
+     "matched_rules": [
+      "E5.1-ENRI-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Bioinformatics enrichment tools: paths toward the comprehensive functional analysis of large gene lists — Huang et al. 2009, Nucleic Acids Research — **[PMID: 19033363](https://pubmed.ncbi.nlm.nih.gov/19033363/)**",
+      "[L-Confirmed] Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles — Subramanian et al. 2005, PNAS — **[PMID: 16199517](https://pubmed.ncbi.nlm.nih.gov/16199517/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D14",
+     "decision_type": "ic50_sample_size",
+     "agent_choice": "n_gte_30_with_power_analysis",
+     "agent_rationale": "GDSC2包含809个细胞系(n≥30),样本量充足,Spearman相关估计稳定 (Barretina et al. 2012, PMID 22950953)",
+     "matched_rules": [
+      "D6.1-DRUG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] The Cancer Cell Line Encyclopedia enables predictive modelling of anticancer drug sensitivity — Barretina et al. 2012, Nature — **[PMID: 22460905](https://pubmed.ncbi.nlm.nih.gov/22460905/)**",
+      "[L-Consensus] A landscape of pharmacogenomic interactions in cancer — Iorio et al. 2016, Cell — **[PMID: 27397505](https://pubmed.ncbi.nlm.nih.gov/27397505/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D15",
+     "decision_type": "expression_survival_consistency",
+     "agent_choice": "direction_consistent",
+     "agent_rationale": "CSTB在肿瘤中高表达(FC>1) + HR>1(风险因素) → 方向一致,支持CSTB作为促癌基因的结论。符合REMARK报告指南 (McShane et al. 2005, PMID 20676068)",
+     "matched_rules": [
+      "N7.1-INTE-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] REporting recommendations for tumour MARKer prognostic studies (REMARK) — McShane et al. 2005, British Journal of Cancer — **[PMID: 16106245](https://pubmed.ncbi.nlm.nih.gov/16106245/)**",
+      "[L-Evidenced] Pan-cancer patterns of somatic copy number alteration — Zack et al. 2013, Nature Genetics — **[PMID: 24071852](https://pubmed.ncbi.nlm.nih.gov/24071852/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D16",
+     "decision_type": "immune_expression_consistency",
+     "agent_choice": "direction_consistent_with_known_function",
+     "agent_rationale": "CSTB参与抗原呈递和免疫调控,其表达与免疫浸润(CD8+ T细胞)正相关符合已知功能。方向一致且文献支持",
+     "matched_rules": [
+      "N7.2-INTE-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Robust enumeration of cell subsets from tissue expression profiles — Newman et al. 2015, Nature Methods (CIBERSORT) — **[PMID: 25822800](https://pubmed.ncbi.nlm.nih.gov/25822800/)**",
+      "[L-Confirmed] REporting recommendations for tumour MARKer prognostic studies (REMARK) — McShane et al. 2005, British Journal of Cancer — **[PMID: 16106245](https://pubmed.ncbi.nlm.nih.gov/16106245/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    }
+   ]
+  },
+  {
+   "trajectory": "pan_edge_claim",
+   "act": "pan",
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "statistical_rigor": 0.0
+   },
+   "step_scores": [
+    {
+     "step_id": "E4",
+     "decision_type": "independent_prognostic_claim",
+     "agent_choice": "univariate_Cox_claiming_independent",
+     "agent_rationale": "CSTB HR=1.38, 95%CI 1.09-1.75, p=0.008 in univariate Cox regression. This demonstrates CSTB is an independent prognostic factor for overall survival in NSCLC patients.",
+     "matched_rules": [
+      "P2.2-PROG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Consensus] Tumor marker utility grading system: a framework to evaluate clinical utility of tumor markers — Hayes et al. 1996, JNCI (updated by Simon et al. 2009) — **[PMID: 8841020](https://pubmed.ncbi.nlm.nih.gov/8841020/)**",
+      "[L-Consensus] Survival analysis part II: multivariate data analysis — Bradburn et al. 2003, British Journal of Cancer — **[PMID: 12888808](https://pubmed.ncbi.nlm.nih.gov/12888808/)**",
+      "[L-Consensus] Regression Modeling Strategies, 2nd ed. — Harrell 2015, Springer — **[DOI: 10.1007/978-3-319-19425-7](https://doi.org/10.1007/978-3-319-19425-7)**"
+     ],
+     "alternatives": [
+      "multivariate_Cox_with_clinical_covariates",
+      "multivariable_adjusted_HR",
+      "multivariate_Cox_model",
+      "multivariate_Cox_minimal_covariates",
+      "stepwise_selection_Cox"
+     ],
+     "reward_signal": 0.0
+    }
+   ]
+  },
+  {
+   "trajectory": "pan_edge_consistency",
+   "act": "pan",
+   "n_decisions": 1,
+   "trajectory_score": 30.0,
+   "verdict": "needs_correction",
+   "dimension_scores": {
+    "statistical_rigor": 0.3
+   },
+   "step_scores": [
+    {
+     "step_id": "E6",
+     "decision_type": "expression_survival_consistency",
+     "agent_choice": "direction_inconsistent_not_discussed",
+     "agent_rationale": "CSTB is upregulated in tumor vs normal (logFC=1.8, padj<0.001) — consistent with oncogenic role. Meanwhile, survival analysis shows CSTB-high patients have better survival (HR=0.72, 95%CI 0.58-0.89) — suggesting a protective effect. Both results are statistically significant and reported in their respective sections.",
+     "matched_rules": [
+      "N7.1-INTE-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] REporting recommendations for tumour MARKer prognostic studies (REMARK) — McShane et al. 2005, British Journal of Cancer — **[PMID: 16106245](https://pubmed.ncbi.nlm.nih.gov/16106245/)**",
+      "[L-Evidenced] Pan-cancer patterns of somatic copy number alteration — Zack et al. 2013, Nature Genetics — **[PMID: 24071852](https://pubmed.ncbi.nlm.nih.gov/24071852/)**"
+     ],
+     "alternatives": [
+      "direction_consistent_with_mechanistic_explanation",
+      "direction_consistent",
+      "direction_inconsistent_with_biological_rationale",
+      "direction_inconsistent_acknowledged_but_unexplained"
+     ],
+     "reward_signal": 0.3
+    }
+   ]
+  },
+  {
+   "trajectory": "pan_edge_epv",
+   "act": "pan",
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "statistical_rigor": 0.0
+   },
+   "step_scores": [
+    {
+     "step_id": "E5",
+     "decision_type": "events_per_variable",
+     "agent_choice": "EPV_less_than_5",
+     "agent_rationale": "Multivariate Cox model includes CSTB + Age + Stage + Grade + Smoking history (5 covariates). Only 3 death events occurred in this cohort. Since the gene is highly significant in univariate analysis, we proceed with the full multivariate model.",
+     "matched_rules": [
+      "P2.3-PROG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Importance of events per independent variable in proportional hazards regression analysis — Peduzzi et al. 1995, Journal of Clinical Epidemiology — **[PMID: 8543964](https://pubmed.ncbi.nlm.nih.gov/8543964/)**",
+      "[L-Consensus] A simulation study of the number of events per variable in logistic regression analysis — Peduzzi et al. 1996, Statistics in Medicine — **[DOI: 10.1016/s0895-4356(96)00236-3](https://doi.org/10.1016/s0895-4356(96)00236-3)**"
+     ],
+     "alternatives": [
+      "EPV_gte_10_verified",
+      "EPV_gte_15",
+      "events_per_variable_gte_10",
+      "EPV_5_to_10_with_penalized",
+      "Firth_penalized_Cox",
+      "ridge_Cox_low_EPV"
+     ],
+     "reward_signal": 0.0
+    }
+   ]
+  },
+  {
+   "trajectory": "pan_edge_purity",
+   "act": "pan",
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.0
+   },
+   "step_scores": [
+    {
+     "step_id": "E2",
+     "decision_type": "purity_confounding",
+     "agent_choice": "purity_ignored",
+     "agent_rationale": "This study focuses on gene-immune correlation patterns. Tumor purity is a separate question and not the primary focus of this analysis — we report raw Spearman correlations between gene expression and immune scores without purity adjustment.",
+     "matched_rules": [
+      "I4.2-IMMU-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Systematic pan-cancer analysis of tumour purity — Aran et al. 2015, Nature Communications — **[PMID: 26634437](https://pubmed.ncbi.nlm.nih.gov/26634437/)**",
+      "[L-Confirmed] Inferring tumour purity and stromal and immune cell admixture from expression data — Yoshihara et al. 2013, Nature Communications — **[PMID: 24113773](https://pubmed.ncbi.nlm.nih.gov/24113773/)**"
+     ],
+     "alternatives": [
+      "purity_adjusted_partial_correlation",
+      "ESTIMATE_purity_correction",
+      "consensusTME_purity_adjustment",
+      "purity_discussed_as_limitation",
+      "stratification_by_purity"
+     ],
+     "reward_signal": 0.0
+    }
+   ]
+  },
+  {
+   "trajectory": "pan_error",
+   "act": "pan",
+   "n_decisions": 16,
+   "trajectory_score": 15.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.18,
+    "method_selection": 0.15,
+    "statistical_rigor": 0.35
+   },
+   "step_scores": [
+    {
+     "step_id": "D1",
+     "decision_type": "filtering",
+     "agent_choice": "no_filtering",
+     "agent_rationale": "跳过过滤以保留全部基因进行发现性分析。",
+     "matched_rules": [
+      "D1.2-DEG-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Consensus] edgeR User's Guide §2.7 Filtering (filterByExpr) — **[查看原文](https://bioconductor.org/packages/release/bioc/vignettes/edgeR/inst/doc/edgeRUsersGuide.pdf)**",
+      "[L-Consensus] Bourgon et al. (2010) PNAS — Independent filtering increases detection power — **[PMID: 20460310](https://pubmed.ncbi.nlm.nih.gov/20460310/)**"
+     ],
+     "alternatives": [
+      "filterByExpr",
+      "independent_filtering",
+      "DESeq2_independentFiltering",
+      "CPM_filter_min_samples",
+      "counts_per_million_min",
+      "mean_expression_filter"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "D2",
+     "decision_type": "normalization",
+     "agent_choice": "TPM",
+     "agent_rationale": "TPM是RNA-seq数据最常用的归一化方法。",
+     "matched_rules": [
+      "D1.3-DEG-001"
+     ],
+     "level": 2,
+     "numeric_score": 0.6,
+     "explanation": "可接受 — 有微小瑕疵",
+     "evidence_citations": [
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Dillies et al. (2013) Briefings in Bioinformatics — Normalization method comparison — **[PMID: 22988256](https://pubmed.ncbi.nlm.nih.gov/22988256/)**",
+      "[L-Consensus] Robinson & Oshlack (2010) — TMM normalization — **[PMID: 20196867](https://pubmed.ncbi.nlm.nih.gov/20196867/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.6
+    },
+    {
+     "step_id": "D3",
+     "decision_type": "deg_method",
+     "agent_choice": "Student_t_test",
+     "agent_rationale": "t-test是经典的差异检验方法,简单直接。",
+     "matched_rules": [
+      "M1.1-DEG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Love et al. (2014) DESeq2, Genome Biology — **[PMID: 25516281](https://pubmed.ncbi.nlm.nih.gov/25516281/)**",
+      "[L-Consensus] Conesa et al. (2016) Genome Biology — RNA-seq best practices survey — **[PMID: 26813401](https://pubmed.ncbi.nlm.nih.gov/26813401/)**",
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Soneson & Delorenzi (2013) BMC Bioinformatics — HISTORICAL REFERENCE — **[PMID: 24115176](https://pubmed.ncbi.nlm.nih.gov/24115176/)**"
+     ],
+     "alternatives": [
+      "DESeq2",
+      "edgeR",
+      "limma-voom",
+      "limma-trend",
+      "voom-with-quality-weights"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D4",
+     "decision_type": "multiple_testing_correction",
+     "agent_choice": "BH",
+     "agent_rationale": "Benjamini-Hochberg FDR控制假阳性率。",
+     "matched_rules": [
+      "M1.2-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Bonferroni inequality — mathematical fact (not a publication)",
+      "[L-Consensus] Benjamini & Hochberg (1995) — Controlling the FDR — **[查看原文](https://www.jstor.org/stable/2346101)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D5",
+     "decision_type": "significance_threshold",
+     "agent_choice": "padj <= 0.05, |logFC| >= 1.0",
+     "agent_rationale": "双阈值筛选确保统计和生物学显著性。",
+     "matched_rules": [
+      "M1.3-DEG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Consensus] Schurch et al. (2016) RNA — n=48 yeast benchmark — **[PMID: 27022035](https://pubmed.ncbi.nlm.nih.gov/27022035/)**",
+      "[L-Evidenced] Wang & Gao (2026) Human Genomics 20:63 — pipeline DE reporting recommendations — **[查看原文](https://doi.org/10.1186/s40246-026-00930-1)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D6",
+     "decision_type": "cox_ph_assumption",
+     "agent_choice": "no_ph_test",
+     "agent_rationale": "Cox回归是标准的生存分析方法,按惯例直接使用。",
+     "matched_rules": [
+      "P2.1-PROG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Proportional hazards tests and diagnostics based on weighted residuals — Grambsch & Therneau 1994, Biometrika — **[DOI: 10.1093/biomet/81.3.515](https://doi.org/10.1093/biomet/81.3.515)**",
+      "[L-Consensus] Survival analysis part II: multivariate data analysis — Bradburn et al. 2003, British Journal of Cancer — **[PMID: 12888808](https://pubmed.ncbi.nlm.nih.gov/12888808/)**"
+     ],
+     "alternatives": [
+      "Schoenfeld_residuals_test",
+      "cox_zph_test",
+      "Grambsch_Therneau_test",
+      "log_log_plot_only",
+      "visual_inspection_only"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D7",
+     "decision_type": "independent_prognostic_claim",
+     "agent_choice": "univariate_Cox_claiming_independent",
+     "agent_rationale": "单变量Cox分析中CSTB HR=1.38, p=0.008, 因此CSTB是独立的预后因素。",
+     "matched_rules": [
+      "P2.2-PROG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Consensus] Tumor marker utility grading system: a framework to evaluate clinical utility of tumor markers — Hayes et al. 1996, JNCI (updated by Simon et al. 2009) — **[PMID: 8841020](https://pubmed.ncbi.nlm.nih.gov/8841020/)**",
+      "[L-Consensus] Survival analysis part II: multivariate data analysis — Bradburn et al. 2003, British Journal of Cancer — **[PMID: 12888808](https://pubmed.ncbi.nlm.nih.gov/12888808/)**",
+      "[L-Consensus] Regression Modeling Strategies, 2nd ed. — Harrell 2015, Springer — **[DOI: 10.1007/978-3-319-19425-7](https://doi.org/10.1007/978-3-319-19425-7)**"
+     ],
+     "alternatives": [
+      "multivariate_Cox_with_clinical_covariates",
+      "multivariable_adjusted_HR",
+      "multivariate_Cox_model",
+      "multivariate_Cox_minimal_covariates",
+      "stepwise_selection_Cox"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D8",
+     "decision_type": "events_per_variable",
+     "agent_choice": "EPV_less_than_5",
+     "agent_rationale": "多变量Cox模型纳入CSTB+年龄+分期+分级共4个协变量。",
+     "matched_rules": [
+      "P2.3-PROG-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Importance of events per independent variable in proportional hazards regression analysis — Peduzzi et al. 1995, Journal of Clinical Epidemiology — **[PMID: 8543964](https://pubmed.ncbi.nlm.nih.gov/8543964/)**",
+      "[L-Consensus] A simulation study of the number of events per variable in logistic regression analysis — Peduzzi et al. 1996, Statistics in Medicine — **[DOI: 10.1016/s0895-4356(96)00236-3](https://doi.org/10.1016/s0895-4356(96)00236-3)**"
+     ],
+     "alternatives": [
+      "EPV_gte_10_verified",
+      "EPV_gte_15",
+      "events_per_variable_gte_10",
+      "EPV_5_to_10_with_penalized",
+      "Firth_penalized_Cox",
+      "ridge_Cox_low_EPV"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D9",
+     "decision_type": "cbioportal_projection",
+     "agent_choice": "SUMMARY",
+     "agent_rationale": "SUMMARY模式更快,数据量更小。",
+     "matched_rules": [
+      "G3.1-GENE-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] cBioPortal Web API Documentation — projection parameter — **[查看原文](https://docs.cbioportal.org/web-api-and-clients/)**"
+     ],
+     "alternatives": [
+      "DETAILED",
+      "projection_DETAILED",
+      "detailed_projection"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D10",
+     "decision_type": "immune_correlation_method",
+     "agent_choice": "Pearson_no_normality_check",
+     "agent_rationale": "Pearson相关是标准的线性相关分析方法。",
+     "matched_rules": [
+      "I4.1-IMMU-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Nonparametric Statistical Methods (3rd ed.) — Hollander, Wolfe & Chicken 2014, Wiley — **[查看原文](https://onlinelibrary.wiley.com/doi/book/10.1002/9781119196037)**",
+      "[L-Consensus] The effects of nonnormality on the product moment correlation coefficient — Kowalski 1972, Biometrika"
+     ],
+     "alternatives": [
+      "Spearman",
+      "Spearman_rank_correlation",
+      "rank_correlation",
+      "Pearson_with_normality_test",
+      "Pearson_after_transformation"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "D11",
+     "decision_type": "purity_confounding",
+     "agent_choice": "purity_ignored",
+     "agent_rationale": "本研究主要关注基因表达与免疫的相关性,纯度不是主要关注点。",
+     "matched_rules": [
+      "I4.2-IMMU-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Systematic pan-cancer analysis of tumour purity — Aran et al. 2015, Nature Communications — **[PMID: 26634437](https://pubmed.ncbi.nlm.nih.gov/26634437/)**",
+      "[L-Confirmed] Inferring tumour purity and stromal and immune cell admixture from expression data — Yoshihara et al. 2013, Nature Communications — **[PMID: 24113773](https://pubmed.ncbi.nlm.nih.gov/24113773/)**"
+     ],
+     "alternatives": [
+      "purity_adjusted_partial_correlation",
+      "ESTIMATE_purity_correction",
+      "consensusTME_purity_adjustment",
+      "purity_discussed_as_limitation",
+      "stratification_by_purity"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D12",
+     "decision_type": "gsea_background",
+     "agent_choice": "GO_all_genes_no_filter",
+     "agent_rationale": "使用GO全基因组注释作为GSEA的背景基因集。",
+     "matched_rules": [
+      "E5.2-ENRI-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles — Subramanian et al. 2005, PNAS — **[PMID: 16199517](https://pubmed.ncbi.nlm.nih.gov/16199517/)**",
+      "[L-Confirmed] GSEA User Guide — gene set background and universe — **[查看原文](https://docs.gsea-msigdb.org/GSEA/GSEA_User_Guide/)**"
+     ],
+     "alternatives": [
+      "expressed_genes_background",
+      "detected_genes_universe",
+      "filtered_expression_matrix_genes",
+      "MSigDB_default_background",
+      "all_known_genes"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D13",
+     "decision_type": "enrichment_correction",
+     "agent_choice": "no_correction",
+     "agent_rationale": "富集分析是探索性的,我们只关注top通路,不需要多重检验校正。",
+     "matched_rules": [
+      "E5.1-ENRI-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Bioinformatics enrichment tools: paths toward the comprehensive functional analysis of large gene lists — Huang et al. 2009, Nucleic Acids Research — **[PMID: 19033363](https://pubmed.ncbi.nlm.nih.gov/19033363/)**",
+      "[L-Confirmed] Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles — Subramanian et al. 2005, PNAS — **[PMID: 16199517](https://pubmed.ncbi.nlm.nih.gov/16199517/)**"
+     ],
+     "alternatives": [
+      "BH_FDR",
+      "Benjamini_Hochberg",
+      "FDR_correction",
+      "BY_FDR",
+      "q_value"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "D14",
+     "decision_type": "ic50_sample_size",
+     "agent_choice": "n_gte_30_with_power_analysis",
+     "agent_rationale": "GDSC2包含809个细胞系,样本量充足。",
+     "matched_rules": [
+      "D6.1-DRUG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] The Cancer Cell Line Encyclopedia enables predictive modelling of anticancer drug sensitivity — Barretina et al. 2012, Nature — **[PMID: 22460905](https://pubmed.ncbi.nlm.nih.gov/22460905/)**",
+      "[L-Consensus] A landscape of pharmacogenomic interactions in cancer — Iorio et al. 2016, Cell — **[PMID: 27397505](https://pubmed.ncbi.nlm.nih.gov/27397505/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "D15",
+     "decision_type": "expression_survival_consistency",
+     "agent_choice": "direction_inconsistent_not_discussed",
+     "agent_rationale": "CSTB在肿瘤中高表达,同时HR<1(保护因素),两个结果我们分开报告。",
+     "matched_rules": [
+      "N7.1-INTE-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] REporting recommendations for tumour MARKer prognostic studies (REMARK) — McShane et al. 2005, British Journal of Cancer — **[PMID: 16106245](https://pubmed.ncbi.nlm.nih.gov/16106245/)**",
+      "[L-Evidenced] Pan-cancer patterns of somatic copy number alteration — Zack et al. 2013, Nature Genetics — **[PMID: 24071852](https://pubmed.ncbi.nlm.nih.gov/24071852/)**"
+     ],
+     "alternatives": [
+      "direction_consistent_with_mechanistic_explanation",
+      "direction_consistent",
+      "direction_inconsistent_with_biological_rationale",
+      "direction_inconsistent_acknowledged_but_unexplained"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "D16",
+     "decision_type": "immune_expression_consistency",
+     "agent_choice": "direction_inconsistent_not_discussed",
+     "agent_rationale": "免疫浸润数据显示CSTB与CD8+ T细胞负相关,但表达分析显示CSTB上调,分开解释。",
+     "matched_rules": [
+      "N7.2-INTE-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Robust enumeration of cell subsets from tissue expression profiles — Newman et al. 2015, Nature Methods (CIBERSORT) — **[PMID: 25822800](https://pubmed.ncbi.nlm.nih.gov/25822800/)**",
+      "[L-Confirmed] REporting recommendations for tumour MARKer prognostic studies (REMARK) — McShane et al. 2005, British Journal of Cancer — **[PMID: 16106245](https://pubmed.ncbi.nlm.nih.gov/16106245/)**"
+     ],
+     "alternatives": [
+      "direction_consistent_with_known_function",
+      "direction_inconsistent_with_validated_explanation",
+      "direction_inconsistent_with_hypothesis_only"
+     ],
+     "reward_signal": 0.3
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_correct",
+   "act": "scrna",
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "dimension_scores": {
+    "data_handling": 0.85,
+    "method_selection": 0.85
+   },
+   "step_scores": [
+    {
+     "step_id": "S1",
+     "decision_type": "api_data_integrity",
+     "agent_choice": "DETAILED_with_validation",
+     "agent_rationale": "GSE131907 .h5ad validated: genes x cells indices intact, no duplicate barcodes, obs/var complete",
+     "matched_rules": [
+      "A1.1-API-001_data_integrity"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Evidenced] Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology — **[PMID: 34329294](https://pubmed.ncbi.nlm.nih.gov/34329294/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S2",
+     "decision_type": "qc_filtering",
+     "agent_choice": "MAD5_adaptive_threshold",
+     "agent_rationale": "Mito<20% + genes>500 adaptive filter; removed 2.5% dead cells (Luecken & Theis 2019, PMID 31841116)",
+     "matched_rules": [
+      "Q1.1-QC-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis: a tutorial — Luecken & Theis 2019, Molecular Systems Biology — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Confirmed] Scater: pre-processing, quality control, normalization and visualization of single-cell RNA-seq data in R — McCarthy et al. 2017, Bioinformatics — **[PMID: 28088763](https://pubmed.ncbi.nlm.nih.gov/28088763/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S3",
+     "decision_type": "doublet_detection",
+     "agent_choice": "scDblFinder",
+     "agent_rationale": "scDblFinder random-forest doublet detection for 10X data (Xi & Li 2021, PMID 33541407)",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S4",
+     "decision_type": "scRNA_normalization",
+     "agent_choice": "SCTransform",
+     "agent_rationale": "SCTransform regularized negative-binomial regression — best variance stabilization for scRNA (Hafemeister & Satija 2019, PMID 31870423)",
+     "matched_rules": [
+      "N1.1-NORM-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**",
+      "[L-Confirmed] Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology — **[PMID: 27122128](https://pubmed.ncbi.nlm.nih.gov/27122128/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S5",
+     "decision_type": "hv_gene_selection",
+     "agent_choice": "vst",
+     "agent_rationale": "Seurat v3 VST selected 3,000 HVGs — standard for scRNA clustering and dimensionality reduction",
+     "matched_rules": [
+      "H1.1-HVG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology — **[PMID: 25867923](https://pubmed.ncbi.nlm.nih.gov/25867923/)**",
+      "[L-Evidenced] Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S6",
+     "decision_type": "batch_correction",
+     "agent_choice": "Harmony",
+     "agent_rationale": "Harmony iterative soft-clustering for 11-patient batch integration (Korsunsky et al. 2019, PMID 31740819)",
+     "matched_rules": [
+      "B1.1-BATC-001_integration",
+      "B1.2-BATC-002_requirement"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Confirmed] Fast, sensitive and accurate integration of single-cell data with Harmony — Korsunsky et al. 2019, Nature Methods — **[PMID: 31740819](https://pubmed.ncbi.nlm.nih.gov/31740819/)**",
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Evidenced] A test metric for assessing single-cell RNA-seq batch correction (kBET) — Büttner et al. 2019, Nature Methods — **[PMID: 30573817](https://pubmed.ncbi.nlm.nih.gov/30573817/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S7",
+     "decision_type": "dim_reduction",
+     "agent_choice": "PCA_elbow_selection",
+     "agent_rationale": "Chunked PCA 50 PCs on 203K cells — memory-safe sparse decomposition, no dense conversion needed",
+     "matched_rules": [
+      "D2.1-DIMR-001_reduction"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S8",
+     "decision_type": "clustering_method",
+     "agent_choice": "Leiden",
+     "agent_rationale": "Leiden algorithm with resolution optimization — guarantees well-connected communities (Traag et al. 2019, PMID 30914743)",
+     "matched_rules": [
+      "C1.1-CLUS-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**",
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S9",
+     "decision_type": "annotation_method",
+     "agent_choice": "SingleR_with_CellTypist_cross_validation",
+     "agent_rationale": "CellTypist + SingleR cross-validation; dotplot marker verification (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401)",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S10",
+     "decision_type": "deg_method",
+     "agent_choice": "pseudobulk_DESeq2",
+     "agent_rationale": "Pseudobulk + DESeq2 at patient level — avoids pseudoreplication, patients as biological replicates (Squair et al. 2021, PMID 34433851)",
+     "matched_rules": [
+      "G1.1-DEG-001_pseudobulk",
+      "G1.3-DEG-003_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology — **[PMID: 26653891](https://pubmed.ncbi.nlm.nih.gov/26653891/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S11",
+     "decision_type": "trajectory_inference",
+     "agent_choice": "monocle3",
+     "agent_rationale": "monocle3 on Epithelial subset for EMT trajectory inference (Saelens et al. 2019, PMID 30643263)",
+     "matched_rules": [
+      "T1.1-TRAJ-001_inference"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A comparison of single-cell trajectory inference methods — Saelens et al. 2019, Nature Biotechnology — **[PMID: 30936559](https://pubmed.ncbi.nlm.nih.gov/30936559/)**",
+      "[L-Evidenced] The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells — Trapnell et al. 2014, Nature Biotechnology — **[PMID: 24658644](https://pubmed.ncbi.nlm.nih.gov/24658644/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S12",
+     "decision_type": "cluster_annotation_consistency",
+     "agent_choice": "consistent_with_cross_validation",
+     "agent_rationale": "41 subclusters map to 8 major cell types via cross-validation; marker dotplot confirms consistency across annotation levels",
+     "matched_rules": [
+      "S1.1-CONS-001_cluster_annotation"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] SingleR — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_crc_correct",
+   "act": "scrna",
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "dimension_scores": {
+    "data_handling": 0.85,
+    "method_selection": 0.85
+   },
+   "step_scores": [
+    {
+     "step_id": "S1",
+     "decision_type": "api_data_integrity",
+     "agent_choice": "DETAILED_with_validation",
+     "agent_rationale": "GSE132465 CRC 10X raw UMI matrix validated: 63,689 cells × 25,655 genes, no duplicate barcodes, tumor/normal labels intact across 10 patients (SMC01-SMC10).",
+     "matched_rules": [
+      "A1.1-API-001_data_integrity"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Evidenced] Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology — **[PMID: 34329294](https://pubmed.ncbi.nlm.nih.gov/34329294/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S2",
+     "decision_type": "qc_filtering",
+     "agent_choice": "MAD5_adaptive_threshold",
+     "agent_rationale": "MAD-based adaptive QC with 5 MAD threshold — retains immune and stromal cells while removing debris. CRC TME has diverse cell sizes requiring adaptive rather than fixed thresholds (Luecken & Theis 2019, PMID 31841116).",
+     "matched_rules": [
+      "Q1.1-QC-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis: a tutorial — Luecken & Theis 2019, Molecular Systems Biology — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Confirmed] Scater: pre-processing, quality control, normalization and visualization of single-cell RNA-seq data in R — McCarthy et al. 2017, Bioinformatics — **[PMID: 28088763](https://pubmed.ncbi.nlm.nih.gov/28088763/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S3",
+     "decision_type": "doublet_detection",
+     "agent_choice": "scDblFinder",
+     "agent_rationale": "scDblFinder random-forest doublet detection — CRC tumors have high cell density, estimated doublet rate ~5% at 63K cells (Xi & Li 2021, PMID 33541407).",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S4",
+     "decision_type": "scRNA_normalization",
+     "agent_choice": "SCTransform",
+     "agent_rationale": "SCTransform regularized negative-binomial regression — best variance stabilization for scRNA UMI counts. CRC TME has diverse cell types (epithelial, immune, stromal) with different library sizes, making variance stabilization critical (Hafemeister & Satija 2019, PMID 31870423).",
+     "matched_rules": [
+      "N1.1-NORM-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**",
+      "[L-Confirmed] Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology — **[PMID: 27122128](https://pubmed.ncbi.nlm.nih.gov/27122128/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S5",
+     "decision_type": "hv_gene_selection",
+     "agent_choice": "vst",
+     "agent_rationale": "Seurat v3 VST selected 3,000 HVGs — standard for scRNA clustering. Sufficient to capture immune and tumor expression programs in CRC TME.",
+     "matched_rules": [
+      "H1.1-HVG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology — **[PMID: 25867923](https://pubmed.ncbi.nlm.nih.gov/25867923/)**",
+      "[L-Evidenced] Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S6",
+     "decision_type": "batch_correction",
+     "agent_choice": "Harmony",
+     "agent_rationale": "Harmony iterative soft-clustering for 10-patient batch integration. CRC samples from multiple patients require batch correction to avoid patient-specific clustering (Korsunsky et al. 2019, PMID 31740819).",
+     "matched_rules": [
+      "B1.1-BATC-001_integration",
+      "B1.2-BATC-002_requirement"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Confirmed] Fast, sensitive and accurate integration of single-cell data with Harmony — Korsunsky et al. 2019, Nature Methods — **[PMID: 31740819](https://pubmed.ncbi.nlm.nih.gov/31740819/)**",
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Evidenced] A test metric for assessing single-cell RNA-seq batch correction (kBET) — Büttner et al. 2019, Nature Methods — **[PMID: 30573817](https://pubmed.ncbi.nlm.nih.gov/30573817/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S7",
+     "decision_type": "dim_reduction",
+     "agent_choice": "PCA_elbow_selection",
+     "agent_rationale": "Elbow plot selected 30 PCs — immune-infiltrated CRC TME has high biological complexity requiring more PCs than simpler tissues.",
+     "matched_rules": [
+      "D2.1-DIMR-001_reduction"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S8",
+     "decision_type": "clustering_method",
+     "agent_choice": "Leiden",
+     "agent_rationale": "Leiden algorithm with resolution 1.2, selected via clustree stability analysis — CRC TME requires slightly higher resolution to separate CD4+/CD8+ T cell subsets and monocyte/macrophage populations (Traag et al. 2019, PMID 30914743).",
+     "matched_rules": [
+      "C1.1-CLUS-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**",
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S9",
+     "decision_type": "annotation_method",
+     "agent_choice": "SingleR_with_CellTypist_cross_validation",
+     "agent_rationale": "CellTypist (immune-focused model) + SingleR (Blueprint/ENCODE reference) cross-validation. CRC TME is immune-infiltrated — dual immune annotation methods provide robust cell type identification. Marker dotplot verification for all major lineages (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S10",
+     "decision_type": "deg_method",
+     "agent_choice": "pseudobulk_DESeq2",
+     "agent_rationale": "Pseudobulk aggregation at patient level + DESeq2 Wald test — patients are biological replicates. CRC tumor vs normal DEG requires proper pseudoreplication handling (Squair et al. 2021, PMID 34433851).",
+     "matched_rules": [
+      "G1.1-DEG-001_pseudobulk",
+      "G1.3-DEG-003_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology — **[PMID: 26653891](https://pubmed.ncbi.nlm.nih.gov/26653891/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S11",
+     "decision_type": "trajectory_inference",
+     "agent_choice": "monocle3",
+     "agent_rationale": "monocle3 on T cell subset for exhaustion trajectory inference — CRC tumors show T cell exhaustion gradient from activated to terminally exhausted states (Saelens et al. 2019, PMID 30643263).",
+     "matched_rules": [
+      "T1.1-TRAJ-001_inference"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A comparison of single-cell trajectory inference methods — Saelens et al. 2019, Nature Biotechnology — **[PMID: 30936559](https://pubmed.ncbi.nlm.nih.gov/30936559/)**",
+      "[L-Evidenced] The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells — Trapnell et al. 2014, Nature Biotechnology — **[PMID: 24658644](https://pubmed.ncbi.nlm.nih.gov/24658644/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S12",
+     "decision_type": "cluster_annotation_consistency",
+     "agent_choice": "consistent_with_cross_validation",
+     "agent_rationale": "CellTypist and SingleR annotations concordant on 92% of cells. 38 clusters map to 8 major cell types. Marker dotplot confirms T cell (CD3D/CD8A/CD4), B cell (CD19/MS4A1), myeloid (CD14/CD68), and epithelial (EPCAM) lineages with clear separation.",
+     "matched_rules": [
+      "S1.1-CONS-001_cluster_annotation"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] SingleR — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_crc_error",
+   "act": "scrna",
+   "n_decisions": 12,
+   "trajectory_score": 29.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.29,
+    "method_selection": 0.5714
+   },
+   "step_scores": [
+    {
+     "step_id": "S1",
+     "decision_type": "api_data_integrity",
+     "agent_choice": "DETAILED_with_validation",
+     "agent_rationale": "GSE132465 CRC raw UMI matrix loaded: 63,689 cells. Cell barcodes and metadata verified against GEO entry.",
+     "matched_rules": [
+      "A1.1-API-001_data_integrity"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Evidenced] Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology — **[PMID: 34329294](https://pubmed.ncbi.nlm.nih.gov/34329294/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S2",
+     "decision_type": "qc_filtering",
+     "agent_choice": "hard_threshold",
+     "agent_rationale": "Fixed QC thresholds: min_genes=200, min_cells=3, max_mito=25%. Simple and reproducible — widely used in published CRC studies.",
+     "matched_rules": [
+      "Q1.1-QC-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis: a tutorial — Luecken & Theis 2019, Molecular Systems Biology — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Confirmed] Scater: pre-processing, quality control, normalization and visualization of single-cell RNA-seq data in R — McCarthy et al. 2017, Bioinformatics — **[PMID: 28088763](https://pubmed.ncbi.nlm.nih.gov/28088763/)**"
+     ],
+     "alternatives": [
+      "MAD5_adaptive_threshold",
+      "adaptive_threshold",
+      "3MAD",
+      "percentile_based"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S3",
+     "decision_type": "doublet_detection",
+     "agent_choice": "no_doublet_detection",
+     "agent_rationale": "Doublet rate estimated below 5% at 63K cells. Doublet removal risks eliminating rare cell doublets that may represent biologically meaningful co-expression patterns (e.g. T cell-tumor cell interactions). Skipping to preserve all cells.",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [
+      "scDblFinder",
+      "scrublet_with_scDblFinder",
+      "Solo_with_scDblFinder",
+      "DoubletFinder",
+      "Scrublet"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "S4",
+     "decision_type": "scRNA_normalization",
+     "agent_choice": "LogNormalize",
+     "agent_rationale": "LogNormalize (log(CPM+1)) — the most widely used scRNA normalization in published CRC studies. Simpler and faster than SCTransform, sufficient for exploratory immune profiling.",
+     "matched_rules": [
+      "N1.1-NORM-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**",
+      "[L-Confirmed] Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology — **[PMID: 27122128](https://pubmed.ncbi.nlm.nih.gov/27122128/)**"
+     ],
+     "alternatives": [
+      "SCTransform",
+      "sctransform",
+      "scran",
+      "scran_norm"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S5",
+     "decision_type": "hv_gene_selection",
+     "agent_choice": "vst",
+     "agent_rationale": "VST selected 3,000 HVGs for downstream clustering.",
+     "matched_rules": [
+      "H1.1-HVG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology — **[PMID: 25867923](https://pubmed.ncbi.nlm.nih.gov/25867923/)**",
+      "[L-Evidenced] Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S6",
+     "decision_type": "batch_correction",
+     "agent_choice": "no_integration",
+     "agent_rationale": "10 patients analyzed together without explicit batch correction. Biological differences (tumor vs normal, patient-specific immune profiles) are the primary signals of interest — integration might over-correct these genuine biological variations.",
+     "matched_rules": [
+      "B1.1-BATC-001_integration",
+      "B1.2-BATC-002_requirement"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Confirmed] Fast, sensitive and accurate integration of single-cell data with Harmony — Korsunsky et al. 2019, Nature Methods — **[PMID: 31740819](https://pubmed.ncbi.nlm.nih.gov/31740819/)**"
+     ],
+     "alternatives": [
+      "Harmony",
+      "scVI",
+      "BBKNN",
+      "Seurat_CCA",
+      "fastMNN"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "S7",
+     "decision_type": "dim_reduction",
+     "agent_choice": "PCA_elbow_selection",
+     "agent_rationale": "Elbow method selected 30 PCs.",
+     "matched_rules": [
+      "D2.1-DIMR-001_reduction"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S8",
+     "decision_type": "clustering_method",
+     "agent_choice": "Leiden",
+     "agent_rationale": "Leiden algorithm — standard for graph-based scRNA clustering.",
+     "matched_rules": [
+      "C1.1-CLUS-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**",
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S9",
+     "decision_type": "annotation_method",
+     "agent_choice": "manual_marker",
+     "agent_rationale": "Manual marker-based annotation using canonical CRC markers: EPCAM (epithelial), CD3D (T cells), CD19 (B cells), CD14 (myeloid), COL1A1 (fibroblasts). More intuitive and controllable — automated methods may misclassify CRC-specific cell states.",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [
+      "SingleR_with_CellTypist_cross_validation",
+      "multi_method_consensus",
+      "reference_based_with_marker_validation",
+      "SingleR",
+      "CellTypist",
+      "Azimuth"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S10",
+     "decision_type": "deg_method",
+     "agent_choice": "wilcoxon_rank_sum",
+     "agent_rationale": "Seurat FindMarkers default Wilcoxon rank-sum test. Cell-level DEG is standard in CRC scRNA-seq literature — widely validated and computationally efficient for 63K cells.",
+     "matched_rules": [
+      "G1.1-DEG-001_pseudobulk",
+      "G1.3-DEG-003_method"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology — **[PMID: 26653891](https://pubmed.ncbi.nlm.nih.gov/26653891/)**"
+     ],
+     "alternatives": [
+      "pseudobulk_DESeq2",
+      "pseudobulk_edgeR",
+      "pseudobulk_limma",
+      "MAST_with_replicate_correction",
+      "NEBULA",
+      "scVI_LDEE"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S11",
+     "decision_type": "trajectory_inference",
+     "agent_choice": "monocle3",
+     "agent_rationale": "monocle3 trajectory inference on Epithelial cells.",
+     "matched_rules": [
+      "T1.1-TRAJ-001_inference"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A comparison of single-cell trajectory inference methods — Saelens et al. 2019, Nature Biotechnology — **[PMID: 30936559](https://pubmed.ncbi.nlm.nih.gov/30936559/)**",
+      "[L-Evidenced] The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells — Trapnell et al. 2014, Nature Biotechnology — **[PMID: 24658644](https://pubmed.ncbi.nlm.nih.gov/24658644/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S12",
+     "decision_type": "cluster_annotation_consistency",
+     "agent_choice": "not_checked",
+     "agent_rationale": "Each module (clustering, annotation, DEG) analyzed independently. Results reported in separate sections — cross-module consistency check deferred to discussion.",
+     "matched_rules": [
+      "S1.1-CONS-001_cluster_annotation"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] SingleR — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**"
+     ],
+     "alternatives": [
+      "consistent_with_cross_validation",
+      "cluster_annotation_mapped",
+      "minor_mismatch_documented"
+     ],
+     "reward_signal": 0.0
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_edge_default",
+   "act": "scrna",
+   "n_decisions": 1,
+   "trajectory_score": 30.0,
+   "verdict": "needs_correction",
+   "dimension_scores": {
+    "method_selection": 0.3
+   },
+   "step_scores": [
+    {
+     "step_id": "E8",
+     "decision_type": "clustering_resolution",
+     "agent_choice": "default_0_8",
+     "agent_rationale": "We used the Seurat default resolution of 0.8 for Leiden clustering. This is the standard setting used in most published scRNA-seq studies and produces a reasonable number of clusters for downstream annotation.",
+     "matched_rules": [
+      "C1.2-CLUS-002_resolution"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] From Louvain to Leiden — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**"
+     ],
+     "alternatives": [
+      "clustree_stability_analysis",
+      "silhouette_optimization",
+      "multi_resolution_validated",
+      "known_marker_guided",
+      "domain_expert_chosen"
+     ],
+     "reward_signal": 0.3
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_edge_nodoublet",
+   "act": "scrna",
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.0
+   },
+   "step_scores": [
+    {
+     "step_id": "E7",
+     "decision_type": "doublet_detection",
+     "agent_choice": "no_doublet_detection",
+     "agent_rationale": "The estimated doublet rate for this 10X dataset (~8,500 cells) is under 3%. At this low rate, doublets are unlikely to form distinct clusters or significantly affect downstream DEG results. We skip doublet detection to save computation time and avoid accidentally removing rare cell types that may resemble doublet profiles.",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [
+      "scDblFinder",
+      "scrublet_with_scDblFinder",
+      "Solo_with_scDblFinder",
+      "DoubletFinder",
+      "Scrublet"
+     ],
+     "reward_signal": 0.0
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_edge_singleanno",
+   "act": "scrna",
+   "n_decisions": 1,
+   "trajectory_score": 60.0,
+   "verdict": "pass",
+   "dimension_scores": {
+    "method_selection": 0.6
+   },
+   "step_scores": [
+    {
+     "step_id": "E9",
+     "decision_type": "annotation_method",
+     "agent_choice": "SingleR",
+     "agent_rationale": "SingleR with the Blueprint/ENCODE reference provides correlation-based cell type annotation. It is well-cited (Aran et al. 2019) and widely used in the field — a single robust method is sufficient for this dataset given the well-characterized tumor microenvironment cell types.",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 2,
+     "numeric_score": 0.6,
+     "explanation": "可接受 — 有微小瑕疵",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.6
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_error",
+   "act": "scrna",
+   "n_decisions": 12,
+   "trajectory_score": 40.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.4,
+    "method_selection": 0.4571
+   },
+   "step_scores": [
+    {
+     "step_id": "S1",
+     "decision_type": "api_data_integrity",
+     "agent_choice": "DETAILED_with_validation",
+     "agent_rationale": "GEO data loaded and validated.",
+     "matched_rules": [
+      "A1.1-API-001_data_integrity"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Evidenced] Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology — **[PMID: 34329294](https://pubmed.ncbi.nlm.nih.gov/34329294/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S2",
+     "decision_type": "qc_filtering",
+     "agent_choice": "hard_threshold",
+     "agent_rationale": "Fixed thresholds: mito<25%, genes 200-6000. Simple and widely used.",
+     "matched_rules": [
+      "Q1.1-QC-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis: a tutorial — Luecken & Theis 2019, Molecular Systems Biology — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Confirmed] Scater: pre-processing, quality control, normalization and visualization of single-cell RNA-seq data in R — McCarthy et al. 2017, Bioinformatics — **[PMID: 28088763](https://pubmed.ncbi.nlm.nih.gov/28088763/)**"
+     ],
+     "alternatives": [
+      "MAD5_adaptive_threshold",
+      "adaptive_threshold",
+      "3MAD",
+      "percentile_based"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S3",
+     "decision_type": "doublet_detection",
+     "agent_choice": "no_doublet_detection",
+     "agent_rationale": "Doublet rate is low (<5%), skipping to save compute time.",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [
+      "scDblFinder",
+      "scrublet_with_scDblFinder",
+      "Solo_with_scDblFinder",
+      "DoubletFinder",
+      "Scrublet"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "S4",
+     "decision_type": "scRNA_normalization",
+     "agent_choice": "SCTransform",
+     "agent_rationale": "SCTransform is the best scRNA normalization method.",
+     "matched_rules": [
+      "N1.1-NORM-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**",
+      "[L-Confirmed] Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology — **[PMID: 27122128](https://pubmed.ncbi.nlm.nih.gov/27122128/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S5",
+     "decision_type": "hv_gene_selection",
+     "agent_choice": "vst",
+     "agent_rationale": "VST selection of 3000 HVGs.",
+     "matched_rules": [
+      "H1.1-HVG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology — **[PMID: 25867923](https://pubmed.ncbi.nlm.nih.gov/25867923/)**",
+      "[L-Evidenced] Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S6",
+     "decision_type": "batch_correction",
+     "agent_choice": "no_integration",
+     "agent_rationale": "11 patients analyzed together, biological differences > technical differences.",
+     "matched_rules": [
+      "B1.1-BATC-001_integration",
+      "B1.2-BATC-002_requirement"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Confirmed] Fast, sensitive and accurate integration of single-cell data with Harmony — Korsunsky et al. 2019, Nature Methods — **[PMID: 31740819](https://pubmed.ncbi.nlm.nih.gov/31740819/)**"
+     ],
+     "alternatives": [
+      "Harmony",
+      "scVI",
+      "BBKNN",
+      "Seurat_CCA",
+      "fastMNN"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "S7",
+     "decision_type": "dim_reduction",
+     "agent_choice": "PCA_fixed_10",
+     "agent_rationale": "Top 10 PCs, Seurat default.",
+     "matched_rules": [
+      "D2.1-DIMR-001_reduction"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [
+      "PCA_elbow_selection",
+      "PCA_JackStraw",
+      "PCA_heatmap_selection",
+      "PCA_default_30",
+      "PCA_fixed_50"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S8",
+     "decision_type": "clustering_method",
+     "agent_choice": "Louvain",
+     "agent_rationale": "Louvain is the classic graph clustering algorithm, widely validated.",
+     "matched_rules": [
+      "C1.1-CLUS-001_method"
+     ],
+     "level": 2,
+     "numeric_score": 0.6,
+     "explanation": "可接受 — 有微小瑕疵",
+     "evidence_citations": [
+      "[L-Confirmed] From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**",
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.6
+    },
+    {
+     "step_id": "S9",
+     "decision_type": "annotation_method",
+     "agent_choice": "manual_marker",
+     "agent_rationale": "Manual marker-based annotation (CD3D/CD8A/CD4/CD19/CD14/EPCAM) — more intuitive and controllable.",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [
+      "SingleR_with_CellTypist_cross_validation",
+      "multi_method_consensus",
+      "reference_based_with_marker_validation",
+      "SingleR",
+      "CellTypist",
+      "Azimuth"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S10",
+     "decision_type": "deg_method",
+     "agent_choice": "wilcoxon_rank_sum",
+     "agent_rationale": "Wilcoxon rank-sum is the standard scRNA DEG method, Seurat default.",
+     "matched_rules": [
+      "G1.1-DEG-001_pseudobulk",
+      "G1.3-DEG-003_method"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology — **[PMID: 26653891](https://pubmed.ncbi.nlm.nih.gov/26653891/)**"
+     ],
+     "alternatives": [
+      "pseudobulk_DESeq2",
+      "pseudobulk_edgeR",
+      "pseudobulk_limma",
+      "MAST_with_replicate_correction",
+      "NEBULA",
+      "scVI_LDEE"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S11",
+     "decision_type": "trajectory_inference",
+     "agent_choice": "monocle3",
+     "agent_rationale": "monocle3 EMT trajectory on Epithelial cells.",
+     "matched_rules": [
+      "T1.1-TRAJ-001_inference"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A comparison of single-cell trajectory inference methods — Saelens et al. 2019, Nature Biotechnology — **[PMID: 30936559](https://pubmed.ncbi.nlm.nih.gov/30936559/)**",
+      "[L-Evidenced] The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells — Trapnell et al. 2014, Nature Biotechnology — **[PMID: 24658644](https://pubmed.ncbi.nlm.nih.gov/24658644/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S12",
+     "decision_type": "cluster_annotation_consistency",
+     "agent_choice": "not_checked",
+     "agent_rationale": "Each module analyzed independently, results reported separately.",
+     "matched_rules": [
+      "S1.1-CONS-001_cluster_annotation"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] SingleR — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**"
+     ],
+     "alternatives": [
+      "consistent_with_cross_validation",
+      "cluster_annotation_mapped",
+      "minor_mismatch_documented"
+     ],
+     "reward_signal": 0.0
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_melanoma_cellvoyager",
+   "act": "scrna",
+   "n_decisions": 12,
+   "trajectory_score": 29.0,
+   "verdict": "blocked",
+   "dimension_scores": {
+    "data_handling": 0.29,
+    "method_selection": 0.4929
+   },
+   "step_scores": [
+    {
+     "step_id": "S1",
+     "decision_type": "api_data_integrity",
+     "agent_choice": "DETAILED_with_validation",
+     "agent_rationale": "GSE115978 loaded and validated: 7,186 cells x 22,454 genes. Raw counts detected (max expression > 100).",
+     "matched_rules": [
+      "A1.1-API-001_data_integrity"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Evidenced] Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology — **[PMID: 34329294](https://pubmed.ncbi.nlm.nih.gov/34329294/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S2",
+     "decision_type": "qc_filtering",
+     "agent_choice": "hard_threshold",
+     "agent_rationale": "Fixed QC thresholds: sc.pp.filter_cells(min_genes=200), sc.pp.filter_genes(min_cells=3). No adaptive thresholding.",
+     "matched_rules": [
+      "Q1.1-QC-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis: a tutorial — Luecken & Theis 2019, Molecular Systems Biology — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Confirmed] Scater: pre-processing, quality control, normalization and visualization of single-cell RNA-seq data in R — McCarthy et al. 2017, Bioinformatics — **[PMID: 28088763](https://pubmed.ncbi.nlm.nih.gov/28088763/)**"
+     ],
+     "alternatives": [
+      "MAD5_adaptive_threshold",
+      "adaptive_threshold",
+      "3MAD",
+      "percentile_based"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S3",
+     "decision_type": "doublet_detection",
+     "agent_choice": "no_doublet_detection",
+     "agent_rationale": "No doublet detection performed. Notebook does not call scDblFinder, scrublet, or any doublet detection method.",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [
+      "scDblFinder",
+      "scrublet_with_scDblFinder",
+      "Solo_with_scDblFinder",
+      "DoubletFinder",
+      "Scrublet"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "S4",
+     "decision_type": "scRNA_normalization",
+     "agent_choice": "LogNormalize",
+     "agent_rationale": "sc.pp.normalize_total(target_sum=1e4) + sc.pp.log1p() — LogNormalize pipeline. 'Filtered cells/genes, normalized, and log-transformed.' No SCTransform or scran.",
+     "matched_rules": [
+      "N1.1-NORM-001"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**",
+      "[L-Confirmed] Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology — **[PMID: 27122128](https://pubmed.ncbi.nlm.nih.gov/27122128/)**"
+     ],
+     "alternatives": [
+      "SCTransform",
+      "sctransform",
+      "scran",
+      "scran_norm"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S5",
+     "decision_type": "hv_gene_selection",
+     "agent_choice": "vst",
+     "agent_rationale": "sc.pp.highly_variable_genes(flavor='seurat', n_top_genes=2000) — VST method for 2,000 HVGs.",
+     "matched_rules": [
+      "H1.1-HVG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology — **[PMID: 25867923](https://pubmed.ncbi.nlm.nih.gov/25867923/)**",
+      "[L-Evidenced] Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S6",
+     "decision_type": "batch_correction",
+     "agent_choice": "no_integration",
+     "agent_rationale": "No explicit batch correction performed. Dataset contains cells from multiple patients but notebook does not call Harmony, scVI, BBKNN, or any integration method.",
+     "matched_rules": [
+      "B1.1-BATC-001_integration",
+      "B1.2-BATC-002_requirement"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Confirmed] Fast, sensitive and accurate integration of single-cell data with Harmony — Korsunsky et al. 2019, Nature Methods — **[PMID: 31740819](https://pubmed.ncbi.nlm.nih.gov/31740819/)**"
+     ],
+     "alternatives": [
+      "Harmony",
+      "scVI",
+      "BBKNN",
+      "Seurat_CCA",
+      "fastMNN"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "S7",
+     "decision_type": "dim_reduction",
+     "agent_choice": "PCA_arbitrary",
+     "agent_rationale": "sc.tl.pca(n_comps=50) — fixed 50 PCs without elbow plot or explained variance justification. n_neighbors=15, n_pcs=30 for graph construction.",
+     "matched_rules": [
+      "D2.1-DIMR-001_reduction"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [
+      "PCA_elbow_selection",
+      "PCA_JackStraw",
+      "PCA_heatmap_selection",
+      "PCA_default_30",
+      "PCA_fixed_50"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S8",
+     "decision_type": "clustering_method",
+     "agent_choice": "Leiden",
+     "agent_rationale": "sc.tl.leiden(resolution=1.0, random_state=0). Standard Leiden clustering with default resolution 1.0 — no clustree stability analysis or silhouette optimization mentioned.",
+     "matched_rules": [
+      "C1.1-CLUS-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**",
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S9",
+     "decision_type": "annotation_method",
+     "agent_choice": "manual_marker",
+     "agent_rationale": "Cell types identified via CD45 status parsed from cell barcodes (CD45_neg = tumor, CD45+ = immune) + melanoma marker scoring (MITF, MLANA, PMEL, TYR). No SingleR, CellTypist, or reference-based annotation used.",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [
+      "SingleR_with_CellTypist_cross_validation",
+      "multi_method_consensus",
+      "reference_based_with_marker_validation",
+      "SingleR",
+      "CellTypist",
+      "Azimuth"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S10",
+     "decision_type": "deg_method",
+     "agent_choice": "Kruskal_Wallis_cell_level",
+     "agent_rationale": "Kruskal-Wallis H-test (non-parametric ANOVA) on cell-level log-normalized data — comparing immune evasion gene expression across G1/S/G2M cell-cycle phases. Cell-level test without pseudobulk aggregation.",
+     "matched_rules": [
+      "G1.1-DEG-001_pseudobulk",
+      "G1.3-DEG-003_method"
+     ],
+     "level": 1,
+     "numeric_score": 0.3,
+     "explanation": "有风险 — 方法选择值得商榷",
+     "evidence_citations": [
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology — **[PMID: 26653891](https://pubmed.ncbi.nlm.nih.gov/26653891/)**"
+     ],
+     "alternatives": [
+      "pseudobulk_DESeq2",
+      "pseudobulk_edgeR",
+      "pseudobulk_limma",
+      "MAST_with_replicate_correction",
+      "NEBULA",
+      "scVI_LDEE"
+     ],
+     "reward_signal": 0.3
+    },
+    {
+     "step_id": "S11",
+     "decision_type": "trajectory_inference",
+     "agent_choice": "no_trajectory",
+     "agent_rationale": "No trajectory inference performed. Notebook focuses on cell-cycle phase analysis and correlation tests rather than pseudotime trajectory inference.",
+     "matched_rules": [
+      "T1.1-TRAJ-001_inference"
+     ],
+     "level": 0,
+     "numeric_score": 0.0,
+     "explanation": "危险 — 方法选择将导致错误结论",
+     "evidence_citations": [
+      "[L-Confirmed] A comparison of single-cell trajectory inference methods — Saelens et al. 2019, Nature Biotechnology — **[PMID: 30936559](https://pubmed.ncbi.nlm.nih.gov/30936559/)**",
+      "[L-Evidenced] The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells — Trapnell et al. 2014, Nature Biotechnology — **[PMID: 24658644](https://pubmed.ncbi.nlm.nih.gov/24658644/)**"
+     ],
+     "alternatives": [
+      "monocle3",
+      "slingshot_with_topology_check",
+      "PAGA",
+      "scVelo",
+      "diffusion_map"
+     ],
+     "reward_signal": 0.0
+    },
+    {
+     "step_id": "S12",
+     "decision_type": "cluster_annotation_consistency",
+     "agent_choice": "consistent_with_cross_validation",
+     "agent_rationale": "CD45-based tumor/immune separation consistent with melanoma marker scores (tumor cells show higher MITF/MLANA/PMEL scores). Cluster 0 validated as tumor via marker expression. Cell-cycle phase distribution consistent across clusters.",
+     "matched_rules": [
+      "S1.1-CONS-001_cluster_annotation"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] SingleR — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_melanoma_correct",
+   "act": "scrna",
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "dimension_scores": {
+    "data_handling": 0.85,
+    "method_selection": 0.85
+   },
+   "step_scores": [
+    {
+     "step_id": "S1",
+     "decision_type": "api_data_integrity",
+     "agent_choice": "DETAILED_with_validation",
+     "agent_rationale": "GSE115978 Melanoma count matrix validated: 7,186 cells × 22,454 genes. CSV format converted from GEO supplementary. Cell annotations verified: CD45+/CD45- sorting labels intact, no missing metadata.",
+     "matched_rules": [
+      "A1.1-API-001_data_integrity"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Evidenced] Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology — **[PMID: 34329294](https://pubmed.ncbi.nlm.nih.gov/34329294/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S2",
+     "decision_type": "qc_filtering",
+     "agent_choice": "MAD5_adaptive_threshold",
+     "agent_rationale": "MAD-based adaptive QC — melanoma is immune-hot with abundant T cells. Adaptive thresholding preserves activated T cell states that may have lower RNA content than tumor cells. All 7,186 cells retained after QC (pre-filtered dataset) (Luecken & Theis 2019, PMID 31841116).",
+     "matched_rules": [
+      "Q1.1-QC-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis: a tutorial — Luecken & Theis 2019, Molecular Systems Biology — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Confirmed] Scater: pre-processing, quality control, normalization and visualization of single-cell RNA-seq data in R — McCarthy et al. 2017, Bioinformatics — **[PMID: 28088763](https://pubmed.ncbi.nlm.nih.gov/28088763/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S3",
+     "decision_type": "doublet_detection",
+     "agent_choice": "scDblFinder",
+     "agent_rationale": "scDblFinder doublet detection — 7.2K cells, estimated doublet rate ~2.2%. Despite low cell count, melanoma TME has high cell-cell interaction (immune-tumor synapses), making doublet removal important to avoid false co-expression signals (Xi & Li 2021, PMID 33541407).",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S4",
+     "decision_type": "scRNA_normalization",
+     "agent_choice": "SCTransform",
+     "agent_rationale": "SCTransform variance-stabilizing normalization — melanoma dataset includes both immune and tumor compartments with distinct transcriptional activity levels. SCTransform corrects for sequencing depth while preserving biological heterogeneity across cell types (Hafemeister & Satija 2019, PMID 31870423).",
+     "matched_rules": [
+      "N1.1-NORM-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**",
+      "[L-Confirmed] Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology — **[PMID: 27122128](https://pubmed.ncbi.nlm.nih.gov/27122128/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S5",
+     "decision_type": "hv_gene_selection",
+     "agent_choice": "vst",
+     "agent_rationale": "VST selected 2,000 HVGs — appropriate for smaller dataset (7.2K cells). Immune-hot melanoma: HVGs enriched for T cell activation markers (GZMB, PRF1, IFNG), immune checkpoint molecules (PDCD1, CTLA4, HAVCR2), and tumor-intrinsic programs (MITF, AXL, SOX10).",
+     "matched_rules": [
+      "H1.1-HVG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology — **[PMID: 25867923](https://pubmed.ncbi.nlm.nih.gov/25867923/)**",
+      "[L-Evidenced] Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S6",
+     "decision_type": "batch_correction",
+     "agent_choice": "scVI",
+     "agent_rationale": "scVI deep generative model for batch correction — melanoma samples from multiple patients with different immunotherapy histories. scVI's latent variable model captures complex batch effects while preserving subtle T cell activation states that linear methods may over-correct (Lopez et al. 2018, PMID 30567576).",
+     "matched_rules": [
+      "B1.1-BATC-001_integration",
+      "B1.2-BATC-002_requirement"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Confirmed] Fast, sensitive and accurate integration of single-cell data with Harmony — Korsunsky et al. 2019, Nature Methods — **[PMID: 31740819](https://pubmed.ncbi.nlm.nih.gov/31740819/)**",
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Evidenced] A test metric for assessing single-cell RNA-seq batch correction (kBET) — Büttner et al. 2019, Nature Methods — **[PMID: 30573817](https://pubmed.ncbi.nlm.nih.gov/30573817/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S7",
+     "decision_type": "dim_reduction",
+     "agent_choice": "PCA_elbow_selection",
+     "agent_rationale": "Elbow method selected 20 PCs — modest dataset size (7.2K cells) with immune-hot TME has concentrated biological signal. 20 PCs capture >85% variance.",
+     "matched_rules": [
+      "D2.1-DIMR-001_reduction"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S8",
+     "decision_type": "clustering_method",
+     "agent_choice": "Leiden",
+     "agent_rationale": "Leiden algorithm with resolution 0.8, validated via silhouette optimization across 0.4-1.4 range. Immune-hot melanoma: resolution 0.8 balances separation of T cell activation states (naive, activated, exhausted) without over-fragmenting (Traag et al. 2019, PMID 30914743).",
+     "matched_rules": [
+      "C1.1-CLUS-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**",
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S9",
+     "decision_type": "annotation_method",
+     "agent_choice": "SingleR_with_CellTypist_cross_validation",
+     "agent_rationale": "CellTypist + SingleR cross-validation with Human Primary Cell Atlas and Blueprint/ENCODE references. Immune-hot melanoma requires precise T cell subset annotation — dual-method cross-validation distinguishes CD8+ exhausted (PDCD1+CTLA4+HAVCR2+) from activated (GZMB+PRF1+) and memory (CD62L+CCR7+) states. Marker dotplot verification with canonical lineage markers (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S10",
+     "decision_type": "deg_method",
+     "agent_choice": "pseudobulk_edgeR",
+     "agent_rationale": "Pseudobulk at patient level + edgeR quasi-likelihood F-test. Melanoma immune vs tumor DEG: edgeR QLF provides robust dispersion estimation for small sample sizes (12 patients). Appropriate for immune-hot TME where DEG focuses on per-cell-type comparisons (Squair et al. 2021, PMID 34433851).",
+     "matched_rules": [
+      "G1.1-DEG-001_pseudobulk",
+      "G1.3-DEG-003_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology — **[PMID: 26653891](https://pubmed.ncbi.nlm.nih.gov/26653891/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S11",
+     "decision_type": "trajectory_inference",
+     "agent_choice": "monocle3",
+     "agent_rationale": "monocle3 on CD8+ T cell subset for exhaustion trajectory — melanoma T cells progress from naive → activated → exhausted states along a continuous pseudotime gradient. Trajectory inference reveals checkpoint expression dynamics (Saelens et al. 2019, PMID 30643263).",
+     "matched_rules": [
+      "T1.1-TRAJ-001_inference"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A comparison of single-cell trajectory inference methods — Saelens et al. 2019, Nature Biotechnology — **[PMID: 30936559](https://pubmed.ncbi.nlm.nih.gov/30936559/)**",
+      "[L-Evidenced] The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells — Trapnell et al. 2014, Nature Biotechnology — **[PMID: 24658644](https://pubmed.ncbi.nlm.nih.gov/24658644/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S12",
+     "decision_type": "cluster_annotation_consistency",
+     "agent_choice": "consistent_with_cross_validation",
+     "agent_rationale": "CellTypist and SingleR annotations concordant on 91% of cells. 28 clusters map to 7 major cell types + 4 T cell activation states. Key finding: CD8+ exhausted T cells form a distinct cluster validated by both methods and marker expression (PDCD1+CTLA4+HAVCR2+). Tumor cells express MITF-high and AXL-high programs forming separate clusters.",
+     "matched_rules": [
+      "S1.1-CONS-001_cluster_annotation"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] SingleR — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    }
+   ]
+  },
+  {
+   "trajectory": "scrna_nsclc_correct",
+   "act": "scrna",
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "verdict": "pass",
+   "dimension_scores": {
+    "data_handling": 0.85,
+    "method_selection": 0.85
+   },
+   "step_scores": [
+    {
+     "step_id": "S1",
+     "decision_type": "api_data_integrity",
+     "agent_choice": "DETAILED_with_validation",
+     "agent_rationale": "GSE131907 NSCLC 10X raw UMI matrix validated: 208,506 cells × 27,578 genes. Verified cell barcodes include patient ID, tissue source (LUNG_N/LUNG_T/LN/NS). 11 patients, no duplicate barcodes.",
+     "matched_rules": [
+      "A1.1-API-001_data_integrity"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Evidenced] Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology — **[PMID: 34329294](https://pubmed.ncbi.nlm.nih.gov/34329294/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S2",
+     "decision_type": "qc_filtering",
+     "agent_choice": "MAD5_adaptive_threshold",
+     "agent_rationale": "MAD-based adaptive QC — NSCLC is an immune-desert TME with sparse immune cells. Adaptive thresholding preserves rare immune populations that fixed thresholds might incorrectly remove (Luecken & Theis 2019, PMID 31841116).",
+     "matched_rules": [
+      "Q1.1-QC-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis: a tutorial — Luecken & Theis 2019, Molecular Systems Biology — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Confirmed] Scater: pre-processing, quality control, normalization and visualization of single-cell RNA-seq data in R — McCarthy et al. 2017, Bioinformatics — **[PMID: 28088763](https://pubmed.ncbi.nlm.nih.gov/28088763/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S3",
+     "decision_type": "doublet_detection",
+     "agent_choice": "scDblFinder",
+     "agent_rationale": "scDblFinder random-forest doublet detection — 208K cells with estimated doublet rate ~7.8%. Large dataset size makes probabilistic doublet scoring essential; scDblFinder scales well to >200K cells (Xi & Li 2021, PMID 33541407).",
+     "matched_rules": [
+      "D1.1-DOUB-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Benchmarking computational doublet-detection methods for single-cell RNA sequencing data — Xi & Li 2021, Cell Systems — **[PMID: 33338399](https://pubmed.ncbi.nlm.nih.gov/33338399/)**",
+      "[L-Evidenced] DoubletFinder: Doublet detection in single-cell RNA sequencing data using artificial nearest neighbors — McGinnis et al. 2019, Cell Systems — **[PMID: 30954475](https://pubmed.ncbi.nlm.nih.gov/30954475/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S4",
+     "decision_type": "scRNA_normalization",
+     "agent_choice": "SCTransform",
+     "agent_rationale": "SCTransform variance-stabilizing normalization — NSCLC data has extreme library size variation (tumor cells have higher RNA content than sparse immune cells). SCTransform removes the technical variation-gene abundance correlation that LogNormalize cannot (Hafemeister & Satija 2019, PMID 31870423).",
+     "matched_rules": [
+      "N1.1-NORM-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Normalization and variance stabilization of single-cell RNA-seq data using regularized negative binomial regression — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**",
+      "[L-Confirmed] Pooling across cells to normalize single-cell RNA sequencing data with many zero counts — Lun et al. 2016, Genome Biology — **[PMID: 27122128](https://pubmed.ncbi.nlm.nih.gov/27122128/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S5",
+     "decision_type": "hv_gene_selection",
+     "agent_choice": "vst",
+     "agent_rationale": "VST selected 3,000 HVGs. In immune-desert NSCLC, many HVGs come from tumor-intrinsic programs (EMT, proliferation) — sufficient to capture both tumor heterogeneity and sparse immune signals.",
+     "matched_rules": [
+      "H1.1-HVG-001"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Spatial reconstruction of single-cell gene expression data — Satija et al. 2015, Nature Biotechnology — **[PMID: 25867923](https://pubmed.ncbi.nlm.nih.gov/25867923/)**",
+      "[L-Evidenced] Normalization and variance stabilization of single-cell RNA-seq data — Hafemeister & Satija 2019, Genome Biology — **[PMID: 31870423](https://pubmed.ncbi.nlm.nih.gov/31870423/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S6",
+     "decision_type": "batch_correction",
+     "agent_choice": "Harmony",
+     "agent_rationale": "Harmony batch integration for 11 patients with diverse tissue sources (tumor/normal/lymph node). NSCLC samples have significant patient-specific tumor expression programs — Harmony's soft-clustering preserves biological heterogeneity while aligning shared cell types (Korsunsky et al. 2019, PMID 31740819).",
+     "matched_rules": [
+      "B1.1-BATC-001_integration",
+      "B1.2-BATC-002_requirement"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Confirmed] Fast, sensitive and accurate integration of single-cell data with Harmony — Korsunsky et al. 2019, Nature Methods — **[PMID: 31740819](https://pubmed.ncbi.nlm.nih.gov/31740819/)**",
+      "[L-Confirmed] A benchmark of batch-effect correction methods for single-cell RNA sequencing data — Tran et al. 2020, Genome Biology — **[PMID: 31948481](https://pubmed.ncbi.nlm.nih.gov/31948481/)**",
+      "[L-Evidenced] A test metric for assessing single-cell RNA-seq batch correction (kBET) — Büttner et al. 2019, Nature Methods — **[PMID: 30573817](https://pubmed.ncbi.nlm.nih.gov/30573817/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S7",
+     "decision_type": "dim_reduction",
+     "agent_choice": "PCA_elbow_selection",
+     "agent_rationale": "Elbow method selected 30 PCs. Large dataset (208K cells) with tumor-dominated landscape — sufficient PCs needed to capture rare immune population variance (~5% of cells).",
+     "matched_rules": [
+      "D2.1-DIMR-001_reduction"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S8",
+     "decision_type": "clustering_method",
+     "agent_choice": "Leiden",
+     "agent_rationale": "Leiden algorithm with resolution 1.0 determined via clustree stability analysis across 0.4-1.6 range. NSCLC immune-desert TME: too-high resolution fragments rare immune clusters, too-low merges distinct tumor subclones. Resolution 1.0 identified 32 clusters with stable immune-tumor separation (Traag et al. 2019, PMID 30914743).",
+     "matched_rules": [
+      "C1.1-CLUS-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports — **[PMID: 30914743](https://pubmed.ncbi.nlm.nih.gov/30914743/)**",
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S9",
+     "decision_type": "annotation_method",
+     "agent_choice": "SingleR_with_CellTypist_cross_validation",
+     "agent_rationale": "CellTypist (immune-focused) + SingleR (Human Primary Cell Atlas reference) cross-validation. NSCLC immune-desert: immune cells are ~5% of total — dual-method annotation prevents misclassification of tumor cells as immune types. Marker validation with canonical lung markers (SFTPC, AGER for alveolar; EPCAM, KRT19 for epithelial) (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+     "matched_rules": [
+      "A1.1-ANNO-001_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Reference-based analysis of lung single-cell sequencing reveals a transitional profibrotic macrophage — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**",
+      "[L-Confirmed] Cross-tissue immune cell analysis reveals tissue-specific features in humans — Domínguez Conde et al. 2022, Science — **[PMID: 35549406](https://pubmed.ncbi.nlm.nih.gov/35549406/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S10",
+     "decision_type": "deg_method",
+     "agent_choice": "pseudobulk_DESeq2",
+     "agent_rationale": "Pseudobulk at patient level + DESeq2. NSCLC tumor vs normal DEG: 11 patients provide adequate biological replicates. Pseudobulk avoids the extreme pseudoreplication that would occur with 208K single cells (Squair et al. 2021, PMID 34433851).",
+     "matched_rules": [
+      "G1.1-DEG-001_pseudobulk",
+      "G1.3-DEG-003_method"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Confirmed] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications — **[PMID: 34584091](https://pubmed.ncbi.nlm.nih.gov/34584091/)**",
+      "[L-Evidenced] MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology — **[PMID: 26653891](https://pubmed.ncbi.nlm.nih.gov/26653891/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S11",
+     "decision_type": "trajectory_inference",
+     "agent_choice": "monocle3",
+     "agent_rationale": "monocle3 on Epithelial subset for EMT trajectory inference — NSCLC progression involves EMT with transition from epithelial to mesenchymal states. Trajectory on Epithelial cells captures this continuum (Saelens et al. 2019, PMID 30643263).",
+     "matched_rules": [
+      "T1.1-TRAJ-001_inference"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] A comparison of single-cell trajectory inference methods — Saelens et al. 2019, Nature Biotechnology — **[PMID: 30936559](https://pubmed.ncbi.nlm.nih.gov/30936559/)**",
+      "[L-Evidenced] The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells — Trapnell et al. 2014, Nature Biotechnology — **[PMID: 24658644](https://pubmed.ncbi.nlm.nih.gov/24658644/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    },
+    {
+     "step_id": "S12",
+     "decision_type": "cluster_annotation_consistency",
+     "agent_choice": "consistent_with_cross_validation",
+     "agent_rationale": "CellTypist and SingleR concordant on 89% of cells. 32 clusters map to 9 major cell types. Key finding: rare immune clusters (CD8+ T cells, NK cells) validated by both methods despite representing <2% of cells each. Epithelial/tumor clusters verified with lung-specific markers (SFTPC, KRT19).",
+     "matched_rules": [
+      "S1.1-CONS-001_cluster_annotation"
+     ],
+     "level": 3,
+     "numeric_score": 0.85,
+     "explanation": "正确级 — 方法选择正确",
+     "evidence_citations": [
+      "[L-Confirmed] Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol — **[PMID: 31217225](https://pubmed.ncbi.nlm.nih.gov/31217225/)**",
+      "[L-Evidenced] SingleR — Aran et al. 2019, Nature Immunology — **[PMID: 30643263](https://pubmed.ncbi.nlm.nih.gov/30643263/)**"
+     ],
+     "alternatives": [],
+     "reward_signal": 0.85
+    }
+   ]
+  }
+ ]
+}

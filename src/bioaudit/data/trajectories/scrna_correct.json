@@ -1,0 +1,122 @@
+[
+  {
+    "step_id": "S1",
+    "decision_type": "api_data_integrity",
+    "choice": "DETAILED_with_validation",
+    "rationale": "GSE131907 .h5ad validated: genes x cells indices intact, no duplicate barcodes, obs/var complete",
+    "context": {
+      "data_source": "GEO",
+      "data_format": "h5ad"
+    }
+  },
+  {
+    "step_id": "S2",
+    "decision_type": "qc_filtering",
+    "choice": "MAD5_adaptive_threshold",
+    "rationale": "Mito<20% + genes>500 adaptive filter; removed 2.5% dead cells (Luecken & Theis 2019, PMID 31841116)",
+    "context": {
+      "sequencing": "10X_scRNA_seq"
+    }
+  },
+  {
+    "step_id": "S3",
+    "decision_type": "doublet_detection",
+    "choice": "scDblFinder",
+    "rationale": "scDblFinder random-forest doublet detection for 10X data (Xi & Li 2021, PMID 33541407)",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_cells": 203365
+    }
+  },
+  {
+    "step_id": "S4",
+    "decision_type": "scRNA_normalization",
+    "choice": "SCTransform",
+    "rationale": "SCTransform regularized negative-binomial regression — best variance stabilization for scRNA (Hafemeister & Satija 2019, PMID 31870423)",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "data_category": "umi_counts"
+    }
+  },
+  {
+    "step_id": "S5",
+    "decision_type": "hv_gene_selection",
+    "choice": "vst",
+    "rationale": "Seurat v3 VST selected 3,000 HVGs — standard for scRNA clustering and dimensionality reduction",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_genes": 27578
+    }
+  },
+  {
+    "step_id": "S6",
+    "decision_type": "batch_correction",
+    "choice": "Harmony",
+    "rationale": "Harmony iterative soft-clustering for 11-patient batch integration (Korsunsky et al. 2019, PMID 31740819)",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "has_batch": true,
+      "n_patients": 11
+    }
+  },
+  {
+    "step_id": "S7",
+    "decision_type": "dim_reduction",
+    "choice": "PCA_elbow_selection",
+    "rationale": "Chunked PCA 50 PCs on 203K cells — memory-safe sparse decomposition, no dense conversion needed",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "method": "PCA"
+    }
+  },
+  {
+    "step_id": "S8",
+    "decision_type": "clustering_method",
+    "choice": "Leiden",
+    "rationale": "Leiden algorithm with resolution optimization — guarantees well-connected communities (Traag et al. 2019, PMID 30914743)",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "graph_type": "SNN"
+    }
+  },
+  {
+    "step_id": "S9",
+    "decision_type": "annotation_method",
+    "choice": "SingleR_with_CellTypist_cross_validation",
+    "rationale": "CellTypist + SingleR cross-validation; dotplot marker verification (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401)",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "reference_based": true
+    }
+  },
+  {
+    "step_id": "S10",
+    "decision_type": "deg_method",
+    "choice": "pseudobulk_DESeq2",
+    "rationale": "Pseudobulk + DESeq2 at patient level — avoids pseudoreplication, patients as biological replicates (Squair et al. 2021, PMID 34433851)",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "n_patients": 11,
+      "pseudobulk": true
+    }
+  },
+  {
+    "step_id": "S11",
+    "decision_type": "trajectory_inference",
+    "choice": "monocle3",
+    "rationale": "monocle3 on Epithelial subset for EMT trajectory inference (Saelens et al. 2019, PMID 30643263)",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "cell_type": "Epithelial"
+    }
+  },
+  {
+    "step_id": "S12",
+    "decision_type": "cluster_annotation_consistency",
+    "choice": "consistent_with_cross_validation",
+    "rationale": "41 subclusters map to 8 major cell types via cross-validation; marker dotplot confirms consistency across annotation levels",
+    "context": {
+      "integration_type": "cross_module"
+    }
+  }
+]

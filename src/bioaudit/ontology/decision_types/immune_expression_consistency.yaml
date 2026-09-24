@@ -1,0 +1,21 @@
+# 决策类型：immune_expression_consistency（免疫-表达一致性）— conclusion / pan-cancer
+# 一致性族（L4 概念）成员：联合上游决策评分（G1 internal_ref）
+decision_type: immune_expression_consistency
+display:
+  cn: 免疫浸润-表达关联一致性
+  en: Immune-expression consistency
+stage: conclusion
+paradigms: [pan-cancer]
+dimension: statistical_rigor
+optional: true
+when_not_applicable: claim_not_made
+aliases: []
+depends_on: [immune_correlation_method, deg_method]
+internal_ref: [deg_method, immune_correlation_method]
+context_schema:
+  - key: integration_type
+    type: enum
+    values: [cross_module]
+    required: true
+    # A2：被罚分规则（N7.2）引用 → 禁止 fail-open
+    missing: fail-closed

@@ -1,0 +1,11 @@
+# 输入归一化映射（matcher 匹配通道）— 原 data/mappings/type_aliases.yaml 移入本体
+# （B2：matcher 读本体的 aliases/同义映射）。仅"同义词 → 规范 ID"，与跨范式同源
+# 声明（aliases.yaml）严格分离：同源声明不参与规则匹配（ontology-design-v1 §二.1）。
+filter: filtering
+norm: normalization
+normalization_method: normalization
+deg: deg_method
+differential_expression: deg_method
+padj: multiple_testing_correction
+fdr: multiple_testing_correction
+threshold: significance_threshold

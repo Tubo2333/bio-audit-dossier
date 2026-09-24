@@ -1,0 +1,86 @@
+rule_id: G1.2-DEG-002_multiple_testing
+domain: DEG
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2016, 2021]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "单细胞 DEG 多重检验校正 / scRNA DEG multiple testing correction"
+description: "单细胞DEG涉及大量并行检验(每种细胞类型 × 每个基因), 多重检验校正不可省略。Benjamini-Hochberg FDR 控制在5%是通用标准。不校正时, 即使p<0.01也会有大量假阳性(若检验20,000个基因, 期望200个假阳性)。"
+condition:
+  decision_type: multiple_testing_correction
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - BH
+      - BH_FDR
+      - Benjamini_Hochberg
+    description: "Benjamini-Hochberg FDR — 基因组学标准"
+    rationale: "在探索性分析中控制FDR, 平衡发现率和假阳性率"
+  level_2:
+    methods:
+      - Bonferroni
+      - BY
+    description: "Bonferroni/BY — 更保守, 适合需要极高特异性的场景"
+    conditions_when_acceptable: "当假阳性代价极高时(如临床biomarker验证阶段)"
+  level_1:
+    methods:
+      - nominal_p_only
+      - p_0_05_no_correction
+    description: "仅使用名义p值 — 在多检验场景下不可靠"
+    note: "检验20,000个基因 × 8种细胞类型 = 160,000次检验, 不校正会有大量假阳性"
+  level_0:
+    methods:
+      - no_correction
+      - visual_selection
+    description: "无校正/目视挑选 — DEG列表不可信"
+  override_n2:
+    condition: "n_patients <= 2"
+    all_methods: "level_0"
+    note: "n<=2 时无法可靠估计生物学变异。降级为仅报告 fold change，不做统计推断。（2026-09-14 处置：沿用 M1.1-DEG-001 整句；触发键按 scRNA 观察单位取 n_patients；出处同 Schurch et al. 2016, PMID 27022035，即 M1.1 支持 override_n2 的那条依据）"
+
+evidence:
+  - source_type: consensus_guideline
+    pmid: "31217225"
+    doi: "10.15252/msb.20188746"
+    title: "Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol"
+    confidence: L-Confirmed
+    excerpt: "Obtained P values for DE tests over conditions represent the expected measures of significance and must be corrected for multiple testing."
+    supports_levels: ["level_3", "level_0"]
+    # 2026-09-16 收尾核对（窗口自查原文）：Conesa 2016 全文仅 1 次提及 multiple testing correction 且属功效语境（不主张 essential）→ 依据改挂 Luecken & Theis 2019（Differential expression testing 节逐字）
+  - source_type: benchmark_paper
+    pmid: "34584091"
+    doi: "10.1038/s41467-021-25960-2"
+    title: "Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications"
+    confidence: L-Confirmed
+    excerpt: "False discoveries can be avoided using statistical methodologies that account for between-replicate variation."
+    supports_levels: ["level_3", "level_2"]
+    # 2026-09-16 收尾核对（窗口自查原文）：该文 FDR/Benjamini/nominal 关键词 0 命中（评价指标为 AUCC）→ 原「多重检验校正 critical」表述该文无，改为该文 Introduction 逐字主张
+conflicts_with: []

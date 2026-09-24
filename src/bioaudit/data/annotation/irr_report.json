@@ -1,0 +1,44 @@
+{
+ "annotation_version": "annotation.v1",
+ "snapshot": {
+  "engine": "0.1.3",
+  "ruleset": "1.1.1",
+  "ontology": "0.1.0"
+ },
+ "irr": {
+  "n_items": 348,
+  "n_agreed": 316,
+  "agreement_ratio": 0.908,
+  "cohen_kappa": 0.7292,
+  "krippendorff_alpha": 0.7288,
+  "gate": {
+   "primary": "cohen_kappa_3class >= 0.8",
+   "secondary": "krippendorff_alpha_nominal >= 0.8",
+   "primary_pass": false,
+   "secondary_pass": false
+  },
+  "confusion": {
+   "correct->correct": 266,
+   "correct->edge": 6,
+   "correct->error": 4,
+   "edge->correct": 14,
+   "edge->edge": 27,
+   "edge->error": 6,
+   "error->correct": 1,
+   "error->edge": 1,
+   "error->error": 23
+  }
+ },
+ "merged_counts": {
+  "labels": {
+   "correct": 280,
+   "edge": 44,
+   "error": 24
+  },
+  "consensus": {
+   "strong": 316,
+   "medium": 32
+  },
+  "n_items": 348
+ }
+}

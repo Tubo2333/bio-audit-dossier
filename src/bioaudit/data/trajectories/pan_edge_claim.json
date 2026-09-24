@@ -1,0 +1,11 @@
+[
+  {
+    "step_id": "E4",
+    "decision_type": "independent_prognostic_claim",
+    "choice": "univariate_Cox_claiming_independent",
+    "rationale": "CSTB HR=1.38, 95%CI 1.09-1.75, p=0.008 in univariate Cox regression. This demonstrates CSTB is an independent prognostic factor for overall survival in NSCLC patients.",
+    "context": {
+      "analysis_type": "survival_analysis"
+    }
+  }
+]

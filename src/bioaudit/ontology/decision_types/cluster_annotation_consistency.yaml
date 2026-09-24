@@ -1,0 +1,21 @@
+# 决策类型：cluster_annotation_consistency（聚类-注释一致性）— conclusion / scRNA
+# 一致性族（L4 概念）成员：联合上游决策评分（G1 internal_ref）
+decision_type: cluster_annotation_consistency
+display:
+  cn: 聚类与注释一致性
+  en: Cluster-annotation consistency
+stage: conclusion
+paradigms: [scRNA]
+dimension: method_selection
+optional: true
+when_not_applicable: claim_not_made
+aliases: []
+depends_on: [annotation_method, clustering_method]
+internal_ref: [annotation_method, clustering_method]
+context_schema:
+  - key: integration_type
+    type: enum
+    values: [cross_module]
+    required: true
+    # A2：被罚分规则（S1.1）引用 → 禁止 fail-open
+    missing: fail-closed

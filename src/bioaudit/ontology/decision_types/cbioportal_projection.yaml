@@ -1,0 +1,20 @@
+# 决策类型：cbioportal_projection（cBioPortal 投影）— interpretation / pan-cancer
+decision_type: cbioportal_projection
+display:
+  cn: cBioPortal 数据投影
+  en: cBioPortal projection
+stage: interpretation
+paradigms: [pan-cancer]
+dimension: data_handling
+# G5 裁决（v1.1）：optional + 适用性谓词（仅当分析包含 cBioPortal 投影声明）
+optional: true
+when_not_applicable: no_cbioportal_projection_claim
+aliases: []
+depends_on: [deg_method, multiple_testing_correction, significance_threshold]
+context_schema:
+  - key: data_source
+    type: enum
+    values: [cBioPortal, GDSC2, GEO]
+    required: true
+    # A2：被罚分规则（G3.1）引用 → 禁止 fail-open
+    missing: fail-closed

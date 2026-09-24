@@ -1,0 +1,78 @@
+rule_id: "M1.3-DEG-001"
+domain: "statistical_rigor.threshold"
+status: "active"
+version: 2
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-14"  # 领域复核已定：本条依据全部有结论（Schurch 2016 数字已更正；ENCODE 假归因已改挂 Human Genomics 2026 20:63，正文原话支撑）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [2016, 2016]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "该规则所属分析家族；适用范围的正式声明待领域复核填写（本字段在家族副本之间保持一致）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "显著性阈值选择"
+description: >
+  DEG 通常需要同时满足统计显著性 (adjusted p-value) 和生物学显著性 (fold change) 两个阈值。
+  注意: |logFC| 最优阈值取决于生物学上下文 (转录因子 vs 代谢酶 vs 组织特异性基因)。
+
+condition:
+  decision_type: "significance_threshold"
+  required_context:
+    analysis_type: "differential_expression"
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+    description: "v0.2 — 由模型给出理由的评估（结合生物学背景）"
+  level_3:
+    methods:
+      - "padj <= 0.05, |logFC| >= 1.0"
+      - "FDR < 0.05, |logFC| >= 1.0"
+      - "padj <= 0.05, |logFC| >= 0.5"
+    description: "双阈值 (统计 + 生物学) — 标准做法。logFC 阈值可根据领域惯例在 0.5-2.0 之间调整。"
+  level_2:
+    methods:
+      - "padj <= 0.1, |logFC| >= 0.5"
+    note: "宽松的统计阈值 → 需明确标注为探索性分析"
+  level_1:
+    methods:
+      - "p_raw <= 0.05"
+    note: "仅用 raw p 值 + 无效应量阈值 → 大量假阳性报告"
+  level_0:
+    methods:
+      - "no_threshold"
+      - "unfiltered"
+    note: "完全无约束 → 不可接受的假阳性率"
+
+evidence:
+  - source_type: "benchmark_paper"
+    doi: "10.1261/rna.053959.115"
+    pmid: "27022035"
+    title: "Schurch et al. (2016) RNA — n=48 yeast benchmark"
+    confidence: "L-Consensus"
+    excerpt: "At n=3, nine of 11 tools found only 20-40% of SDE genes; sensitivity stays low across methods. |logFC| threshold helps reduce false positives, but n>=6 is the primary requirement for reliability."
+
+  - source_type: "method_paper"
+    doi: "10.1186/s40246-026-00930-1"
+    url: "https://doi.org/10.1186/s40246-026-00930-1"
+    title: "Wang & Gao (2026) Human Genomics 20:63 — pipeline DE reporting recommendations"
+    confidence: "L-Evidenced"
+    excerpt: "we recommend reporting results from both (A) statistical and (B) effect-size perspectives... report adjusted p-values (FDR)... report fold change as log2FC"
+    supports_levels: ["level_3"]
+    # 2026-09-14 核查：原归因「ENCODE RNA-seq standards」不是任何 ENCODE 文档名（404/无此标题），
+    # 改挂本文（正文原话为 we recommend 第一人称建议；DOI/URL 见上）。档位与判定未动。

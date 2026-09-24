@@ -1,0 +1,33 @@
+# 决策类型：qc_filtering（scRNA 质量过滤）— qc / scRNA
+decision_type: qc_filtering
+display:
+  cn: 单细胞质量过滤
+  en: scRNA QC filtering
+stage: qc
+paradigms: [scRNA]
+dimension: data_handling
+optional: false
+# 同源声明（跨范式，非匹配通道）：bulk 的 filtering
+aliases: [filtering]
+depends_on: [api_data_integrity]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: min_cells
+    type: int
+    min: 0
+    required: false
+    missing: fail-open
+  - key: min_genes
+    type: int
+    min: 0
+    required: false
+    missing: fail-open
+  - key: n_cells
+    type: int
+    min: 0
+    required: false
+    missing: fail-open

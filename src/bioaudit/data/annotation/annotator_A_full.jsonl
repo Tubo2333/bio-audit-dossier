@@ -1,0 +1,221 @@
+{"task_id": "bmd_scrna_002", "step_id": "S1", "label": "correct", "confidence": 0.7, "note": "分析前做数据完整性校验是标准做法；但 rationale 数据集编号(GSE131907)与 context(GSE115978)不一致，值得留意"}
+{"task_id": "bmd_scrna_002", "step_id": "S2", "label": "correct", "confidence": 0.8, "note": "10X 数据用固定阈值(mito<25%, 基因 200-6000)做 QC 是主流常用做法"}
+{"task_id": "bmd_scrna_002", "step_id": "S3", "label": "edge", "confidence": 0.55, "note": "85K 10X 细胞跳过双细胞去除可辩护但非最优：声称双细胞率<5% 未经验证，双细胞可能产生假簇，但下游为患者级 pseudobulk DEG 影响有限"}
+{"task_id": "bmd_scrna_002", "step_id": "S4", "label": "correct", "confidence": 0.9, "note": "UMI counts 用 SCTransform 归一化是主流标准做法"}
+{"task_id": "bmd_scrna_002", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "Seurat VST 选 3000 HVG 是聚类/降维的标准做法"}
+{"task_id": "bmd_scrna_002", "step_id": "S7", "label": "correct", "confidence": 0.8, "note": "PCA+肘部法选主成分是标准做法；稀疏分块 PCA 内存友好"}
+{"task_id": "bmd_scrna_002", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "SNN 图上用 Leiden 聚类是主流标准"}
+{"task_id": "bmd_scrna_002", "step_id": "S9", "label": "correct", "confidence": 0.85, "note": "SingleR+CellTypist 交叉验证加 marker 验证是稳健的注释方案"}
+{"task_id": "bmd_scrna_002", "step_id": "S10", "label": "correct", "confidence": 0.95, "note": "多患者 scRNA DEG 用患者级 pseudobulk+DESeq2 避免伪重复，是标准做法"}
+{"task_id": "bmd_scrna_002", "step_id": "S12", "label": "correct", "confidence": 0.8, "note": "亚簇到主要细胞类型的交叉验证一致性核查合理"}
+{"task_id": "bmd_scrna_002", "step_id": "A1", "label": "correct", "confidence": 0.95, "note": "DEG 多重检验用 BH-FDR 校正是标准做法"}
+{"task_id": "bmd_scrna_002", "step_id": "A2", "label": "correct", "confidence": 0.8, "note": "30-50 PC 启发式范围合理；但与 S7 所述 50 PC 存在轨迹内不一致"}
+{"task_id": "bmd_scrna_003", "step_id": "S1", "label": "correct", "confidence": 0.85, "note": "数据完整性校验是标准前置步骤"}
+{"task_id": "bmd_scrna_003", "step_id": "S2", "label": "correct", "confidence": 0.85, "note": "MAD 自适应 QC 阈值是推荐做法，适合细胞异质数据集"}
+{"task_id": "bmd_scrna_003", "step_id": "S3", "label": "correct", "confidence": 0.9, "note": "scDblFinder 检测 10X 双细胞是主流方法"}
+{"task_id": "bmd_scrna_003", "step_id": "S4", "label": "correct", "confidence": 0.9, "note": "UMI counts 用 SCTransform 归一化是标准做法"}
+{"task_id": "bmd_scrna_003", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "VST 选 HVG 是标准做法"}
+{"task_id": "bmd_scrna_003", "step_id": "S6", "label": "correct", "confidence": 0.9, "note": "11 患者多批次数据用 Harmony 做批次整合是主流标准"}
+{"task_id": "bmd_scrna_003", "step_id": "S7", "label": "correct", "confidence": 0.8, "note": "PCA+肘部法选主成分是标准做法"}
+{"task_id": "bmd_scrna_003", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "Leiden 聚类是主流标准"}
+{"task_id": "bmd_scrna_003", "step_id": "S9", "label": "correct", "confidence": 0.85, "note": "SingleR+CellTypist 交叉验证加 marker 验证稳健"}
+{"task_id": "bmd_scrna_003", "step_id": "S10", "label": "correct", "confidence": 0.95, "note": "患者级 pseudobulk+DESeq2 是多患者 DEG 的标准做法"}
+{"task_id": "bmd_scrna_003", "step_id": "A1", "label": "correct", "confidence": 0.85, "note": "基于 MAD 的自适应 mito 阈值合理"}
+{"task_id": "bmd_scrna_003", "step_id": "A2", "label": "correct", "confidence": 0.8, "note": "30-50 PC 启发式范围合理"}
+{"task_id": "bmd_scrna_003", "step_id": "A3", "label": "correct", "confidence": 0.95, "note": "DEG 用 BH-FDR 校正是标准做法"}
+{"task_id": "bmd_scrna_003", "step_id": "A4", "label": "correct", "confidence": 0.85, "note": "marker dotplot 验证注释是标准核查方式"}
+{"task_id": "bmd_scrna_004", "step_id": "S1", "label": "correct", "confidence": 0.85, "note": "数据完整性校验是标准前置步骤"}
+{"task_id": "bmd_scrna_004", "step_id": "S2", "label": "correct", "confidence": 0.85, "note": "MAD 自适应 QC 阈值合理"}
+{"task_id": "bmd_scrna_004", "step_id": "S3", "label": "correct", "confidence": 0.9, "note": "scDblFinder 检测双细胞是主流方法"}
+{"task_id": "bmd_scrna_004", "step_id": "S4", "label": "correct", "confidence": 0.9, "note": "SCTransform 归一化 UMI counts 是标准做法"}
+{"task_id": "bmd_scrna_004", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "VST 选 HVG 是标准做法"}
+{"task_id": "bmd_scrna_004", "step_id": "S6", "label": "error", "confidence": 0.9, "note": "11 患者 has_batch=true 却跳过批次整合，仅凭'生物学差异>技术差异'断言，患者效应会驱动聚类导致结论失真"}
+{"task_id": "bmd_scrna_004", "step_id": "S7", "label": "edge", "confidence": 0.6, "note": "63K 细胞复杂 TME 固定 10 PC 偏低（Seurat 默认 20），可能损失亚群分辨率，但可辩护非致命"}
+{"task_id": "bmd_scrna_004", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "Leiden 聚类是主流标准"}
+{"task_id": "bmd_scrna_004", "step_id": "S9", "label": "correct", "confidence": 0.85, "note": "SingleR+CellTypist 交叉验证稳健"}
+{"task_id": "bmd_scrna_004", "step_id": "S10", "label": "correct", "confidence": 0.95, "note": "患者级 pseudobulk+DESeq2 是标准做法"}
+{"task_id": "bmd_scrna_004", "step_id": "A1", "label": "correct", "confidence": 0.85, "note": "自适应 mito 阈值合理"}
+{"task_id": "bmd_scrna_004", "step_id": "A2", "label": "correct", "confidence": 0.8, "note": "30 PC 在启发式范围内合理；但与 S7 固定 10 PC 存在轨迹内不一致"}
+{"task_id": "bmd_scrna_004", "step_id": "A3", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_scrna_004", "step_id": "A4", "label": "correct", "confidence": 0.85, "note": "marker dotplot 验证注释是标准核查方式"}
+{"task_id": "bmd_scrna_006", "step_id": "S1", "label": "correct", "confidence": 0.85, "note": "数据完整性校验是标准前置步骤"}
+{"task_id": "bmd_scrna_006", "step_id": "S2", "label": "correct", "confidence": 0.85, "note": "MAD 自适应 QC 阈值合理，适合 CRC TME 细胞异质性"}
+{"task_id": "bmd_scrna_006", "step_id": "S3", "label": "correct", "confidence": 0.9, "note": "scDblFinder 检测双细胞是主流方法"}
+{"task_id": "bmd_scrna_006", "step_id": "S4", "label": "correct", "confidence": 0.8, "note": "LogNormalize 是 Seurat 默认的常用归一化，虽非最优但主流可接受"}
+{"task_id": "bmd_scrna_006", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "VST 选 HVG 是标准做法"}
+{"task_id": "bmd_scrna_006", "step_id": "S6", "label": "correct", "confidence": 0.9, "note": "10 患者多批次数据用 Harmony 整合是主流标准"}
+{"task_id": "bmd_scrna_006", "step_id": "S7", "label": "correct", "confidence": 0.85, "note": "PCA 肘部法选 30 PC 合理"}
+{"task_id": "bmd_scrna_006", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "Leiden+clustree 选分辨率是稳健做法"}
+{"task_id": "bmd_scrna_006", "step_id": "S9", "label": "correct", "confidence": 0.8, "note": "SingleR 参考注释是标准方法"}
+{"task_id": "bmd_scrna_006", "step_id": "S10", "label": "correct", "confidence": 0.95, "note": "患者级 pseudobulk+DESeq2 是标准做法"}
+{"task_id": "bmd_scrna_006", "step_id": "S11", "label": "correct", "confidence": 0.85, "note": "T 细胞亚群用 monocle3 推断耗竭轨迹是标准做法"}
+{"task_id": "bmd_scrna_006", "step_id": "S12", "label": "correct", "confidence": 0.8, "note": "双方法注释一致性核查合理"}
+{"task_id": "bmd_scrna_006", "step_id": "A1", "label": "correct", "confidence": 0.7, "note": "固定 25% mito 阈值在肿瘤 scRNA 中常用可接受；与 S2 的 20% 自适应阈值略有出入"}
+{"task_id": "bmd_scrna_006", "step_id": "A2", "label": "edge", "confidence": 0.6, "note": "63K 细胞复杂 TME 固定 10 PC 偏低且与 S7 的 30 PC 矛盾，可辩护但非最优"}
+{"task_id": "bmd_scrna_006", "step_id": "A3", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_scrna_006", "step_id": "A4", "label": "correct", "confidence": 0.85, "note": "marker dotplot 验证注释是标准核查方式"}
+{"task_id": "bmd_scrna_006", "step_id": "A5", "label": "correct", "confidence": 0.8, "note": "在验证过的注释子集上推轨迹合理"}
+{"task_id": "bmd_scrna_006", "step_id": "A6", "label": "correct", "confidence": 0.8, "note": "DEG 覆盖全部主要细胞类型是合理的一致性核查"}
+{"task_id": "bmd_scrna_006", "step_id": "A7", "label": "correct", "confidence": 0.8, "note": "轨迹顺序与注释状态一致性的核查合理"}
+{"task_id": "bmd_scrna_006", "step_id": "A8", "label": "edge", "confidence": 0.6, "note": "分辨率 0.8 本身是常用默认，但与 S8 的 clustree 选定 1.2 矛盾，属轨迹内不一致"}
+{"task_id": "bmd_scrna_008", "step_id": "S1", "label": "correct", "confidence": 0.85, "note": "数据完整性校验是标准前置步骤"}
+{"task_id": "bmd_scrna_008", "step_id": "S2", "label": "correct", "confidence": 0.85, "note": "MAD 自适应 QC 阈值合理"}
+{"task_id": "bmd_scrna_008", "step_id": "S3", "label": "correct", "confidence": 0.9, "note": "scDblFinder 检测双细胞是主流方法"}
+{"task_id": "bmd_scrna_008", "step_id": "S4", "label": "correct", "confidence": 0.9, "note": "SCTransform 归一化是标准做法"}
+{"task_id": "bmd_scrna_008", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "VST 选 HVG 是标准做法"}
+{"task_id": "bmd_scrna_008", "step_id": "S7", "label": "correct", "confidence": 0.8, "note": "PCA+肘部法选主成分是标准做法"}
+{"task_id": "bmd_scrna_008", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "Leiden 聚类是主流标准"}
+{"task_id": "bmd_scrna_008", "step_id": "S9", "label": "correct", "confidence": 0.7, "note": "手工 marker 注释是常用主流方法，虽未用参考库交叉验证但可接受"}
+{"task_id": "bmd_scrna_008", "step_id": "S10", "label": "error", "confidence": 0.9, "note": "11 患者组间比较用细胞级 Wilcoxon 秩和检验（即使 context 标注 pseudobulk）会造成伪重复、夸大显著性，应用 pseudobulk+DESeq2/edgeR"}
+{"task_id": "bmd_scrna_008", "step_id": "S12", "label": "correct", "confidence": 0.8, "note": "注释一致性核查合理"}
+{"task_id": "bmd_scrna_008", "step_id": "A1", "label": "error", "confidence": 0.9, "note": "全基因组 DEG 不做多重检验校正并称'只关心 top 基因'，会产生大量假阳性导致结论失真"}
+{"task_id": "bmd_scrna_008", "step_id": "A2", "label": "correct", "confidence": 0.8, "note": "30-50 PC 启发式范围合理"}
+{"task_id": "bmd_scrna_009", "step_id": "S1", "label": "correct", "confidence": 0.85, "note": "数据完整性校验是标准前置步骤"}
+{"task_id": "bmd_scrna_009", "step_id": "S2", "label": "correct", "confidence": 0.85, "note": "MAD 自适应 QC 阈值合理"}
+{"task_id": "bmd_scrna_009", "step_id": "S3", "label": "correct", "confidence": 0.8, "note": "scDblFinder 是主流方法；但 rationale 称 208K 细胞与 context n_cells=64532 不一致"}
+{"task_id": "bmd_scrna_009", "step_id": "S4", "label": "correct", "confidence": 0.9, "note": "SCTransform 归一化是标准做法"}
+{"task_id": "bmd_scrna_009", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "VST 选 HVG 是标准做法"}
+{"task_id": "bmd_scrna_009", "step_id": "S7", "label": "correct", "confidence": 0.85, "note": "PCA 肘部法选 30 PC 合理"}
+{"task_id": "bmd_scrna_009", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "Leiden+clustree 选分辨率是稳健做法"}
+{"task_id": "bmd_scrna_009", "step_id": "S9", "label": "correct", "confidence": 0.85, "note": "SingleR+CellTypist 交叉验证稳健"}
+{"task_id": "bmd_scrna_009", "step_id": "S10", "label": "correct", "confidence": 0.95, "note": "患者级 pseudobulk+DESeq2 是标准做法"}
+{"task_id": "bmd_scrna_009", "step_id": "S12", "label": "correct", "confidence": 0.8, "note": "注释一致性核查合理"}
+{"task_id": "bmd_scrna_009", "step_id": "A1", "label": "error", "confidence": 0.85, "note": "50% mito 阈值过高，大量低质量/濒死细胞会保留并干扰下游聚类与 DEG，导致结论失真"}
+{"task_id": "bmd_scrna_009", "step_id": "A2", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_scrna_011", "step_id": "S1", "label": "correct", "confidence": 0.85, "note": "数据完整性校验是标准前置步骤"}
+{"task_id": "bmd_scrna_011", "step_id": "S2", "label": "correct", "confidence": 0.85, "note": "MAD 自适应 QC 阈值合理"}
+{"task_id": "bmd_scrna_011", "step_id": "S3", "label": "correct", "confidence": 0.9, "note": "scDblFinder 检测双细胞是主流方法"}
+{"task_id": "bmd_scrna_011", "step_id": "S4", "label": "correct", "confidence": 0.9, "note": "SCTransform 归一化是标准做法"}
+{"task_id": "bmd_scrna_011", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "VST 选 HVG 是标准做法"}
+{"task_id": "bmd_scrna_011", "step_id": "S7", "label": "edge", "confidence": 0.6, "note": "63K 细胞 CRC TME 固定 10 PC 偏低且与自身 context n_comps=30 矛盾，可辩护但非最优，可能损失亚群分辨率"}
+{"task_id": "bmd_scrna_011", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "Leiden+clustree 选分辨率是稳健做法"}
+{"task_id": "bmd_scrna_011", "step_id": "S9", "label": "correct", "confidence": 0.85, "note": "SingleR+CellTypist 交叉验证稳健"}
+{"task_id": "bmd_scrna_011", "step_id": "S10", "label": "correct", "confidence": 0.95, "note": "患者级 pseudobulk+DESeq2 是标准做法"}
+{"task_id": "bmd_scrna_011", "step_id": "S12", "label": "correct", "confidence": 0.8, "note": "注释一致性核查合理"}
+{"task_id": "bmd_scrna_011", "step_id": "A1", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_scrna_011", "step_id": "A2", "label": "correct", "confidence": 0.8, "note": "30 PC 在启发式范围内合理；但与 S7 固定 10 PC 存在轨迹内不一致"}
+{"task_id": "bmd_scrna_012", "step_id": "S1", "label": "correct", "confidence": 0.85, "note": "数据完整性校验是标准前置步骤"}
+{"task_id": "bmd_scrna_012", "step_id": "S2", "label": "correct", "confidence": 0.85, "note": "MAD 自适应 QC 阈值合理"}
+{"task_id": "bmd_scrna_012", "step_id": "S3", "label": "correct", "confidence": 0.9, "note": "scDblFinder 检测双细胞是主流方法"}
+{"task_id": "bmd_scrna_012", "step_id": "S4", "label": "correct", "confidence": 0.9, "note": "SCTransform 归一化是标准做法"}
+{"task_id": "bmd_scrna_012", "step_id": "S5", "label": "correct", "confidence": 0.85, "note": "小数据集选 2000 HVG 合理"}
+{"task_id": "bmd_scrna_012", "step_id": "S6", "label": "error", "confidence": 0.7, "note": "12 患者 has_batch=true 跳过批次整合，患者效应可驱动聚类；'生物学>技术差异'属未验证断言，可能使跨患者比较失真"}
+{"task_id": "bmd_scrna_012", "step_id": "S7", "label": "correct", "confidence": 0.85, "note": "PCA 肘部法选 20 PC 对 7.2K 细胞合理"}
+{"task_id": "bmd_scrna_012", "step_id": "S8", "label": "correct", "confidence": 0.9, "note": "Leiden+轮廓系数选分辨率是稳健做法"}
+{"task_id": "bmd_scrna_012", "step_id": "S9", "label": "correct", "confidence": 0.85, "note": "SingleR+CellTypist 交叉验证稳健"}
+{"task_id": "bmd_scrna_012", "step_id": "S10", "label": "correct", "confidence": 0.85, "note": "患者级 pseudobulk+edgeR QLF 是标准做法之一"}
+{"task_id": "bmd_scrna_012", "step_id": "A1", "label": "correct", "confidence": 0.85, "note": "自适应 mito 阈值合理"}
+{"task_id": "bmd_scrna_012", "step_id": "A2", "label": "correct", "confidence": 0.8, "note": "30 PC 在启发式范围内合理；与 S7 的 20 PC 略有出入但均可接受"}
+{"task_id": "bmd_scrna_012", "step_id": "A3", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_scrna_012", "step_id": "A4", "label": "correct", "confidence": 0.85, "note": "marker dotplot 验证注释是标准核查方式"}
+{"task_id": "bmd_pan_002", "step_id": "D1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 按设计自适应过滤低表达基因是标准做法"}
+{"task_id": "bmd_pan_002", "step_id": "D2", "label": "edge", "confidence": 0.5, "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配（DESeq2 自行估计 size factors，需原始 counts），不影响最终检验但不够严谨"}
+{"task_id": "bmd_pan_002", "step_id": "D3", "label": "correct", "confidence": 0.9, "note": "双组 bulk RNA-seq 用 DESeq2 是标准做法"}
+{"task_id": "bmd_pan_002", "step_id": "D4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_002", "step_id": "D5", "label": "correct", "confidence": 0.9, "note": "padj<0.05+|logFC|>=1 双阈值是常用标准"}
+{"task_id": "bmd_pan_002", "step_id": "D6", "label": "edge", "confidence": 0.6, "note": "Cox 分析跳过比例风险假设检验是常见但非最优做法，PH 违反时 HR 解释可能失真，至少应做 Schoenfeld 检验"}
+{"task_id": "bmd_pan_002", "step_id": "D7", "label": "correct", "confidence": 0.9, "note": "多变量 Cox 调整临床协变量后声称独立预后是标准做法"}
+{"task_id": "bmd_pan_002", "step_id": "D8", "label": "correct", "confidence": 0.9, "note": "EPV=12>=10 验证合理，符合 Peduzzi 建议"}
+{"task_id": "bmd_pan_002", "step_id": "D9", "label": "correct", "confidence": 0.9, "note": "cBioPortal 用 DETAILED projection 取完整基因符号是合理做法"}
+{"task_id": "bmd_pan_002", "step_id": "D10", "label": "correct", "confidence": 0.85, "note": "非正态数据用 Spearman 秩相关更稳健，合理"}
+{"task_id": "bmd_pan_002", "step_id": "D11", "label": "error", "confidence": 0.6, "note": "肿瘤纯度是免疫浸润-表达相关的已知混杂因素，忽略会导致虚假关联、结论失真；至少应控制纯度或作为局限讨论"}
+{"task_id": "bmd_pan_002", "step_id": "D12", "label": "correct", "confidence": 0.9, "note": "GSEA 用实际表达基因作背景是正确做法"}
+{"task_id": "bmd_pan_002", "step_id": "D13", "label": "correct", "confidence": 0.9, "note": "通路富集做 BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_002", "step_id": "D14", "label": "correct", "confidence": 0.85, "note": "GDSC2 样本量充足，相关性估计稳定，合理"}
+{"task_id": "bmd_pan_002", "step_id": "D15", "label": "correct", "confidence": 0.85, "note": "表达上调与风险 HR 方向一致，跨模块一致性核查合理"}
+{"task_id": "bmd_pan_002", "step_id": "D16", "label": "correct", "confidence": 0.8, "note": "免疫-表达方向与已知功能一致的核查合理"}
+{"task_id": "bmd_pan_004", "step_id": "D1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 过滤是标准做法"}
+{"task_id": "bmd_pan_004", "step_id": "D2", "label": "edge", "confidence": 0.5, "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配（DESeq2 需原始 counts 并自行归一化）"}
+{"task_id": "bmd_pan_004", "step_id": "D3", "label": "correct", "confidence": 0.9, "note": "双组 bulk RNA-seq 用 DESeq2 是标准做法"}
+{"task_id": "bmd_pan_004", "step_id": "D4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_004", "step_id": "D5", "label": "correct", "confidence": 0.9, "note": "双阈值标准合理"}
+{"task_id": "bmd_pan_004", "step_id": "D6", "label": "correct", "confidence": 0.85, "note": "Schoenfeld 残差检验验证 PH 假设是标准做法"}
+{"task_id": "bmd_pan_004", "step_id": "D7", "label": "correct", "confidence": 0.9, "note": "多变量 Cox 调整协变量是标准做法"}
+{"task_id": "bmd_pan_004", "step_id": "D8", "label": "correct", "confidence": 0.9, "note": "EPV>=10 验证合理"}
+{"task_id": "bmd_pan_005", "step_id": "D1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 过滤是标准做法"}
+{"task_id": "bmd_pan_005", "step_id": "D2", "label": "edge", "confidence": 0.5, "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"}
+{"task_id": "bmd_pan_005", "step_id": "D3", "label": "correct", "confidence": 0.9, "note": "DESeq2 是标准做法"}
+{"task_id": "bmd_pan_005", "step_id": "D4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_005", "step_id": "D5", "label": "correct", "confidence": 0.9, "note": "双阈值标准合理"}
+{"task_id": "bmd_pan_005", "step_id": "D6", "label": "correct", "confidence": 0.85, "note": "Schoenfeld 检验验证 PH 假设是标准做法"}
+{"task_id": "bmd_pan_005", "step_id": "D7", "label": "correct", "confidence": 0.9, "note": "多变量 Cox 调整协变量是标准做法"}
+{"task_id": "bmd_pan_005", "step_id": "D8", "label": "correct", "confidence": 0.9, "note": "EPV>=10 验证合理"}
+{"task_id": "bmd_pan_005", "step_id": "A1", "label": "edge", "confidence": 0.5, "note": "高表达却为保护性 HR 的方向矛盾未讨论，属解释/报告不足而非方法本身错误；若据此下促癌结论则会失真"}
+{"task_id": "bmd_pan_007", "step_id": "D1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 过滤是标准做法"}
+{"task_id": "bmd_pan_007", "step_id": "D2", "label": "edge", "confidence": 0.5, "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"}
+{"task_id": "bmd_pan_007", "step_id": "D3", "label": "correct", "confidence": 0.9, "note": "DESeq2 是标准做法"}
+{"task_id": "bmd_pan_007", "step_id": "D4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_007", "step_id": "D5", "label": "correct", "confidence": 0.9, "note": "双阈值标准合理"}
+{"task_id": "bmd_pan_007", "step_id": "D6", "label": "correct", "confidence": 0.85, "note": "Schoenfeld 检验验证 PH 假设是标准做法"}
+{"task_id": "bmd_pan_007", "step_id": "D7", "label": "correct", "confidence": 0.9, "note": "多变量 Cox 调整协变量是标准做法"}
+{"task_id": "bmd_pan_007", "step_id": "D8", "label": "correct", "confidence": 0.9, "note": "EPV>=10 验证合理"}
+{"task_id": "bmd_pan_007", "step_id": "D9", "label": "correct", "confidence": 0.9, "note": "cBioPortal DETAILED projection 合理"}
+{"task_id": "bmd_pan_007", "step_id": "D10", "label": "edge", "confidence": 0.6, "note": "表达与免疫评分通常非正态且有离群值，Pearson 不做正态性检查可辩护但非最优，Spearman 更稳健"}
+{"task_id": "bmd_pan_007", "step_id": "D11", "label": "correct", "confidence": 0.85, "note": "用 ESTIMATE 纯度做偏相关控制混杂是正确做法"}
+{"task_id": "bmd_pan_007", "step_id": "D12", "label": "correct", "confidence": 0.9, "note": "GSEA 用实际表达基因作背景是正确做法"}
+{"task_id": "bmd_pan_007", "step_id": "D13", "label": "correct", "confidence": 0.9, "note": "通路富集做 BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_007", "step_id": "D14", "label": "correct", "confidence": 0.85, "note": "GDSC2 样本量充足，合理"}
+{"task_id": "bmd_pan_007", "step_id": "D15", "label": "edge", "confidence": 0.5, "note": "表达-生存方向矛盾未讨论，属报告/解释不足而非方法错误"}
+{"task_id": "bmd_pan_007", "step_id": "D16", "label": "correct", "confidence": 0.8, "note": "免疫-表达方向与已知功能一致的核查合理"}
+{"task_id": "bmd_pan_008", "step_id": "D1", "label": "edge", "confidence": 0.55, "note": "不做基因过滤可辩护（DESeq2 有内置过滤）但非最优，低表达基因会稀释检验效能"}
+{"task_id": "bmd_pan_008", "step_id": "D2", "label": "edge", "confidence": 0.5, "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"}
+{"task_id": "bmd_pan_008", "step_id": "D3", "label": "correct", "confidence": 0.9, "note": "DESeq2 是标准做法"}
+{"task_id": "bmd_pan_008", "step_id": "D4", "label": "error", "confidence": 0.9, "note": "全基因组 DEG 不做多重检验校正会大量假阳性，导致结论失真"}
+{"task_id": "bmd_pan_008", "step_id": "D5", "label": "correct", "confidence": 0.7, "note": "双阈值本身是标准判据；依赖 D4 的 FDR 校正提供 padj"}
+{"task_id": "bmd_pan_009", "step_id": "D1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 过滤是标准做法"}
+{"task_id": "bmd_pan_009", "step_id": "D2", "label": "edge", "confidence": 0.5, "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"}
+{"task_id": "bmd_pan_009", "step_id": "D3", "label": "correct", "confidence": 0.9, "note": "DESeq2 是标准做法"}
+{"task_id": "bmd_pan_009", "step_id": "D4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_009", "step_id": "D5", "label": "correct", "confidence": 0.9, "note": "双阈值标准合理"}
+{"task_id": "bmd_pan_009", "step_id": "D6", "label": "correct", "confidence": 0.85, "note": "Schoenfeld 检验验证 PH 假设是标准做法"}
+{"task_id": "bmd_pan_009", "step_id": "D7", "label": "correct", "confidence": 0.9, "note": "多变量 Cox 调整协变量是标准做法"}
+{"task_id": "bmd_pan_009", "step_id": "D8", "label": "error", "confidence": 0.6, "note": "EPV<5 时 4 协变量的多变量 Cox 估计不稳定、易过拟合，不应接受；且标签与 rationale(100 事件/EPV=25)自相矛盾"}
+{"task_id": "bmd_pan_009", "step_id": "D9", "label": "correct", "confidence": 0.9, "note": "cBioPortal DETAILED projection 合理"}
+{"task_id": "bmd_pan_009", "step_id": "D10", "label": "correct", "confidence": 0.85, "note": "非正态数据用 Spearman 秩相关合理"}
+{"task_id": "bmd_pan_009", "step_id": "D11", "label": "correct", "confidence": 0.85, "note": "ESTIMATE 纯度偏相关控制混杂是正确做法"}
+{"task_id": "bmd_pan_009", "step_id": "D12", "label": "correct", "confidence": 0.9, "note": "GSEA 用实际表达基因作背景是正确做法"}
+{"task_id": "bmd_pan_009", "step_id": "D13", "label": "correct", "confidence": 0.9, "note": "通路富集做 BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_009", "step_id": "D14", "label": "correct", "confidence": 0.85, "note": "GDSC2 样本量充足，合理"}
+{"task_id": "bmd_pan_009", "step_id": "D15", "label": "correct", "confidence": 0.85, "note": "表达-生存方向一致的核查合理"}
+{"task_id": "bmd_pan_009", "step_id": "D16", "label": "edge", "confidence": 0.5, "note": "免疫-表达方向矛盾未讨论，属报告/解释不足而非方法错误"}
+{"task_id": "bmd_pan_010", "step_id": "D1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 过滤是标准做法"}
+{"task_id": "bmd_pan_010", "step_id": "D2", "label": "error", "confidence": 0.7, "note": "TPM 为长度归一化的连续值，不是 counts，不能作为 DESeq2 负二项模型的输入；数据形态不匹配会导致检验无效"}
+{"task_id": "bmd_pan_010", "step_id": "D3", "label": "correct", "confidence": 0.85, "note": "DESeq2 本身是标准做法（前提是输入原始 counts）"}
+{"task_id": "bmd_pan_010", "step_id": "D4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_010", "step_id": "D5", "label": "correct", "confidence": 0.7, "note": "放宽阈值用于候选筛选、后续外部验证，是合理的探索性选择"}
+{"task_id": "bmd_pan_010", "step_id": "D6", "label": "correct", "confidence": 0.85, "note": "Schoenfeld 检验验证 PH 假设是标准做法"}
+{"task_id": "bmd_pan_010", "step_id": "D7", "label": "correct", "confidence": 0.9, "note": "多变量 Cox 调整协变量是标准做法"}
+{"task_id": "bmd_pan_010", "step_id": "D8", "label": "edge", "confidence": 0.6, "note": "EPV~8 略低于 10 的推荐值，对 4 协变量模型属可接受但非最优"}
+{"task_id": "bmd_pan_010", "step_id": "D9", "label": "correct", "confidence": 0.9, "note": "cBioPortal DETAILED projection 合理"}
+{"task_id": "bmd_pan_010", "step_id": "D10", "label": "correct", "confidence": 0.85, "note": "非正态数据用 Spearman 秩相关合理"}
+{"task_id": "bmd_pan_010", "step_id": "D11", "label": "correct", "confidence": 0.7, "note": "将纯度作为局限显式讨论是可接受的报告做法（未调整但已声明）"}
+{"task_id": "bmd_pan_010", "step_id": "D12", "label": "correct", "confidence": 0.9, "note": "GSEA 用实际表达基因作背景是正确做法"}
+{"task_id": "bmd_pan_010", "step_id": "D13", "label": "correct", "confidence": 0.9, "note": "通路富集做 BH-FDR 校正是标准做法"}
+{"task_id": "bmd_pan_010", "step_id": "D14", "label": "correct", "confidence": 0.85, "note": "GDSC2 样本量充足，合理"}
+{"task_id": "bmd_pan_010", "step_id": "D15", "label": "correct", "confidence": 0.85, "note": "表达-生存方向一致的核查合理"}
+{"task_id": "bmd_pan_010", "step_id": "D16", "label": "correct", "confidence": 0.8, "note": "免疫-表达方向与已知功能一致的核查合理"}
+{"task_id": "bmd_deg_003", "step_id": "s1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 过滤是标准做法"}
+{"task_id": "bmd_deg_003", "step_id": "s2", "label": "edge", "confidence": 0.5, "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"}
+{"task_id": "bmd_deg_003", "step_id": "s3", "label": "correct", "confidence": 0.9, "note": "双组 bulk RNA-seq 用 DESeq2 是标准做法"}
+{"task_id": "bmd_deg_003", "step_id": "s4", "label": "error", "confidence": 0.9, "note": "全基因组 DEG 不做多重检验校正会大量假阳性，导致结论失真"}
+{"task_id": "bmd_deg_003", "step_id": "s5", "label": "correct", "confidence": 0.7, "note": "双阈值本身是标准判据；依赖 s4 的 FDR 校正提供 padj"}
+{"task_id": "bmd_deg_004", "step_id": "s1", "label": "edge", "confidence": 0.55, "note": "不做基因过滤可辩护（DESeq2 有内置过滤）但非最优，低表达基因稀释检验效能"}
+{"task_id": "bmd_deg_004", "step_id": "s2", "label": "correct", "confidence": 0.7, "note": "TMM 归一化本身是标准做法（此处下游为 t 检验，无 DESeq2 归一化冲突）"}
+{"task_id": "bmd_deg_004", "step_id": "s3", "label": "error", "confidence": 0.9, "note": "对原始 counts 直接用 Student t 检验，忽略负二项/均值-方差关系与文库大小，RNA-seq DEG 应使用 DESeq2/edgeR/limma-voom"}
+{"task_id": "bmd_deg_004", "step_id": "s4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_deg_004", "step_id": "s5", "label": "correct", "confidence": 0.9, "note": "双阈值标准合理"}
+{"task_id": "bmd_deg_005", "step_id": "s1", "label": "correct", "confidence": 0.9, "note": "filterByExpr 过滤是标准做法"}
+{"task_id": "bmd_deg_005", "step_id": "s2", "label": "error", "confidence": 0.7, "note": "TPM 是长度归一化连续值而非 counts，limma-voom 需要原始 counts 建模方差，数据形态不匹配会使检验无效"}
+{"task_id": "bmd_deg_005", "step_id": "s3", "label": "correct", "confidence": 0.9, "note": "limma-voom 处理 count 型 RNA-seq 是标准做法"}
+{"task_id": "bmd_deg_005", "step_id": "s4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_deg_005", "step_id": "s5", "label": "correct", "confidence": 0.9, "note": "双阈值标准合理"}
+{"task_id": "bmd_deg_007", "step_id": "s1", "label": "edge", "confidence": 0.55, "note": "不做基因过滤可辩护（DESeq2 有内置过滤）但非最优"}
+{"task_id": "bmd_deg_007", "step_id": "s2", "label": "error", "confidence": 0.7, "note": "TPM 不是 counts，不能作为 DESeq2 负二项模型的输入，数据形态不匹配"}
+{"task_id": "bmd_deg_007", "step_id": "s3", "label": "correct", "confidence": 0.9, "note": "DESeq2 本身是标准做法（前提是输入原始 counts）"}
+{"task_id": "bmd_deg_007", "step_id": "s4", "label": "correct", "confidence": 0.95, "note": "BH-FDR 校正是标准做法"}
+{"task_id": "bmd_deg_007", "step_id": "s5", "label": "error", "confidence": 0.85, "note": "全基因组 DEG 用原始 p<0.05 作阈值等同于不做多重检验校正，假阳性会淹没真实信号，导致结论失真"}
+{"task_id": "bmd_deg_008", "step_id": "s1", "label": "correct", "confidence": 0.9, "note": "CPM 最低样本数过滤是标准做法"}
+{"task_id": "bmd_deg_008", "step_id": "s2", "label": "correct", "confidence": 0.9, "note": "RLE size factors 与 DESeq2 匹配，是标准做法"}
+{"task_id": "bmd_deg_008", "step_id": "s3", "label": "correct", "confidence": 0.9, "note": "DESeq2 是标准做法"}
+{"task_id": "bmd_deg_008", "step_id": "s4", "label": "edge", "confidence": 0.6, "note": "BY 是有效的更保守 FDR 控制，但基因组学主流用 BH；可辩护但会损失检验效能"}
+{"task_id": "bmd_deg_008", "step_id": "s5", "label": "correct", "confidence": 0.7, "note": "放宽阈值用于候选筛选、后续验证，是合理的探索性选择"}

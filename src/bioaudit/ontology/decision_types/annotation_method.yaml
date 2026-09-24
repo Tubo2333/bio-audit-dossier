@@ -1,0 +1,25 @@
+# 决策类型：annotation_method（细胞注释方法）— interpretation / scRNA
+decision_type: annotation_method
+display:
+  cn: 细胞类型注释方法
+  en: Annotation method
+stage: interpretation
+paradigms: [scRNA]
+dimension: method_selection
+optional: false
+aliases: []
+depends_on: [clustering_method, clustering_resolution]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: reference_based
+    type: bool
+    required: false
+    missing: skip
+  - key: markers_used
+    type: string
+    required: false
+    missing: fail-open

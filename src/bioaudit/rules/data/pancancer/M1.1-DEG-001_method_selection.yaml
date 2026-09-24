@@ -1,0 +1,113 @@
+rule_id: "M1.1-DEG-001"
+domain: "method_selection.deg"
+status: "active"
+version: 2
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-13"  # 领域复核已定：本条规则依据全部已判定（domain_review 只表示人工/领域判断过，不表示逐条读过原文）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [2013, 2016]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "该规则所属分析家族；适用范围的正式声明待领域复核填写（本字段在家族副本之间保持一致）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "Bulk RNA-seq 差异分析方法选择"
+description: >
+  核心证据：Conesa 2016 + Schurch 2016；Soneson 2013 降级为历史参考。
+  Level 3 与 Level 4 已合并（MVP 口径）；Level 4 保留给增强评估（v0.2）。
+
+condition:
+  decision_type: "deg_method"
+  required_context:
+    data_category: "raw_counts"
+    sequencing: "bulk_RNA_seq"
+    design: "simple_two_group"
+  context_constraints:
+    - "n_replicates >= 2"
+  forbidden_context:
+    data_category: ["normalized_counts", "tpm", "fpkm", "rpkm"]
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+    description: "v0.2 — 由模型给出理由的评估（演示级论证）"
+  level_3:
+    methods:
+      - "DESeq2"
+      - "edgeR"
+      - "limma-voom"
+      - "limma_voom"
+    description: "DESeq2 / edgeR / limma-voom — 负二项分布或经验贝叶斯框架"
+    note: "Level 3 覆盖所有正确方法。n=3 时所有方法敏感度低 (~50%)，但方法选择正确。"
+  level_2:
+    methods:
+      - "limma-trend"
+      - "voom-with-quality-weights"
+    note: "边缘适用场景 — 在特定条件下可接受"
+    conditions_when_acceptable: "当使用 TPM/log-TPM 输入时应选用 limma-trend"
+  level_1:
+    methods:
+      - "Wilcoxon_rank_sum"
+    note: "对低表达基因效力不足。pseudobulk + Wilcoxon 在单细胞场景是标准做法，但本规则仅覆盖 bulk RNA-seq。"
+    conditions_when_acceptable: "n >= 5 且数据严重非正态时可能合理"
+  level_0:
+    methods:
+      - "ttest_equal_variance"
+      - "ttest_unequal_variance"
+      - "DESeq2_on_normalized_data"
+    note: "t-test 违反正态性假设。DESeq2 要求 raw counts 输入。"
+  override_n2:
+    condition: "n_replicates <= 2"
+    all_methods: "level_0"
+    note: "n<=2 时无法可靠估计生物学变异。降级为仅报告 fold change，不做统计推断。"
+
+evidence:
+  - source_type: "consensus_guideline"
+    doi: "10.1186/s13059-016-0881-8"
+    pmid: "26813401"
+    title: "Conesa et al. (2016) Genome Biology — RNA-seq best practices survey"
+    confidence: "L-Consensus"
+    excerpt: "DESeq2, like edgeR, uses the negative binomial as the reference distribution and provides its own normalization approach; among the tools, limma has been shown to perform well under many circumstances and it is also the fastest to run."
+    supports_levels: ["level_3"]
+    # 2026-09-16 收尾核查补核（窗口自查原文 Conesa 2016 DE 一节）：「most widely used and best-performing」与「limma-voom compares comparably」系规则措辞，原文无；且原文称 DESeq/edgeR FDR 控制分别偏保守/偏宽松——收紧为原文逐字；档位与词表未动
+
+  - source_type: "benchmark_paper"
+    doi: "10.1261/rna.053959.115"
+    pmid: "27022035"
+    title: "Schurch et al. (2016) RNA — n=48 yeast benchmark"
+    confidence: "L-Consensus"
+    excerpt: "At n=3, nine of 11 tools found only 20-40% of SDE genes (>85% for genes changing >4-fold). n>=6 recommended for adequate power. DESeq2 most conservative; edgeR-robust best balance."
+    supports_levels: ["level_3", "override_n2"]
+
+  - source_type: "benchmark_paper"
+    doi: "10.1186/1471-2105-14-91"
+    pmid: "24115176"
+    title: "Soneson & Delorenzi (2013) BMC Bioinformatics — HISTORICAL REFERENCE"
+    confidence: "L-Evidenced"
+    excerpt: "Evaluated DESeq v1 (not DESeq2). Broad finding that negative binomial models control FDR still holds, but specific rankings are outdated."
+    supports_levels: ["level_3"]
+
+  - source_type: "method_paper"
+    doi: "10.1186/s13059-014-0550-8"
+    pmid: "25516281"
+    title: "Love et al. (2014) DESeq2, Genome Biology"
+    confidence: "L-Confirmed"
+    excerpt: "The DESeq2 model requires raw counts of sequencing fragments... it is not appropriate to supply normalized counts."
+    supports_levels: ["level_0"]
+
+conflicts_with: ["M1.1-DEG-003"]
+conflict_resolution: "M1.1-DEG-001 适用于 bulk RNA-seq。单细胞数据使用 M1.1-DEG-003。"

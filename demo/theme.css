@@ -1,0 +1,1464 @@
+/* ============================================================
+   Bio-Audit 演示 · 深色审计台主题
+   设计 token：深色审计台设计规范 §4
+   - 背景 #0f1115 / 面板 #1a1d24 / 边框 #2a2f3a
+   - 强调 琥珀 #f59e0b（主操作/焦点，面积 <10%）/ 辅助 青 #22d3ee（信息/链接）
+   - verdict 绿 #10b981 / 黄 #f59e0b / 红 #ef4444
+   - 等宽栈 "JetBrains Mono", Consolas, "Courier New", monospace（Windows 落 Consolas）
+   - 8px 基准网格，卡片圆角 10px
+   版本锁定动机：data-testid 选择器在 1.x 稳定（pyproject streamlit>=1.33,<2——
+   st.popover 首发 1.33.0，据此抬升下限，见设计 §14）。
+   ============================================================ */
+
+:root {
+  --ba-bg: #0f1115;
+  --ba-panel: #1a1d24;
+  --ba-panel-2: #232833;
+  --ba-border: #2a2f3a;
+  --ba-amber: #f59e0b;
+  --ba-cyan: #22d3ee;
+  --ba-green: #10b981;
+  --ba-red: #ef4444;
+  --ba-text: #e5e7eb;
+  --ba-text-dim: #9ca3af;
+  --ba-text-faint: #6b7280;
+  --ba-mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+}
+
+/* ── 全局底与容器 ─────────────────────────────────────────── */
+[data-testid="stAppViewContainer"] {
+  background: var(--ba-bg);
+  color: var(--ba-text);
+}
+[data-testid="stApp"] { background: var(--ba-bg); }
+
+/* 1.31 与新版容器的宽度/padding 双兼容 */
+[data-testid="stAppViewContainer"] .block-container,
+[data-testid="stMainBlockContainer"] .block-container,
+[data-testid="stMain"] .block-container {
+  max-width: 1180px;
+  padding-top: 1.2rem;
+  padding-bottom: 4rem;
+}
+
+/* ── 侧边栏（面板） ───────────────────────────────────────── */
+[data-testid="stSidebar"] {
+  background: var(--ba-panel);
+  border-right: 1px solid var(--ba-border);
+}
+[data-testid="stSidebar"] * { color: var(--ba-text); }
+[data-testid="stSidebar"] .ba-sidebar-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ba-text);
+}
+[data-testid="stSidebar"] .ba-sidebar-sub {
+  font-size: 0.78rem;
+  color: var(--ba-text-faint);
+  margin-top: 2px;
+}
+.ba-nav-rule {
+  height: 1px;
+  background: var(--ba-border);
+  margin: 14px 0;
+}
+
+/* 页级导航：radio 定制为块级按钮组，选中态 = 琥珀左边条（无 AI 模板感的
+   克制选中态：不发光、不放大） */
+[data-testid="stSidebar"] div[data-testid="stRadio"] > div {
+  gap: 4px;
+}
+[data-testid="stSidebar"] div[data-testid="stRadio"] label {
+  display: flex;
+  align-items: center;
+  padding: 9px 12px 9px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  border-left: 3px solid transparent;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.6;
+  cursor: pointer;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out;
+}
+[data-testid="stSidebar"] div[data-testid="stRadio"] label:hover {
+  background: var(--ba-panel-2);
+  border-color: var(--ba-border);
+}
+[data-testid="stSidebar"] div[data-testid="stRadio"] label:has(input:checked) {
+  background: rgba(245, 158, 11, 0.07);
+  border-color: var(--ba-border);
+  border-left-color: var(--ba-amber);
+  color: var(--ba-amber);
+  font-weight: 600;
+}
+/* 隐藏 radio 原生圆点（1.x 结构兼容：圆点位于 label 首个子元素） */
+[data-testid="stSidebar"] div[data-testid="stRadio"] label > div:first-child {
+  display: none;
+}
+
+/* 隐藏 Streamlit 自动 multipage 导航（条件渲染为本应用导航唯一来源） */
+[data-testid="stSidebarNav"] { display: none; }
+
+/* 隐藏默认 toolbar（Deploy 按钮/运行菜单）——演示界面不需要 */
+[data-testid="stToolbar"] { display: none; }
+[data-testid="stAppDeployButton"] { display: none; }
+
+/* ── 文本与排版（中文混排行高 ≥1.6） ─────────────────────── */
+/* 链接：特定性压过 Streamlit 默认（.stMarkdown a → rgb(0,84,163) 深蓝） */
+[data-testid="stMarkdownContainer"] a,
+.stMarkdown a,
+.stApp a {
+  color: var(--ba-cyan);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.35);
+  transition: color 0.15s ease-out, border-color 0.15s ease-out;
+}
+[data-testid="stMarkdownContainer"] a:hover,
+.stMarkdown a:hover {
+  color: var(--ba-text);
+  border-bottom-color: var(--ba-cyan);
+}
+p, li, label, .stMarkdown, [data-testid="stCaptionContainer"] p {
+  line-height: 1.6;
+  word-break: break-word;
+}
+h1, h2, h3 {
+  color: var(--ba-text);
+  letter-spacing: 0.01em;
+}
+[data-testid="stCaptionContainer"] p { color: var(--ba-text-faint); font-size: 0.82rem; }
+
+/* 页面标题（四页共用；等宽小号楷体式克制大标题，非模板居中） */
+.ba-page-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--ba-text);
+  margin-bottom: 4px;
+}
+.ba-page-sub {
+  font-size: 0.92rem;
+  color: var(--ba-text-dim);
+  margin-bottom: 18px;
+  max-width: 720px;
+}
+
+/* ── 顶部横幅（品牌 + 版本徽章 + 当前页名） ───────────────── */
+.ba-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  margin-bottom: 18px;
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  flex-wrap: wrap;
+}
+.ba-brand {
+  font-family: var(--ba-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ba-text);
+}
+.ba-badge {
+  font-family: var(--ba-mono);
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--ba-border);
+  color: var(--ba-cyan);
+  background: rgba(34, 211, 238, 0.06);
+}
+.ba-banner-page {
+  margin-left: auto;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ba-amber);
+}
+
+/* ── 卡片 / 数字 / 状态色点（共用基础） ───────────── */
+.ba-card {
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  padding: 16px 18px;
+}
+.ba-score {
+  font-family: var(--ba-mono);
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  /* 缺陷修复（2026-09-22，runtime 实测）：本元素为 flex 子项，原为 `flex: 0 1 auto`
+     且 `white-space: normal`——可用宽度不足时被压窄并把「85.0」折成「85.」+「0」
+     （实测 1440 宽即折行、1200 宽时元素宽仅 50px、高 211px）。
+     分数是**一个不可分的数值**，折行即误读，故禁止其断行与收缩。 */
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+/* 侧栏文字可断行，避免与不可折的分数争宽 */
+.ba-score-side { min-width: 0; }
+.ba-mono { font-family: var(--ba-mono); }
+.ba-verdict-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}
+.ba-verdict-pass { background: var(--ba-green); }
+.ba-verdict-needs_correction { background: var(--ba-amber); }
+.ba-verdict-blocked { background: var(--ba-red); }
+
+/* ── 控件深色化 ───────────────────────────────────────────── */
+[data-testid="stButton"] button {
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  color: var(--ba-text);
+  border-radius: 8px;
+  font-weight: 500;
+  transition: border-color 0.15s ease-out, background 0.15s ease-out;
+}
+[data-testid="stButton"] button:hover {
+  border-color: var(--ba-amber);
+  color: var(--ba-amber);
+}
+[data-testid="stButton"] button[kind="primary"],
+[data-testid="stButton"] button:active {
+  background: var(--ba-amber);
+  border-color: var(--ba-amber);
+  color: #14161b;
+  font-weight: 600;
+}
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea {
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  color: var(--ba-text);
+  border-radius: 8px;
+}
+[data-testid="stSelectbox"] [data-baseweb="select"],
+[data-testid="stMultiSelect"] [data-baseweb="select"],
+[data-testid="stDateInput"] [data-baseweb="select"] {
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  border-radius: 8px;
+  color: var(--ba-text);
+}
+[data-testid="stExpander"] {
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  background: var(--ba-panel);
+}
+[data-testid="stMetricValue"] {
+  font-family: var(--ba-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 占位区（四页空壳共用） ───────────────────────────────── */
+.ba-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  background: var(--ba-panel);
+  border: 1px dashed var(--ba-border);
+  border-radius: 10px;
+  color: var(--ba-text-faint);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 24px;
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════════════════════════════════
+   审计工坊（结果页全元素）
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 分区标题 / 引导文案 / 结果标题 ── */
+.ba-section-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ba-text-dim);
+  margin: 18px 0 10px;
+}
+.ba-guide {
+  border: 1px dashed var(--ba-border);
+  border-radius: 10px;
+  background: rgba(42, 47, 58, 0.25);
+  color: var(--ba-text-faint);
+  font-size: 0.85rem;
+  padding: 12px 14px;
+  line-height: 1.7;
+}
+.ba-guide b { color: var(--ba-cyan); font-weight: 600; }
+.ba-result-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ba-cyan);
+  margin: 4px 0;
+}
+
+/* ── 总分大卡 + verdict 色点（色点与 level 徽章视觉区分） ── */
+.ba-score-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  min-height: 148px;
+}
+.ba-score-side { display: flex; flex-direction: column; gap: 6px; }
+.ba-verdict-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ba-verdict-label {
+  font-family: var(--ba-mono);
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ba-verdict-desc { font-size: 0.85rem; color: var(--ba-text-dim); }
+.ba-score-unit {
+  font-family: var(--ba-mono);
+  font-size: 0.72rem;
+  color: var(--ba-text-faint);
+}
+/* 合规约束（四轴未展示时的就地声明）。限定语，不是结论——
+   次级色、无醒目色、不加粗放大。 */
+.ba-score-disclaimer {
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--ba-text-faint);
+  margin: 6px 0 2px;
+}
+.ba-score-disclaimer b { color: var(--ba-text-dim); font-weight: 600; }
+
+/* ── 快照徽章（可信 UI） ── */
+.ba-snapshot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0 4px;
+}
+.ba-snapshot-chip {
+  font-family: var(--ba-mono);
+  font-size: 0.7rem;
+  color: var(--ba-cyan);
+  background: rgba(34, 211, 238, 0.06);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+.ba-snapshot-src { color: var(--ba-text-faint); border-color: var(--ba-border); }
+
+/* ── 维度进度条 ── */
+.ba-dim-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.ba-dim-row:last-child { margin-bottom: 0; }
+.ba-dim-label {
+  flex: 0 0 96px;
+  font-size: 0.8rem;
+  color: var(--ba-text-dim);
+}
+.ba-dim-track {
+  flex: 1;
+  height: 8px;
+  background: var(--ba-panel-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.ba-dim-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.15s ease-out;
+}
+.ba-dim-val {
+  flex: 0 0 44px;
+  text-align: right;
+  font-family: var(--ba-mono);
+  font-size: 0.78rem;
+  font-variant-numeric: tabular-nums;
+}
+/* 维度无决策（缺失键）→ 中性「—」，不渲染误导性 0% 红条 */
+.ba-dim-na { color: var(--ba-text-faint); }
+
+/* ── level 五档徽章（L3 绿 / L2 青 / L1 黄 / L0 红 / L-1 灰） ── */
+.ba-level {
+  font-family: var(--ba-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 1px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+.ba-level-l3 { color: #10b981; background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); }
+.ba-level-l2 { color: #22d3ee; background: rgba(34, 211, 238, 0.1); border: 1px solid rgba(34, 211, 238, 0.4); }
+.ba-level-l1 { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); }
+.ba-level-l0 { color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); }
+/* L-1（无法评估）/ L-2（未验证）：灰，不误读为危险 */
+.ba-level-lm { color: #9ca3af; background: rgba(107, 114, 128, 0.12); border: 1px solid rgba(107, 114, 128, 0.4); }
+
+/* ── 决策状态点网格 ── */
+.ba-dec-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(232px, 1fr));
+  gap: 10px;
+}
+.ba-dec-card {
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: help;
+  transition: border-color 0.15s ease-out;
+}
+.ba-dec-card:hover { border-color: var(--ba-cyan); }
+.ba-dec-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.ba-dec-rules { font-size: 0.68rem; color: var(--ba-text-faint); }
+.ba-dec-type { font-size: 0.86rem; font-weight: 600; color: var(--ba-text); }
+.ba-dec-choice {
+  font-size: 0.72rem;
+  color: var(--ba-text-dim);
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── 证据卡（PMID 悬停不点击） ── */
+.ba-ev-cite {
+  font-size: 0.82rem;
+  color: var(--ba-text-dim);
+  line-height: 1.6;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+.ba-pmid {
+  font-family: var(--ba-mono);
+  font-size: 0.7rem;
+  color: var(--ba-cyan);
+  background: rgba(34, 211, 238, 0.08);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 6px;
+  padding: 0 6px;
+  margin: 0 2px;
+  cursor: help;
+  white-space: nowrap;
+}
+.ba-missing-keys {
+  font-size: 0.78rem;
+  color: var(--ba-amber);
+  margin-bottom: 8px;
+}
+.ba-issue-line {
+  font-size: 0.82rem;
+  color: var(--ba-red);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  background: rgba(239, 68, 68, 0.07);
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin: 6px 0;
+  word-break: break-word;
+}
+.ba-l-dist { font-size: 0.8rem; color: var(--ba-text-dim); margin: 6px 0; }
+
+/* ── 时间轴（stages 推导；节点四色 + 已审计标记） ── */
+.ba-tl { padding: 16px 18px 8px; }
+.ba-tl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.ba-tl-stage { margin-bottom: 14px; }
+.ba-tl-stage-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.ba-tl-stage-id {
+  font-family: var(--ba-mono);
+  font-size: 0.66rem;
+  color: var(--ba-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ba-tl-stage-cn { font-size: 0.86rem; font-weight: 600; }
+.ba-tl-tag {
+  font-size: 0.66rem;
+  color: var(--ba-cyan);
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  border-radius: 999px;
+  padding: 0 8px;
+  margin-left: 6px;
+}
+.ba-tl-none { font-size: 0.72rem; color: var(--ba-text-faint); }
+.ba-tl-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ba-tl-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--ba-border);
+  background: var(--ba-panel);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  cursor: help;
+  max-width: 340px;
+}
+.ba-tl-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+.ba-tl-normal .ba-tl-dot { background: var(--ba-green); }
+.ba-tl-risk .ba-tl-dot { background: var(--ba-amber); }
+.ba-tl-danger .ba-tl-dot { background: var(--ba-red); }
+.ba-tl-unverified .ba-tl-dot { background: var(--ba-text-faint); }
+.ba-tl-type { font-size: 0.78rem; }
+.ba-tl-choice {
+  font-size: 0.68rem;
+  color: var(--ba-text-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 160px;
+}
+
+/* ── 并排对比表（行 = ontology 顺序；缺失列"无此决策"） ── */
+.ba-cmp-wrap { overflow-x: auto; margin: 6px 0 16px; }
+.ba-cmp {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.78rem;
+  min-width: 640px;
+}
+.ba-cmp th, .ba-cmp td {
+  border: 1px solid var(--ba-border);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.6;
+  word-break: break-word;
+}
+.ba-cmp thead th {
+  background: var(--ba-panel-2);
+  font-weight: 600;
+  color: var(--ba-text);
+  white-space: nowrap;
+}
+.ba-cmp .ba-cmp-summary td { background: rgba(35, 40, 51, 0.5); }
+.ba-cmp-type {
+  font-family: var(--ba-mono);
+  font-size: 0.72rem;
+  color: var(--ba-cyan);
+  white-space: nowrap;
+}
+.ba-cmp-missing { color: var(--ba-text-faint); font-style: italic; }
+.ba-cmp-choice {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--ba-text-dim);
+  margin-top: 3px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ba-cmp-score { font-size: 1.05rem; font-variant-numeric: tabular-nums; }
+.ba-cmp-l { font-size: 0.7rem; color: var(--ba-text-dim); margin-top: 3px; }
+.ba-cmp-issues {
+  font-size: 0.7rem;
+  color: var(--ba-amber);
+  margin-top: 3px;
+  cursor: help;
+}
+
+/* ── 现象链路 ── */
+.ba-chain {
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  background: var(--ba-panel);
+  padding: 6px 16px;
+  margin: 10px 0;
+}
+.ba-chain-step {
+  border-left: 3px solid var(--ba-border);
+  padding: 8px 12px;
+  font-size: 0.86rem;
+  color: var(--ba-text-dim);
+  line-height: 1.7;
+}
+.ba-chain-step-highlight {
+  border-left-color: var(--ba-amber);
+  background: rgba(245, 158, 11, 0.06);
+  color: var(--ba-text);
+}
+
+/* ── 提示卡（口径注等） ── */
+.ba-callout {
+  border-radius: 10px;
+  border: 1px solid var(--ba-border);
+  background: var(--ba-panel);
+  padding: 10px 14px;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  margin: 8px 0;
+  color: var(--ba-text-dim);
+  word-break: break-word;
+}
+.ba-callout-note { border-left: 3px solid var(--ba-cyan); }
+.ba-callout-warn { border-left: 3px solid var(--ba-amber); color: var(--ba-text); }
+.ba-callout-ok { border-left: 3px solid var(--ba-green); color: var(--ba-text); }
+.ba-callout-err { border-left: 3px solid var(--ba-red); color: var(--ba-red); }
+
+/* ══════════════════════════════════════════════════════════
+   采集演示（机制层）
+   ══════════════════════════════════════════════════════════ */
+
+/* ── 统计 chips 行（四类判定计数 / verdict 三态计数） ── */
+.ba-stat-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 4px;
+}
+.ba-stat-chip {
+  font-family: var(--ba-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid var(--ba-border);
+  border-radius: 999px;
+  padding: 3px 12px;
+  background: var(--ba-panel);
+  white-space: nowrap;
+}
+.ba-stat-chip-exp {
+  color: var(--ba-cyan);
+  border-color: rgba(34, 211, 238, 0.4);
+  background: rgba(34, 211, 238, 0.07);
+}
+
+/* ── 四类判定对齐表（四色语义严格绑定判定类别） ── */
+.ba-align-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 0.74rem;
+  color: var(--ba-text-dim);
+  margin: 6px 0 10px;
+}
+.ba-align-legend-item { display: inline-flex; align-items: center; gap: 6px; }
+.ba-align-legend-item i {
+  width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+}
+.ba-align {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 0.78rem;
+  min-width: 780px;
+}
+.ba-align th, .ba-align td {
+  border: 1px solid var(--ba-border);
+  padding: 8px 10px;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.6;
+  word-break: break-word;
+}
+.ba-align thead th {
+  background: var(--ba-panel-2);
+  font-weight: 600;
+  color: var(--ba-text);
+  white-space: nowrap;
+}
+.ba-align-type { font-size: 0.84rem; font-weight: 600; color: var(--ba-text); }
+.ba-align-tid { font-size: 0.68rem; color: var(--ba-text-faint); }
+.ba-align-badge {
+  display: inline-block;
+  font-family: var(--ba-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  border: 1px solid var(--ba-border);
+  border-radius: 6px;
+  padding: 1px 8px;
+  margin-right: 4px;
+  white-space: nowrap;
+}
+.ba-align-badge-exp {
+  color: var(--ba-cyan) !important;
+  border-color: rgba(34, 211, 238, 0.45) !important;
+  background: rgba(34, 211, 238, 0.08) !important;
+  cursor: help;
+}
+.ba-align-none { color: var(--ba-text-faint); font-style: italic; }
+.ba-align-detail {
+  font-size: 0.74rem;
+  color: var(--ba-text-dim);
+  cursor: help;
+  max-width: 380px;
+}
+/* 虚报行：红调底 + 左边条（唯一红色行，一眼定位问题决策） */
+.ba-align-row-fp td { background: rgba(239, 68, 68, 0.05); }
+.ba-align-row-fp td:first-child { border-left: 3px solid var(--ba-red); }
+.ba-inst { font-size: 0.68rem; color: var(--ba-text-faint); margin-left: 6px; }
+
+/* ── verdict 状态位流转 ── */
+.ba-flow-stat {
+  font-family: var(--ba-mono);
+  font-size: 0.86rem;
+  color: var(--ba-text-dim);
+  border: 1px solid var(--ba-border);
+  background: var(--ba-panel);
+  border-radius: 8px;
+  padding: 5px 14px;
+}
+.ba-flow-stat b { font-size: 1rem; color: var(--ba-text); }
+.ba-flow-stat.ba-flow-final { border-color: rgba(16, 185, 129, 0.4); }
+.ba-flow-stat.ba-flow-final b { color: var(--ba-green); }
+.ba-flow-stat.ba-flow-revoked { border-color: rgba(239, 68, 68, 0.4); }
+.ba-flow-stat.ba-flow-revoked b { color: var(--ba-red); }
+.ba-flow-arrow { color: var(--ba-text-faint); font-size: 0.8rem; }
+.ba-flow-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--ba-text-faint);
+  margin: 4px 0 12px;
+}
+.ba-flow-chip {
+  font-family: var(--ba-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  border-radius: 6px;
+  padding: 1px 8px;
+  white-space: nowrap;
+}
+.ba-flow-chip-prov { color: var(--ba-text-dim); background: rgba(107, 114, 128, 0.15); }
+.ba-flow-chip-final { color: var(--ba-green); background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.4); }
+.ba-flow-chip-revoked { color: var(--ba-red); background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); }
+.ba-flow-chip-exp { color: var(--ba-cyan); background: rgba(34, 211, 238, 0.08); border: 1px solid rgba(34, 211, 238, 0.4); }
+.ba-flow { padding: 10px 16px; }
+.ba-flow-row {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.1fr) auto minmax(200px, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--ba-border);
+}
+.ba-flow-row:last-child { border-bottom: none; }
+.ba-flow-row-revoked { background: rgba(239, 68, 68, 0.05); border-left: 3px solid var(--ba-red); }
+.ba-flow-row-exp { background: rgba(34, 211, 238, 0.04); border-left: 3px solid var(--ba-cyan); }
+.ba-flow-dec { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; }
+.ba-flow-cn { font-size: 0.84rem; font-weight: 600; }
+.ba-flow-tid { font-size: 0.66rem; color: var(--ba-text-faint); }
+.ba-flow-choice {
+  font-size: 0.72rem;
+  color: var(--ba-text-dim);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 220px;
+}
+.ba-flow-chips { display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.ba-flow-reason {
+  font-size: 0.72rem;
+  color: var(--ba-text-faint);
+  cursor: help;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── 补入决策卡（中间产物） ── */
+.ba-added-card { border-left: 3px solid var(--ba-cyan); margin: 10px 0; }
+.ba-added-title {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ba-cyan);
+  margin-bottom: 8px;
+}
+.ba-added-row { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.ba-added-type {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ba-text);
+  border: 1px solid var(--ba-border);
+  border-radius: 6px;
+  padding: 2px 10px;
+}
+.ba-added-ctx { display: flex; flex-wrap: wrap; gap: 6px; }
+.ba-ctx-chip {
+  font-size: 0.68rem;
+  color: var(--ba-cyan);
+  background: rgba(34, 211, 238, 0.06);
+  border: 1px solid rgba(34, 211, 238, 0.3);
+  border-radius: 999px;
+  padding: 1px 9px;
+  white-space: nowrap;
+}
+
+/* ── declared 折叠区列表 ── */
+.ba-decl-list { margin: 6px 0 0 4px; padding-left: 18px; }
+.ba-decl-list li { font-size: 0.82rem; color: var(--ba-text-dim); margin-bottom: 6px; }
+.ba-decl-list b { color: var(--ba-text); }
+
+/* ══════════════════════════════════════════════════════════
+   评测与奖励 + 关于
+   ══════════════════════════════════════════════════════════ */
+
+/* ── st.tabs 深色化（评测页四 tab；整页导航仍为侧边栏条件渲染） ── */
+[data-testid="stTabs"] [data-baseweb="tab-list"] {
+  gap: 4px;
+  border-bottom: 1px solid var(--ba-border);
+  margin-bottom: 14px;
+}
+[data-testid="stTabs"] button[role="tab"] {
+  background: transparent;
+  color: var(--ba-text-dim);
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 8px 14px;
+  transition: color 0.15s ease-out, border-color 0.15s ease-out;
+}
+[data-testid="stTabs"] button[role="tab"]:hover { color: var(--ba-text); }
+[data-testid="stTabs"] button[role="tab"][aria-selected="true"] {
+  color: var(--ba-amber);
+  border-bottom-color: var(--ba-amber);
+  font-weight: 600;
+}
+
+/* ── 统计大卡（benchmark 摘要 / 关于页工程数字） ── */
+.ba-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+  margin: 6px 0 14px;
+}
+.ba-stat-card {
+  background: var(--ba-panel);
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.ba-stat-value {
+  font-family: var(--ba-mono);
+  font-size: 1.9rem;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ba-text);
+  font-variant-numeric: tabular-nums;
+  word-break: break-all;
+}
+.ba-stat-label {
+  font-size: 0.78rem;
+  color: var(--ba-amber);
+  font-weight: 600;
+  margin-top: 6px;
+}
+/* 长值卡（如三元组版本串）用小一号等宽，避免大字号折行破坏节奏 */
+.ba-stat-value-sm {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: normal;
+  word-break: break-word;
+}
+.ba-stat-sub {
+  font-size: 0.7rem;
+  color: var(--ba-text-faint);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+/* ── 决策构成堆叠条（correct / edge / error） ── */
+.ba-stack {
+  display: flex;
+  height: 14px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--ba-panel-2);
+  margin: 10px 0 10px;
+}
+.ba-stack-seg { height: 100%; }
+.ba-stack-legend { display: flex; flex-wrap: wrap; gap: 8px; }
+
+/* ── strata CI 注（右列小字） ── */
+.ba-dim-ci {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  color: var(--ba-text-faint);
+  font-family: var(--ba-mono);
+  white-space: nowrap;
+}
+.ba-card-tight { padding: 14px 18px 8px; }
+
+/* ── 窄表（reward 映射 / 层间比较 / 对照表） ── */
+.ba-cmp-narrow { min-width: 0; }
+.ba-cmp-highlight td { background: rgba(34, 211, 238, 0.06); }
+.ba-cmp-highlight td:first-child { border-left: 3px solid var(--ba-cyan); }
+
+/* ── spike-in 掉分行 ── */
+.ba-spike-row { margin-bottom: 14px; }
+.ba-spike-row:last-child { margin-bottom: 0; }
+.ba-spike-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+.ba-spike-trail { font-size: 0.8rem; color: var(--ba-text-dim); }
+.ba-spike-val { font-size: 0.9rem; font-weight: 600; margin-left: auto; }
+.ba-spike-bar { display: flex; align-items: center; gap: 10px; }
+.ba-spike-track {
+  flex: 1;
+  height: 8px;
+  background: var(--ba-panel-2);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.ba-spike-fill {
+  display: block;
+  height: 100%;
+  background: var(--ba-red);
+  border-radius: 999px;
+}
+.ba-spike-drop { font-size: 0.72rem; color: var(--ba-red); white-space: nowrap; }
+
+/* ── 真实评测运行卡 / R0 卡 ── */
+.ba-run-card { margin-bottom: 12px; }
+.ba-run-head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.ba-run-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: var(--ba-text-dim);
+}
+.ba-run-cost { font-size: 0.8rem; color: var(--ba-text-dim); }
+.ba-cost-chip {
+  color: var(--ba-amber);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.07);
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-weight: 600;
+}
+.ba-score-sm {
+  font-family: var(--ba-mono);
+  font-size: 1.7rem;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 关于页 ── */
+.ba-layer-row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  background: var(--ba-panel);
+  margin-bottom: 10px;
+}
+.ba-layer-num {
+  font-family: var(--ba-mono);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--ba-amber);
+  padding-top: 2px;
+}
+.ba-layer-title { font-size: 0.95rem; font-weight: 700; color: var(--ba-text); }
+.ba-layer-desc {
+  font-size: 0.84rem;
+  color: var(--ba-text-dim);
+  line-height: 1.7;
+  margin-top: 4px;
+}
+.ba-road-list { margin: 8px 0 0; padding-left: 18px; }
+.ba-road-list li {
+  font-size: 0.82rem;
+  color: var(--ba-text-dim);
+  margin-bottom: 7px;
+  line-height: 1.6;
+}
+.ba-road-list b { color: var(--ba-text); }
+.ba-takeaway { margin: 8px 0; }
+.ba-takeaway-line {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 0.9rem;
+  color: var(--ba-text);
+  margin-bottom: 8px;
+  line-height: 1.6;
+}
+.ba-takeaway-line:last-child { margin-bottom: 0; }
+.ba-takeaway-num {
+  font-family: var(--ba-mono);
+  color: var(--ba-amber);
+  font-weight: 700;
+  flex: none;
+}
+
+/* ── 窄屏（<1100px）：采集页对齐表纵向堆叠，不横向溢出页面 ── */
+@media (max-width: 1100px) {
+  .ba-align { min-width: 0; }
+  .ba-align thead { display: none; }
+  .ba-align tr { display: block; margin-bottom: 12px; border: 1px solid var(--ba-border); border-radius: 10px; }
+  .ba-align td { display: block; border: none; border-bottom: 1px solid var(--ba-border); }
+  .ba-align td:last-child { border-bottom: none; }
+  .ba-flow-row { grid-template-columns: 1fr; gap: 6px; }
+  .ba-flow-chips { white-space: normal; flex-wrap: wrap; }
+}
+
+/* ── 窄屏（<1100px）：对比表纵向堆叠，不横向溢出页面 ── */
+@media (max-width: 1100px) {
+  .ba-cmp { min-width: 0; }
+  .ba-cmp thead { display: none; }
+  .ba-cmp tr { display: block; margin-bottom: 12px; border: 1px solid var(--ba-border); border-radius: 10px; }
+  .ba-cmp td { display: block; border: none; border-bottom: 1px solid var(--ba-border); }
+  .ba-cmp td:last-child { border-bottom: none; }
+  .ba-cmp .ba-cmp-summary td { border-bottom: 1px solid var(--ba-border); }
+  .ba-dec-grid { grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+}
+
+/* ── 窄屏（<1100px）：关于页价值层行收窄 ── */
+@media (max-width: 1100px) {
+  .ba-layer-row { grid-template-columns: 44px 1fr; }
+  .ba-stat-value { font-size: 1.5rem; }
+}
+
+/* ── 窄屏（<1100px）：分数卡改纵向堆叠，避免分数被压窄或卡片溢出 ── */
+/* 实测（2026-09-22）：分数卡与维度条为 [1.6, 1] 两列；窄视口下分数卡所得宽度不足以
+   并排容纳「分数 + 侧栏」，原表现为分数折行（改前）或卡片溢出（改后未堆叠时）。
+   分数是整块信息中最不可分的一项，故窄屏改为上下堆叠、并把数字略降一号以保纵向克制。 */
+@media (max-width: 1100px) {
+  .ba-score-card { flex-direction: column; align-items: flex-start; gap: 10px; min-height: 0; }
+  .ba-score { font-size: 2.4rem; }
+}
+
+/* ── 尊重减弱动效偏好 ─────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   修复补丁 v2（2026-09-20 · 经 puppeteer 实测 DOM 定位）
+   实测：① stHeader 为白底 60px 高、z-index 999990、absolute 定位的横条，
+            压住横幅上半部（"顶部被挡住"的根因）；
+         ② 收起态下 stSidebar 被 transform: translateX(-300px) 推出视口、
+            宽度压到 1px（aria-expanded="false"），且展开控件无法用旧
+            testid 命中（"收起后调不回来 + 页面滑不动"的根因）。
+   处置：① 隐藏 stHeader（演示不需要顶部工具栏横条）；
+         ② 隐藏「收起」按钮（禁掉触发路径）；
+         ③ 强制侧边栏常驻视口（width/transform/visibility 全强制）——
+            即使浏览器保留历史收起状态，导航也始终可见。
+   ══════════════════════════════════════════════════════════════ */
+
+/* ① 顶部 header 白条：隐藏（否则遮挡横幅） */
+[data-testid="stHeader"] {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  background: transparent !important;
+}
+
+/* ② 收起按钮：隐藏（演示导航必须常驻，禁止收起） */
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapseButton"] button,
+[data-testid="stSidebar"] button[aria-label*="ollapse"],
+[data-testid="stSidebar"] button[title*="ollapse"],
+[data-testid="stSidebar"] button[aria-label*="收起"],
+[data-testid="stSidebar"] button[title*="收起"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ③ 侧边栏常驻：无视 aria-expanded / 历史收起状态，始终 300px 留在视口内 */
+[data-testid="stSidebar"] {
+  transform: none !important;
+  width: 300px !important;
+  min-width: 300px !important;
+  max-width: 300px !important;
+  visibility: visible !important;
+  display: block !important;
+}
+[data-testid="stSidebarContent"] {
+  width: 300px !important;
+  min-width: 300px !important;
+  visibility: visible !important;
+}
+[data-testid="stSidebarHeader"] { visibility: visible !important; }
+
+/* ④ 兜底：展开控件（若版本仍渲染）可见可点 */
+[data-testid="stSidebarCollapsedControl"],
+[data-testid="collapsedControl"] {
+  display: flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  z-index: 1000000 !important;
+  pointer-events: auto !important;
+}
+
+/* ⑤ 兜底：主区滚动不被锁死 */
+[data-testid="stAppViewContainer"],
+[data-testid="stMain"],
+main {
+  overflow-y: auto !important;
+}
+
+/* ── 对比面板：基准 / 对比项 主从可辨（2026-09-20 重构）────────
+   基准 = 琥珀（参照系，锁定）；对比项 = 青（可移除）。与主题既有语义一致
+   （琥珀=主操作/焦点，青=信息/辅助）。 */
+.ba-section-sub {
+  font-size: 0.78rem;
+  color: var(--ba-text-faint);
+  margin: 4px 0 8px;
+}
+.ba-cmp-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  margin-bottom: 6px;
+  border: 1px solid var(--ba-border);
+  background: var(--ba-panel);
+}
+.ba-cmp-row-primary {
+  border-color: rgba(245, 158, 11, 0.55);
+  border-left: 3px solid var(--ba-amber);
+  background: rgba(245, 158, 11, 0.05);
+}
+.ba-cmp-row-vs {
+  border-color: rgba(34, 211, 238, 0.35);
+  border-left: 3px solid var(--ba-cyan);
+  background: rgba(34, 211, 238, 0.04);
+}
+.ba-cmp-tag {
+  flex: 0 0 auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.ba-cmp-tag-primary {
+  background: rgba(245, 158, 11, 0.14);
+  color: var(--ba-amber);
+  border: 1px solid rgba(245, 158, 11, 0.5);
+}
+.ba-cmp-tag-vs {
+  background: rgba(34, 211, 238, 0.12);
+  color: var(--ba-cyan);
+  border: 1px solid rgba(34, 211, 238, 0.4);
+}
+.ba-cmp-name {
+  font-size: 0.84rem;
+  color: var(--ba-text);
+  line-height: 1.5;
+}
+.ba-cmp-lock {
+  margin-left: auto;
+  font-size: 0.7rem;
+  color: var(--ba-text-faint);
+  white-space: nowrap;
+}
+.ba-cmp-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* ── 页面导语与页间过渡（2026-09-20 叙事层）──────────────────
+   导语：位于页面主标题下方，陈述本页要回答的问题与结论（专业、克制，
+   一句话说清"这一页在处理什么"）；过渡：位于页尾，指明下一步去看什么，
+   把四页串成一条路径而非四个孤立模块。 */
+.ba-page-lead {
+  max-width: 860px;
+  margin: 2px 0 18px;
+  padding: 12px 16px 13px;
+  border-left: 3px solid var(--ba-cyan);
+  border-radius: 0 8px 8px 0;
+  background: rgba(34, 211, 238, 0.05);
+  color: var(--ba-text);
+  font-size: 0.92rem;
+  line-height: 1.75;
+}
+.ba-page-lead .ba-lead-key {
+  color: var(--ba-cyan);
+  font-weight: 600;
+}
+.ba-next-step {
+  max-width: 860px;
+  margin: 26px 0 4px;
+  padding: 10px 14px;
+  border: 1px solid var(--ba-border);
+  border-left: 3px solid var(--ba-amber);
+  border-radius: 0 8px 8px 0;
+  background: rgba(245, 158, 11, 0.04);
+  font-size: 0.86rem;
+  color: var(--ba-text-dim);
+  line-height: 1.7;
+}
+.ba-next-step .ba-next-key {
+  color: var(--ba-amber);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.ba-term-note {
+  max-width: 860px;
+  margin: 8px 0 0;
+  font-size: 0.76rem;
+  line-height: 1.7;
+  color: var(--ba-text-faint);
+}
+.ba-term-note b { color: var(--ba-text-dim); font-weight: 600; }
+
+/* ── 案例交代卡（采集页专用）────────────────────────────────
+   固定案例页必须主动交代：这是谁的运行、关键事实、为何选它、与上一页关系。
+   采用键值行结构：左键右值，读起来像一份案例摘要而非段落堆砌。 */
+.ba-case-card {
+  max-width: 860px;
+  margin: 10px 0 20px;
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  background: var(--ba-panel);
+  overflow: hidden;
+}
+.ba-case-row {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ba-border);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+.ba-case-row:last-child { border-bottom: none; }
+.ba-case-row:first-child {
+  background: rgba(34, 211, 238, 0.04);
+}
+.ba-case-key {
+  color: var(--ba-cyan);
+  font-weight: 600;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  padding-top: 1px;
+}
+.ba-case-val { color: var(--ba-text); }
+.ba-case-val b { color: var(--ba-text); font-weight: 600; }
+/* 短文本行（分数 · verdict 等）不折行——同一位置不同案例的长短差异
+   （如多一个"源报告口径 63.0"小注）不得造成"有的行一行、有的两行" */
+.ba-case-val-inline { white-space: nowrap; }
+/* 口径注：长说明独立成行的小字（不内联进「核验口径」——
+   保持每张卡片的行数与行语义一致，避免折行数不齐） */
+.ba-case-note {
+  font-size: 0.78rem;
+  line-height: 1.65;
+  color: var(--ba-text-dim);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   UI 打磨（2026-09-20）：交互反馈 + 产出过渡
+   ① 可交互元素统一手型光标、禁止拖动误选（控件不该像一段文本）；
+   ② 正文/数据仍允许选择复制（证据链要能被复制带走）；
+   ③ 运行审计的产出过渡动画（分步过程，见 01_workshop）。
+   ══════════════════════════════════════════════════════════════ */
+
+/* 分数类元素一律不折行（列宽受 verdict 文字长短影响，数字不得被挤成两行） */
+.ba-cmp-score,
+.ba-stat-value,
+.ba-stat-value-sm,
+.ba-score-sm,
+.ba-score-big,
+.ba-verdict-line,
+.ba-verdict-label {
+  white-space: nowrap;
+}
+
+/* ① 手型光标：所有可点区域 */
+button,
+[role="button"],
+summary,
+label,
+[data-testid="stSelectbox"],
+[data-testid="stMultiSelect"],
+[data-testid="stSelectbox"] > div,
+[data-testid="stMultiSelect"] > div,
+[data-baseweb="select"],
+[data-baseweb="select"] *,
+[data-testid="stExpander"] summary,
+[data-testid="stRadio"] label,
+[data-testid="stCheckbox"] label,
+[data-testid="stFileUploader"] label,
+.ba-cmp-row,
+.ba-case-row,
+.ba-cmp-tag,
+.ba-stat-chip,
+.ba-level,
+.ba-verdict-dot,
+.ba-run-card,
+.ba-spike-row,
+.ba-flow-chip,
+.ba-timeline-node,
+.ba-nav-rule {
+  cursor: pointer;
+}
+
+/* ② 交互元素禁止误选（拖动不该选中文字）；正文区显式恢复可选中 */
+button,
+[role="button"],
+label,
+[data-testid="stSelectbox"],
+[data-testid="stMultiSelect"],
+[data-testid="stSidebar"] .ba-sidebar-title,
+[data-testid="stSidebar"] .ba-sidebar-sub,
+.ba-cmp-row,
+.ba-case-row,
+.ba-cmp-tag,
+.ba-stat-chip,
+.ba-level,
+.ba-flow-chip {
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ba-page-lead,
+.ba-next-step,
+.ba-term-note,
+.ba-case-note,
+.ba-case-val,
+.ba-cmp,
+.ba-dec-grid,
+.ba-timeline,
+.ba-evidence,
+.ba-callout {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* ③ 审计过程动画（CSS 驱动 · 顺序呈现）
+   设计纪律（2026-09-20 修正）：
+   - 由浏览器播放 CSS 动画（不依赖 Python 逐帧推送——Streamlit 会合并执行期
+     更新，逐帧方案在浏览器端可能一次收到、看不到过程）；
+   - **未到的步骤初始不可见**（opacity:0 + visibility:hidden）：后续步骤与
+     结论不提前泄露，必须按"先判级、后结论"的真实顺序出现；
+   - Python 侧只等动画播完再渲染结果区（先判断、后结论，非先射箭再画靶）。 */
+@keyframes ba-step-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ba-bar-grow {
+  from { width: 0%; }
+  to   { width: 100%; }
+}.ba-run-anim {
+  margin: 6px 0 18px;
+  padding: 14px 16px 12px;
+  border: 1px solid var(--ba-border);
+  border-radius: 10px;
+  background: var(--ba-panel);
+}
+.ba-run-anim-head {
+  font-size: 0.84rem;
+  color: var(--ba-cyan);
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+.ba-run-bar {
+  height: 4px;
+  border-radius: 999px;
+  background: var(--ba-border);
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+.ba-run-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--ba-cyan), var(--ba-amber));
+  animation: ba-bar-grow 5.6s linear forwards;
+}
+.ba-run-step {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: 8px;
+  border-left: 3px solid rgba(16, 185, 129, 0.45);
+  opacity: 0;
+  animation: ba-step-in 0.45s ease-out forwards;
+}
+/* 步骤按序出现（每步 ≈0.95s）。
+   注意两点（2026-09-20 修正）：
+   ① 初始只设 opacity:0（**不设 visibility:hidden**——keyframes 不声明该属性
+      时元素会永久隐藏，曾导致"只有进度条没有文字"）；
+   ② 用 nth-child 精确定位步骤：容器内前两个子元素是标题与进度条，
+      nth-of-type 会把它们算进 div 计数 → 延迟错位。 */
+.ba-run-anim > .ba-run-step:nth-child(3) { animation-delay: 0.05s; }
+.ba-run-anim > .ba-run-step:nth-child(4) { animation-delay: 1.00s; }
+.ba-run-anim > .ba-run-step:nth-child(5) { animation-delay: 1.95s; }
+.ba-run-anim > .ba-run-step:nth-child(6) { animation-delay: 2.90s; }
+.ba-run-anim > .ba-run-step:nth-child(7) { animation-delay: 3.85s; }
+.ba-run-anim > .ba-run-step:nth-child(8) { animation-delay: 4.80s; }
+/* 结论步（最后一步）：额外强调——它是判断完成后的产物 */
+.ba-run-anim > .ba-run-step:last-child {
+  background: rgba(245, 158, 11, 0.06);
+  border-left-color: var(--ba-amber);
+}
+.ba-run-step-mark {
+  flex: 0 0 auto;
+  width: 14px;
+  font-family: var(--ba-mono);
+  font-size: 0.82rem;
+  color: var(--ba-green);
+}
+.ba-run-step:last-of-type .ba-run-step-mark { color: var(--ba-amber); }
+.ba-run-step-text {
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: var(--ba-text);
+}
+.ba-run-step-detail { color: var(--ba-text-dim); }
+.ba-run-step-idx {
+  flex: 0 0 auto;
+  margin-left: auto;
+  font-family: var(--ba-mono);
+  font-size: 0.74rem;
+  color: var(--ba-text-faint);
+}

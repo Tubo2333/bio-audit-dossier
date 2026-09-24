@@ -1,0 +1,11 @@
+[
+  {
+    "step_id": "E5",
+    "decision_type": "events_per_variable",
+    "choice": "EPV_less_than_5",
+    "rationale": "Multivariate Cox model includes CSTB + Age + Stage + Grade + Smoking history (5 covariates). Only 3 death events occurred in this cohort. Since the gene is highly significant in univariate analysis, we proceed with the full multivariate model.",
+    "context": {
+      "analysis_type": "survival_analysis"
+    }
+  }
+]

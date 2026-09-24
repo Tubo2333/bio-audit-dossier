@@ -1,0 +1,426 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# M3 采集签名表（signatures 驱动，窗口 C / C2）
+#
+# 设计依据：docs/specs/2026-08-13-trajectory-capture-design-v1.md §五（规则驱动
+# 的确定性发现——主路径）+ §四（上下文三级可信源 + 禁猜规则，F6）。
+#
+# 结构：
+#   signatures_version / schema_version：签名表版本
+#   types:
+#     <decision_type>:            # 本体规范 ID（capture-validate 校验 ∈ 34 类型）
+#       note: ...                 # 覆盖说明 / 待补说明
+#       signatures:
+#         - tool: <规范工具名>     # 证据展示用
+#           pattern: <正则>        # 命中该工具调用（re.search）
+#           paradigms: [deg|pan|scrna]   # 可选；限定范式（同名异构消歧）
+#           choice: <字面 choice>  # 确定性字面 choice（规则词表内）
+#           choice_arg: <参数名>   # choice 来自调用参数；配合 choice_map
+#           choice_map: {<参数值>: <choice>}   # 确定性映射；值不在表内 → uncertain
+#           choice_group: <具名组> # choice 来自 pattern 具名组；配合 choice_map
+#           choice_ranges: [{min,max,choice}]  # 数值区间 → 规则词表 choice
+#           choice_table: [{<组名>: <值>, ..., choice: ...}]  # 多组联合 → 词表 choice
+#           args: {<参数名|组名>: {key: <规范 context 键>, type: int|float|string|bool}}
+#           context_fixed: {<键>: <值>}  # 签名本身的确定性事实（工具定义语义）
+#           note: ...
+#
+# 铁律（禁猜规则，F6）：
+#   1. choice 只能来自：字面量 / 调用参数确定性映射 / pattern 具名组确定性映射 /
+#      规则词表数值区间；无法判定 → 该候选进 ParseResult.uncertain（不猜）。
+#   2. 数值只能来自：调用参数 / pattern 具名组（代码里真实出现的字面量）/
+#      数据元数据 / declared（评测者/数据事实声明，运行宪法/评测配置注入——
+#      与 Agent 自证严格区分）；四级都无 → 键标 unverified，绝不补默认值。
+#   3. 上下文四级可信源：call_arg > data_metadata > declared。
+#
+# 已知边界（诚实声明）：
+#   - dim_reduction：`sc.pp.pca` 单凭代码不能证明 elbow/JackStraw 选择 →
+#     uncertain（不伪造 PCA_elbow_selection）；`sc.tl.umap` 是投影而非聚类
+#     降维方法 → uncertain（修复旧 trajectory_capture 的 UMAP→PCA 张冠李戴）。
+#   - choice 需要验证证据的类型（如 cox_ph_assumption 的 PH 检验）→ uncertain。
+#   - 纯上下文类型（events_per_variable / ic50_sample_size 等）→ 声明/元数据源。
+# ─────────────────────────────────────────────────────────────────────────────
+
+signatures_version: "1.0"
+schema_version: "1.0"
+
+types:
+  # ── scRNA 管线 ─────────────────────────────────────────────────────────────
+  qc_filtering:
+    note: "filter_cells/filter_genes 硬阈值（min_genes/min_counts/min_cells 入 context）"
+    signatures:
+      - tool: scanpy.pp.filter_cells
+        pattern: 'sc\.pp\.filter_cells\s*\('
+        choice: hard_threshold
+        args:
+          min_genes: {key: min_genes, type: int}
+          min_counts: {key: min_counts, type: int}
+          min_cells: {key: min_cells, type: int}
+      - tool: scanpy.pp.filter_genes
+        pattern: 'sc\.pp\.filter_genes\s*\('
+        choice: hard_threshold
+        args:
+          min_cells: {key: min_cells, type: int}
+      - tool: Seurat mt_frac outlier
+        pattern: 'mt_frac|is_outlier'
+        choice: MAD5_adaptive_threshold
+
+  qc_mito_threshold:
+    note: "线粒体比例阈值来自代码字面量（具名组）；词表外值 → uncertain"
+    signatures:
+      - tool: pct_counts_mt subset
+        pattern: 'pct_counts_mt\s*[<>]\s*(?P<mito>\d+(?:\.\d+)?)'
+        choice_group: mito
+        choice_map:
+          "25": fixed_mito_25
+          "50": mito_50_percent
+        args:
+          mito: {key: mito_percent, type: float}
+
+  scRNA_normalization:
+    note: "normalize_total/log1p → LogNormalize；SCTransform → SCTransform；scran → scran"
+    signatures:
+      - tool: scanpy.pp.normalize_total
+        pattern: 'sc\.pp\.normalize_total\s*\('
+        choice: LogNormalize
+        args:
+          target_sum: {key: target_sum, type: float}
+      - tool: scanpy.pp.log1p
+        pattern: 'sc\.pp\.log1p\s*\('
+        choice: LogNormalize
+        context_fixed: {log_transformed: true}
+      - tool: scanpy.pp.sc_transform
+        pattern: 'SCTransform|sc\.pp\.sc_transform|sctransform'
+        choice: SCTransform
+      - tool: scran computeSumFactors
+        pattern: 'computeSumFactors|scran'
+        choice: scran
+
+  hv_gene_selection:
+    note: "flavor=seurat_v3 → vst；flavor=seurat → dispersion（规则词表）"
+    signatures:
+      - tool: scanpy.pp.highly_variable_genes
+        pattern: 'sc\.pp\.highly_variable_genes\s*\('
+        choice_arg: flavor
+        choice_map:
+          seurat_v3: vst
+          seurat: dispersion
+        args:
+          flavor: {key: flavor, type: string}
+          n_top_genes: {key: n_top_genes, type: int}
+
+  batch_correction:
+    note: "has_batch/n_patients 仅来自数据元数据/环境声明（不猜）"
+    signatures:
+      - tool: scanpy.external.pp.harmony_integrate
+        pattern: 'harmony_integrate|harmony'
+        choice: Harmony
+      - tool: scanpy.external.pp.bbknn
+        pattern: 'bbknn'
+        choice: BBKNN
+      - tool: scVI
+        pattern: 'scvi|SCVI'
+        choice: scVI
+      - tool: ComBat
+        pattern: 'combat|ComBat'
+        choice: ComBat
+
+  doublet_detection:
+    note: "n_cells 来自数据元数据；工具调用确定 choice"
+    signatures:
+      - tool: scDblFinder
+        pattern: 'scDblFinder'
+        choice: scDblFinder
+      - tool: Scrublet
+        pattern: 'scrublet'
+        choice: Scrublet
+      - tool: DoubletFinder
+        pattern: 'DoubletFinder'
+        choice: DoubletFinder
+      - tool: Solo
+        pattern: '\bSolo\b'
+        choice: Solo
+
+  dim_reduction:
+    note: "禁猜（F6）：pca 调用不证明 elbow 选择；umap 是投影非聚类降维 → uncertain"
+    signatures:
+      - tool: scanpy.pp.pca
+        pattern: 'sc\.pp\.pca\s*\('
+        args:
+          n_comps: {key: n_comps, type: int}
+        context_fixed: {method: PCA}
+        note: "choice 需 elbow/JackStraw 证据 → uncertain"
+      - tool: PCA elbow/JackStraw
+        pattern: 'pca_variance_ratio|elbow|JackStraw'
+        choice: PCA_elbow_selection
+        context_fixed: {method: PCA}
+      - tool: scanpy.tl.umap
+        pattern: 'sc\.tl\.umap\s*\('
+        args:
+          n_comps: {key: n_comps, type: int}
+        note: "UMAP 投影 ≠ 聚类降维方法；需'直接用于聚类'证据 → uncertain（修复 UMAP→PCA 张冠李戴）"
+
+  pca_dimension:
+    note: "n_comps 数值 → 规则词表区间（D2.2）；区间外 → uncertain"
+    signatures:
+      - tool: scanpy.pp.pca
+        pattern: 'sc\.pp\.pca\s*\('
+        args:
+          n_comps: {key: n_comps, type: int}
+        choice_ranges:
+          - {min: 30, max: 50, choice: heuristic_30_50}
+          - {min: 10, max: 10, choice: default_10}
+          - {min: 15, max: 15, choice: default_15}
+          - {min: 0, max: 4, choice: arbitrary_less_than_5}
+
+  clustering_method:
+    note: "leiden/louvain 调用 → 规则词表 choice；graph_type=SNN 为工具定义语义
+           （scanpy 图聚类运行在 neighbors SNN 图上，context_fixed，G-2 采集修复）"
+    signatures:
+      - tool: scanpy.tl.leiden
+        pattern: 'sc\.tl\.leiden\s*\('
+        choice: Leiden
+        context_fixed: {graph_type: SNN}
+      - tool: scanpy.tl.louvain
+        pattern: 'sc\.tl\.louvain\s*\('
+        choice: Louvain
+        context_fixed: {graph_type: SNN}
+
+  clustering_resolution:
+    note: "分辨率数值入 context（不当方法名）；0.8 → default_0_8，其余需验证证据 → uncertain"
+    signatures:
+      - tool: scanpy.tl.leiden
+        pattern: 'sc\.tl\.leiden\s*\('
+        args:
+          resolution: {key: resolution, type: float}
+        choice_ranges:
+          - {min: 0.8, max: 0.8, choice: default_0_8}
+
+  annotation_method:
+    note: "reference_based 为工具定义语义（context_fixed）；marker 字典 → manual_marker"
+    signatures:
+      - tool: SingleR
+        pattern: 'SingleR'
+        choice: SingleR
+        context_fixed: {reference_based: true}
+      - tool: CellTypist
+        pattern: 'CellTypist|celltypist'
+        choice: CellTypist
+        context_fixed: {reference_based: true}
+      - tool: Azimuth
+        pattern: 'Azimuth'
+        choice: Azimuth
+        context_fixed: {reference_based: true}
+      - tool: marker panel
+        pattern: 'marker_(?:genes|dict)|markers\s*=\s*\{'
+        choice: manual_marker
+
+  trajectory_inference:
+    note: "monocle3/scVelo/PAGA 调用 → 词表 choice；slingshot 需拓扑检查证据 → uncertain"
+    signatures:
+      - tool: monocle3
+        pattern: 'monocle3|monocle\s*\.\s*3'
+        choice: monocle3
+      - tool: scVelo
+        pattern: 'scvelo|scVelo|sc\.tl\.velocity'
+        choice: scVelo
+      - tool: PAGA
+        pattern: 'sc\.tl\.paga|PAGA'
+        choice: PAGA
+      - tool: slingshot
+        pattern: 'slingshot'
+        note: "需 slingshot_with_topology_check 证据 → uncertain"
+
+  deg_method:
+    note: "同名异构（B2）：scrna 词表 ≠ bulk 词表；pseudobulk+DESeq2 联合才成立"
+    signatures:
+      - tool: scanpy.tl.rank_genes_groups
+        pattern: 'sc\.tl\.rank_genes_groups\s*\('
+        paradigms: [scrna]
+        choice_arg: method
+        choice_map:
+          wilcoxon: wilcoxon_rank_sum
+          t-test: ttest_equal_variance
+          t-test_overestim_var: ttest_equal_variance
+        args:
+          method: {key: deg_test, type: string}
+      - tool: MAST
+        pattern: 'MAST'
+        paradigms: [scrna]
+        choice: MAST
+      - tool: pseudobulk DESeq2
+        pattern: 'pseudobulk[\s\S]{0,200}DESeq2|DESeq2[\s\S]{0,200}pseudobulk'
+        paradigms: [scrna]
+        choice: pseudobulk_DESeq2
+        context_fixed: {pseudobulk: true}
+      - tool: pseudobulk edgeR
+        pattern: 'pseudobulk[\s\S]{0,200}edgeR|edgeR[\s\S]{0,200}pseudobulk'
+        paradigms: [scrna]
+        choice: pseudobulk_edgeR
+        context_fixed: {pseudobulk: true}
+      - tool: DESeq2 (bulk)
+        pattern: 'DESeq2'
+        paradigms: [deg, pan]
+        choice: DESeq2
+      - tool: edgeR (bulk)
+        pattern: 'edgeR'
+        paradigms: [deg, pan]
+        choice: edgeR
+      - tool: limma-voom (bulk)
+        pattern: 'limma[^\n]{0,40}voom|voom\s*\('
+        paradigms: [deg, pan]
+        choice: limma_voom
+
+  multiple_testing_correction:
+    note: "p.adjust(method=...) → 词表；analysis_type 来自元数据/声明"
+    signatures:
+      - tool: statsmodels p.adjust BH
+        pattern: "p\\.adjust\\s*\\([^)]*method\\s*=\\s*['\"](?:BH|fdr)['\"]"
+        choice: BH
+      - tool: statsmodels p.adjust bonferroni
+        pattern: "p\\.adjust\\s*\\([^)]*method\\s*=\\s*['\"]bonferroni['\"]"
+        choice: Bonferroni
+      - tool: statsmodels p.adjust BY
+        pattern: "p\\.adjust\\s*\\([^)]*method\\s*=\\s*['\"]BY['\"]"
+        choice: BY
+
+  significance_threshold:
+    note: "padj+logFC 组合 → 规则词表 choice（M1.3）；组合不在词表 → uncertain"
+    signatures:
+      - tool: padj+logFC filter
+        pattern: '(?:padj|p_val_adj|adj_p)\s*[<]\s*(?P<padj>\d+(?:\.\d+)?)[\s\S]{0,120}(?:logFC|log2fc|avg_log2FC)[\s\S]{0,40}?[>]\s*(?P<logfc>\d+(?:\.\d+)?)'
+        args:
+          padj: {key: padj_cutoff, type: float}
+          logfc: {key: logfc_cutoff, type: float}
+        choice_table:
+          - {padj: "0.05", logfc: "1.0", choice: "padj <= 0.05, |logFC| >= 1.0"}
+          - {padj: "0.05", logfc: "0.5", choice: "padj <= 0.05, |logFC| >= 0.5"}
+          - {padj: "0.1", logfc: "0.5", choice: "padj <= 0.1, |logFC| >= 0.5"}
+      - tool: raw p filter
+        pattern: '(?<![A-Za-z_])p\s*[<]\s*0\.05\b'
+        choice: p_raw <= 0.05
+
+  # ── bulk-DEG / pan-cancer 管线 ─────────────────────────────────────────────
+  filtering:
+    note: "bulk 表达过滤（edgeR filterByExpr / DESeq2 independentFiltering）"
+    signatures:
+      - tool: edgeR filterByExpr
+        pattern: 'filterByExpr'
+        paradigms: [deg, pan]
+        choice: filterByExpr
+      - tool: DESeq2 independentFiltering
+        pattern: 'independentFiltering|independent_filtering'
+        paradigms: [deg, pan]
+        choice: independent_filtering
+
+  normalization:
+    note: "bulk 归一化（edgeR calcNormFactors / DESeq2 median-of-ratios）"
+    signatures:
+      - tool: edgeR calcNormFactors TMM
+        pattern: 'calcNormFactors[^\n]{0,80}TMM'
+        paradigms: [deg, pan]
+        choice: TMM
+      - tool: edgeR calcNormFactors RLE
+        pattern: 'calcNormFactors[^\n]{0,80}RLE'
+        paradigms: [deg, pan]
+        choice: RLE
+      - tool: edgeR upperquartile
+        pattern: 'calcNormFactors[^\n]{0,80}upperquartile|upper_quartile'
+        paradigms: [deg, pan]
+        choice: upper_quartile
+      - tool: DESeq2 median of ratios
+        pattern: 'estimateSizeFactors'
+        paradigms: [deg, pan]
+        choice: DESeq2_median_of_ratios
+
+  immune_correlation_method:
+    note: "spearman/kendall 调用 → 词表；pearson 需正态性检验证据 → uncertain"
+    signatures:
+      - tool: scipy spearmanr
+        pattern: 'spearmanr\s*\('
+        choice: Spearman
+      - tool: scipy kendalltau
+        pattern: 'kendalltau\s*\('
+        choice: Kendall_tau
+      - tool: scipy pearsonr
+        pattern: 'pearsonr\s*\('
+        note: "需正态性检验证据（Pearson_with_normality_test）→ uncertain"
+
+  cox_ph_assumption:
+    note: "PH 检验调用 → 词表；CoxPHFitter 单独出现 → uncertain（不猜）"
+    signatures:
+      - tool: lifelines check_assumptions
+        pattern: 'check_assumptions|proportional_hazard_test'
+        choice: Schoenfeld_residuals_test
+      - tool: lifelines CoxPHFitter
+        pattern: 'CoxPHFitter'
+        note: "仅建模不证明 PH 假设已检验 → uncertain"
+
+  enrichment_correction:
+    note: "富集分析的校正（gseapy/enrichr 附近 p.adjust）→ pan 词表"
+    signatures:
+      - tool: enrichment p.adjust
+        pattern: '(?:enrichr|gseapy|gsea)[\s\S]{0,300}p\.adjust|p\.adjust[\s\S]{0,300}(?:enrichr|gseapy|gsea)'
+        paradigms: [pan]
+        choice_arg: method
+        choice_map:
+          BH: BH_FDR
+          fdr: BH_FDR
+          bonferroni: Bonferroni
+          BY: BY_FDR
+
+  gsea_background:
+    note: "背景集选择无法从调用确定性推导 → uncertain（声明确认）"
+    signatures:
+      - tool: GSEA
+        pattern: 'gsea|GSEA'
+        note: "背景 universe 需声明/产物佐证 → uncertain"
+
+  cbioportal_projection:
+    note: "DETAILED/SUMMARY 需 API 形态证据 → uncertain"
+    signatures:
+      - tool: cBioPortal API
+        pattern: 'cbioportal|cbioPortal'
+        note: "投影粒度需声明 → uncertain"
+
+  api_data_integrity:
+    note: "数据加载调用提取上下文；校验方式需声明 → uncertain（不伪造 DETAILED_with_validation）"
+    signatures:
+      - tool: anndata read_h5ad
+        pattern: 'read_h5ad\s*\('
+        args:
+          filename: {key: data_path, type: string}
+        context_fixed: {data_format: h5ad}
+
+  # ── 纯上下文 / 一致性类型（choice 需声明或元数据；无确定性签名）──────────────
+  events_per_variable:
+    note: "EPV 数值来自数据元数据/声明（不猜）；无确定性工具签名"
+    signatures: []
+  ic50_sample_size:
+    note: "样本量来自数据元数据/声明（不猜）；无确定性工具签名"
+    signatures: []
+  independent_prognostic_claim:
+    note: "需多因素模型证据（声明）；无确定性工具签名"
+    signatures: []
+  expression_survival_consistency:
+    note: "需产物证据（声明）；无确定性工具签名"
+    signatures: []
+  immune_expression_consistency:
+    note: "需产物证据（声明）；无确定性工具签名"
+    signatures: []
+  purity_confounding:
+    note: "纯度数据来自元数据/声明；无确定性工具签名"
+    signatures: []
+  cluster_annotation_consistency:
+    note: "一致性判定需跨模块产物（声明）；无确定性工具签名"
+    signatures: []
+  annotation_validation:
+    note: "注释验证需产物证据（声明）；无确定性工具签名"
+    signatures: []
+  trajectory_validation:
+    note: "轨迹验证需拓扑证据（声明）；无确定性工具签名"
+    signatures: []
+  trajectory_annotation_consistency:
+    note: "需轨迹×注释交叉产物（声明）；无确定性工具签名"
+    signatures: []
+  annotation_deg_consistency:
+    note: "需注释×DEG 交叉产物（声明）；无确定性工具签名"
+    signatures: []

@@ -1,0 +1,9 @@
+# Type aliases for normalizing agent decision types (B8: moved from code to data)
+filter: filtering
+norm: normalization
+normalization_method: normalization
+deg: deg_method
+differential_expression: deg_method
+padj: multiple_testing_correction
+fdr: multiple_testing_correction
+threshold: significance_threshold

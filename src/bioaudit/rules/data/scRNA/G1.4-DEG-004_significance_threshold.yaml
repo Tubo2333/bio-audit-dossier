@@ -1,0 +1,86 @@
+rule_id: "G1.4-DEG-004_significance_threshold"
+domain: "statistical_rigor.threshold"
+status: "active"
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2016, 2026]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "单细胞显著性阈值选择 / scRNA significance threshold"
+description: >
+  scRNA DEG 报告需同时满足统计显著性（多重检验校正后的 adjusted p-value）与生物学显著性
+  （fold change）两个阈值。**双过滤为本项目裁定惯例（2026-09-16 人类裁定：当前无直接文献引用；
+  原 Conesa 2016 引用经核对不成立，槽位已删除并留注记）**；单细胞数据因检验数巨大（数千基因 ×
+  聚类对比），未校正 p 值或纯效应量筛选会急剧膨胀假阳性。既往裁定：三版黄金 Agent 的 significance_threshold 决策此前均为 L-1（覆盖缺口，见 I1 报告 §8.3）；
+  本规则补 scRNA 范式覆盖，level 词表与 DEG/pan 范式 M1.3-DEG-001 对齐（跨范式一致性：
+  同一阈值选择的评级不随范式改变——阈值科学本身是范式无关的）。
+condition:
+  decision_type: "significance_threshold"
+  # 匹配设计说明（窗口 J2）：scRNA 采集链路中 M3 签名对 significance_threshold 输出
+  # padj_cutoff/logfc_cutoff 事实 context（无 analysis_type/sequencing 键），而 M1 声明
+  # 侧键随范式上下文可变——故本规则以 decision_type 为唯一门（per-paradigm registry
+  # 已隔离 deg/pan 的 M1.3），阈值语义由 choice 词表编码（与 M1.3 词表一致）。
+  required_context: {}
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+    description: "v0.2 — 由模型给出理由的评估（结合生物学背景）"
+  level_3:
+    methods:
+      - "padj <= 0.05, |logFC| >= 1.0"
+      - "FDR < 0.05, |logFC| >= 1.0"
+      - "padj <= 0.05, |logFC| >= 0.5"
+    description: "双阈值 (校正统计显著性 + 生物学效应量) — 标准做法。logFC 阈值可根据领域惯例在 0.5-2.0 之间调整（与 M1.3-DEG-001 对齐）"
+  level_2:
+    methods:
+      - "padj <= 0.1, |logFC| >= 0.5"
+    note: "宽松的统计阈值 → 需明确标注为探索性分析"
+  level_1:
+    methods:
+      - "p_raw <= 0.05"
+    note: "仅用 raw p 值（未做多重检验校正）+ 无效应量阈值 → 大量假阳性报告；scRNA 检验数巨大时尤其危险"
+  level_0:
+    methods:
+      - "no_threshold"
+      - "unfiltered"
+    note: "完全无约束 → 不可接受的假阳性率"
+
+evidence:
+  # 2026-09-16 项目裁定（人类）：本主张为项目裁定——DESeq2/edgeR 的 padj+logFC 惯例——当前无直接文献引用。Conesa et al. 2016 全文无 adjusted p-value / BH-FDR / log fold change 过滤要求（关键词 0 命中）；不另找替代文献。跨族同名规则（DEG/pancancer 的 G1.4-DEG-004）缺陷同源，另列跟踪债（见 DP-scRNA-REVIEW-FEEDBACK.md「收尾核查」节）
+  # 2026-09-16 收尾核对（窗口自查原文）：Luecken & Theis 2019 无「adjusted p-value + effect-size 阈值」表述（adjusted p / FDR / effect size 阈值关键词 0 命中；原文只要求 P values 须做多重检验校正）→ 槽位删除；多重检验校正主张由 G1.2 的 Luecken 槽位承担
+  - source_type: "benchmark_paper"
+    pmid: "34584091"
+    doi: "10.1038/s41467-021-25960-2"
+    title: "Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications"
+    confidence: "L-Confirmed"
+    excerpt: "Methods that ignore variation between biological replicates are biased and prone to false discoveries; the most widely used methods can discover hundreds of DE genes in the absence of biological differences."
+    supports_levels: ["level_3", "level_1"]
+    # 2026-09-16 收尾核对（窗口自查原文）：该文 Abstract 逐字；「pseudoreplication」一词正文未出现（仅见于参考文献题名）；FDR 并非该文中心关切（中心关切为生物重复间变异）→ 去掉 FDR central / FPR 100% / pseudoreplication 表述
+  - source_type: "benchmark_paper"
+    pmid: "27022035"
+    title: "Schurch et al. (2016) RNA — n=48 yeast benchmark"
+    confidence: "L-Consensus"
+    excerpt: "At n=3, sensitivity is low across methods. |logFC| threshold helps reduce false positives, but n>=6 is the primary requirement for reliability."
+conflicts_with: []

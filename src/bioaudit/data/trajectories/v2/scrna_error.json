@@ -1,0 +1,133 @@
+{
+  "version": 2,
+  "trajectory_id": "scrna_error",
+  "act": "scrna",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "scrna_error.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "S1",
+      "decision_type": "api_data_integrity",
+      "choice": "DETAILED_with_validation",
+      "rationale": "GEO data loaded and validated.",
+      "context": {
+        "data_source": "GEO",
+        "data_format": "h5ad"
+      }
+    },
+    {
+      "step_id": "S2",
+      "decision_type": "qc_filtering",
+      "choice": "hard_threshold",
+      "rationale": "Fixed thresholds: mito<25%, genes 200-6000. Simple and widely used.",
+      "context": {
+        "sequencing": "10X_scRNA_seq"
+      }
+    },
+    {
+      "step_id": "S3",
+      "decision_type": "doublet_detection",
+      "choice": "no_doublet_detection",
+      "rationale": "Doublet rate is low (<5%), skipping to save compute time.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 50000
+      }
+    },
+    {
+      "step_id": "S4",
+      "decision_type": "scRNA_normalization",
+      "choice": "SCTransform",
+      "rationale": "SCTransform is the best scRNA normalization method.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "data_category": "umi_counts"
+      }
+    },
+    {
+      "step_id": "S5",
+      "decision_type": "hv_gene_selection",
+      "choice": "vst",
+      "rationale": "VST selection of 3000 HVGs.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_genes": 20000
+      }
+    },
+    {
+      "step_id": "S6",
+      "decision_type": "batch_correction",
+      "choice": "no_integration",
+      "rationale": "11 patients analyzed together, biological differences > technical differences.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "has_batch": true,
+        "n_patients": 11
+      }
+    },
+    {
+      "step_id": "S7",
+      "decision_type": "dim_reduction",
+      "choice": "PCA_fixed_10",
+      "rationale": "Top 10 PCs, Seurat default.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "method": "PCA"
+      }
+    },
+    {
+      "step_id": "S8",
+      "decision_type": "clustering_method",
+      "choice": "Louvain",
+      "rationale": "Louvain is the classic graph clustering algorithm, widely validated.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "graph_type": "SNN"
+      }
+    },
+    {
+      "step_id": "S9",
+      "decision_type": "annotation_method",
+      "choice": "manual_marker",
+      "rationale": "Manual marker-based annotation (CD3D/CD8A/CD4/CD19/CD14/EPCAM) — more intuitive and controllable.",
+      "context": {
+        "sequencing": "10X_scRNA_seq"
+      }
+    },
+    {
+      "step_id": "S10",
+      "decision_type": "deg_method",
+      "choice": "wilcoxon_rank_sum",
+      "rationale": "Wilcoxon rank-sum is the standard scRNA DEG method, Seurat default.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_patients": 11,
+        "pseudobulk": false
+      }
+    },
+    {
+      "step_id": "S11",
+      "decision_type": "trajectory_inference",
+      "choice": "monocle3",
+      "rationale": "monocle3 EMT trajectory on Epithelial cells.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "cell_type": "Epithelial"
+      }
+    },
+    {
+      "step_id": "S12",
+      "decision_type": "cluster_annotation_consistency",
+      "choice": "not_checked",
+      "rationale": "Each module analyzed independently, results reported separately.",
+      "context": {
+        "integration_type": "cross_module"
+      }
+    }
+  ]
+}

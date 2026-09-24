@@ -1,0 +1,10 @@
+# Decision dependency graph (B8: moved from code to data)
+# "downstream_type": ["upstream_type_it_depends_on", ...]
+deg_method:
+  - normalization
+  - filtering
+multiple_testing_correction:
+  - deg_method
+significance_threshold:
+  - deg_method
+  - multiple_testing_correction

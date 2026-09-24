@@ -1,0 +1,23 @@
+# 决策类型：pca_dimension（PCA 维数选择）— inference / scRNA
+decision_type: pca_dimension
+display:
+  cn: PCA 主成分数选择
+  en: PCA dimension selection
+stage: inference
+paradigms: [scRNA]
+dimension: method_selection
+optional: false
+aliases: []
+depends_on: [dim_reduction]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: n_genes
+    type: int
+    min: 0
+    required: false
+    # A2：被罚分规则（D2.2，约束 n_genes>=1000）引用 → 禁止 fail-open
+    missing: fail-closed

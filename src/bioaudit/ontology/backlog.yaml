@@ -1,0 +1,23 @@
+# 待补清单（G2/G6）— 规则集增长入口 / 未知决策类型登记区
+# 校验器覆盖报告会展示本清单；新增待补条目应同时说明缺失的范式×阶段坐标。
+backlog:
+  - id: G6-deg_directionality
+    title: DEG 方向性判定
+    stage: inference
+    paradigms: [bulk-DEG, pan-cancer, scRNA]
+    note: "错误标注方向是常见错误，当前 34 类型无覆盖（v1.1 G6 采纳）"
+  - id: G2-reference_genome
+    title: 参考基因组版本
+    stage: preprocessing
+    paradigms: [pan-cancer, scRNA]
+    note: "版本未披露/过期（v1.1 G2：参考基因组类决策进待补清单）"
+  - id: G2-annotation_version
+    title: 注释版本
+    stage: interpretation
+    paradigms: [scRNA]
+    note: "注释来源与版本（v1.1 G2）"
+  - id: G2-marker_version
+    title: marker 版本
+    stage: interpretation
+    paradigms: [scRNA]
+    note: "marker 列表版本与出处（v1.1 G2）"

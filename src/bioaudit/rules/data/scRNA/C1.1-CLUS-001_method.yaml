@@ -1,0 +1,81 @@
+rule_id: C1.1-CLUS-001_method
+domain: CLUSTER
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2019, 2019]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "聚类算法 / Clustering algorithm"
+description: "Leiden算法是Louvain的改进版, 保证社区连通性 (Traag et al. 2019)。Louvain在某些情况下可能产生不连通的社区(已废弃特征)。Leiden更快且结果更稳健。对于scRNA-seq基于图的聚类, Leiden是当前标准。"
+condition:
+  decision_type: clustering_method
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+    graph_type: SNN
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - Leiden
+      - leiden
+    description: "Leiden算法 — 保证社区连通性, 当前最佳选择"
+    rationale: "Traag et al. (2019) 证明Leiden在保证连通性的同时速度比Louvain快"
+  level_2:
+    methods:
+      - Louvain
+      - louvain
+    description: "Louvain — 经典但可能产生不连通社区 (已被Leiden取代)"
+    conditions_when_acceptable: "当需要与已有文献结果对比且使用相同方法时"
+  level_1:
+    methods:
+      - Walktrap
+      - Infomap
+    description: "Walktrap/Infomap — 图聚类替代方案, 但不如Leiden广泛验证"
+    note: "用于特定场景(如轨迹导向)可能有优势, 但不适合通用聚类"
+  level_0:
+    methods:
+      - kmeans_on_pca
+      - hierarchical_no_validation
+    description: "k-means/层次聚类 — 不考虑scRNA-seq数据的zero-inflation和图结构"
+    rationale: "k-means假设球形cluster, 不适用于scRNA-seq的低维流形结构"
+
+evidence:
+  - source_type: method_paper
+    pmid: "30914743"
+    title: "From Louvain to Leiden: guaranteeing well-connected communities — Traag et al. 2019, Scientific Reports"
+    confidence: L-Confirmed
+    excerpt: "Leiden algorithm guarantees well-connected communities and is faster than Louvain."
+    supports_levels: ["level_3", "level_2"]
+  - source_type: "consensus_guideline"
+    pmid: "31217225"
+    doi: "10.15252/msb.20188746"
+    title: "Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol"
+    confidence: L-Confirmed
+    excerpt: "The standard approach to clustering single-cell datasets is multi-resolution modularity optimization as implemented in the Louvain algorithm on single-cell KNN graphs."
+    supports_levels: ["level_3"]
+    # 2026-09-16 收尾核对（窗口自查原文）：该文只讲 Louvain（多分辨率模块度优化），「Leiden」全文 0 命中 → 口径随原文收紧；Leiden 主张由 Traag 槽位承担（详见 DP-scRNA-REVIEW-FEEDBACK.md「收尾核查」节）
+conflicts_with: []

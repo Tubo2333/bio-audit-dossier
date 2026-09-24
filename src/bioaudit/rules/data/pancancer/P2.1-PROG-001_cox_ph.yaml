@@ -1,0 +1,77 @@
+rule_id: P2.1-PROG-001
+domain: PROGNOSIS
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：本条依据全部有结论（人类 2026-09-15 裁定「仍成立」）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [1994, 2003]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "泛癌分析链路（含 DEG / 富集 / 生存 / 免疫浸润等）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "Cox比例风险假设检验 / Cox PH assumption test"
+description: "Cox回归的前提是比例风险(PH)假设——危险比在整个随访期间恒定。不检验PH假设直接报告HR可能导致有偏估计和错误结论。必须报告Schoenfeld残差检验或log-log图检验结果。"
+condition:
+  decision_type: cox_ph_assumption
+  required_context:
+    analysis_type: survival_analysis
+    method: Cox_regression
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - Schoenfeld_residuals_test
+      - cox_zph_test
+      - Grambsch_Therneau_test
+      - log_log_plot_verified
+    description: "检验PH假设并报告结果 — 完整统计实践"
+    rationale: "Schoenfeld残差检验是检验PH假设的标准方法,cox.zph()函数提供全局和变量级别的PH检验 (Grambsch & Therneau 1994)"
+  level_2:
+    methods:
+      - log_log_plot_only
+      - visual_inspection_only
+    description: "仅可视化检查 — 可接受但不够严谨"
+    note: "log-log生存曲线平行性目视检查是PH假设的粗略检验,但缺乏统计量支持"
+  level_1:
+    methods:
+      - mentioned_but_not_tested
+    description: "提及PH假设但未实际检验 — 形式上的严谨"
+  level_0:
+    methods:
+      - no_ph_test
+      - ph_assumption_ignored
+      - not_mentioned
+    description: "不检验PH假设 — 结果可能不可靠"
+    rationale: "当PH假设不成立时,Cox回归的HR估计有偏,可能高估或低估真实效应。加权Cox模型或参数生存模型可能是更合适的选择。"
+
+evidence:
+  - source_type: method_paper
+    doi: "10.1093/biomet/81.3.515"
+    title: "Proportional hazards tests and diagnostics based on weighted residuals — Grambsch & Therneau 1994, Biometrika"
+    confidence: L-Confirmed
+    excerpt: "Schoenfeld residuals provide a formal test of the proportional hazards assumption."
+    supports_levels: ["level_3"]
+  - source_type: method_paper
+    pmid: "12888808"
+    title: "Survival analysis part II: multivariate data analysis — Bradburn et al. 2003, British Journal of Cancer"
+    confidence: L-Consensus
+    excerpt: "The proportional hazards assumption should always be tested before reporting Cox regression results."
+    supports_levels: ["level_3", "level_0"]

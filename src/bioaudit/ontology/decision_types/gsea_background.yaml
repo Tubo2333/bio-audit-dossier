@@ -1,0 +1,24 @@
+# 决策类型：gsea_background（富集背景/基因集）— interpretation / pan-cancer
+decision_type: gsea_background
+display:
+  cn: 富集分析背景与基因集
+  en: GSEA background & gene sets
+stage: interpretation
+paradigms: [pan-cancer]
+dimension: data_handling
+optional: true
+when_not_applicable: no_enrichment_analysis
+aliases: []
+depends_on: [filtering, normalization, deg_method]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [pathway_enrichment, differential_expression, survival_analysis, immune_expression_correlation, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（E5.2）引用 → 禁止 fail-open
+    missing: fail-closed
+  - key: method
+    type: enum
+    values: [GSEA, ORA, ssGSEA]
+    required: false
+    missing: skip

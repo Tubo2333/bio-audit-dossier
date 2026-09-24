@@ -1,0 +1,70 @@
+rule_id: N7.1-INTE-001
+domain: INTEGRATION
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：本条依据全部有结论（人类 2026-09-15 裁定「仍成立」）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [2005, 2010]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "泛癌分析链路（含 DEG / 富集 / 生存 / 免疫浸润等）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "表达-预后方向一致性 / Expression-prognosis direction consistency"
+description: "跨模块结论一致性检验。基因在肿瘤中高表达(相对于正常)且HR>1(风险因素)或低表达且HR<1(保护因素)时方向一致。若高表达+HR<1或低表达+HR>1,属于方向矛盾,必须提供生物学解释(如反馈调控、肿瘤微环境中的非自主效应)。"
+condition:
+  decision_type: expression_survival_consistency
+  required_context:
+    integration_type: cross_module
+
+scoring:
+  level_3:
+    methods:
+      - direction_consistent_with_mechanistic_explanation
+      - direction_consistent
+      - direction_inconsistent_with_biological_rationale
+    description: "方向一致或有合理的生物学解释 — 结论链完整"
+    rationale: "致癌基因通常: 肿瘤高表达 + HR>1 (风险); 抑癌基因: 肿瘤低表达 + HR>1 (风险)。方向矛盾需要额外解释 (如: 旁分泌效应 / 肿瘤微环境 / 免疫调控)"
+  level_2:
+    methods:
+      - direction_inconsistent_acknowledged_but_unexplained
+    description: "方向矛盾,明确提及但未充分解释 — 部分可信"
+  level_1:
+    methods:
+      - direction_inconsistent_not_discussed
+    description: "方向矛盾,未提及 — 结论链断裂"
+    rationale: "表达和预后方向矛盾而不加讨论 = 忽略了可能推翻主结论的证据"
+  level_0:
+    methods:
+      - direction_inconsistent_hidden
+      - selective_reporting_direction
+    description: "方向矛盾但选择性报告一致结果 — 科学不端"
+
+evidence:
+  - source_type: consensus_guideline
+    pmid: "16106245"
+    title: "REporting recommendations for tumour MARKer prognostic studies (REMARK) — McShane et al. 2005, British Journal of Cancer"   # 2026-09-15 更正：原 PMID 指向 Pharmacogenomics J 2010；原写 JNCI 亦错（REMARK 刊于 Br J Cancer / Eur J Cancer）
+    confidence: L-Confirmed
+    excerpt: "All analyses performed should be reported, including those with contradictory results."
+    supports_levels: ["level_3", "level_1", "level_0"]
+  - source_type: method_paper
+    pmid: "24071852"
+    doi: "10.1038/ng.2760"
+    title: "Pan-cancer patterns of somatic copy number alteration — Zack et al. 2013, Nature Genetics"   # 2026-09-15 人类裁定：原写「Beroukhim et al. 2010, Nature」系与同课题组 Beroukhim 2010 Nature（The landscape of somatic copy-number alteration across human cancers, PMID 20164920）张冠李戴，该组合不存在；标题全匹配的实体是 Zack et al. 2013 Nat Genet。题材为 CNA 全景、与支撑句（跨平台一致性验证）的匹配度有限，已在复核材料中如实记录。
+    confidence: L-Evidenced
+    excerpt: "Cross-platform consistency of gene expression and clinical outcome is essential for biomarker validation."
+    supports_levels: ["level_3"]

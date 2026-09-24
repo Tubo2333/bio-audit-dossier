@@ -1,0 +1,45 @@
+# 范式内主题族（8 个）— ontology-design-v1 §二.5 / diagrams §图 2
+# 族用于知识组织与 L3/L4 重构骨架，不产生新的决策类型 ID。
+topics:
+  consistency_family:
+    cn: 一致性族
+    en: Consistency family
+    description: "L4 概念：跨模块结论一致性核验（联合上游决策评分，G1 internal_ref）"
+    members: [expression_survival_consistency, immune_expression_consistency,
+              cluster_annotation_consistency, annotation_deg_consistency,
+              trajectory_annotation_consistency]
+  qc_family:
+    cn: QC 族
+    en: QC family
+    description: scRNA 质量控制
+    members: [qc_filtering, qc_mito_threshold, doublet_detection]
+  annotation_family:
+    cn: 注释族
+    en: Annotation family
+    description: scRNA 细胞注释与验证
+    members: [annotation_method, annotation_validation]
+  prognosis_family:
+    cn: 预后族
+    en: Prognosis family
+    description: 生存分析与独立预后声明
+    members: [cox_ph_assumption, events_per_variable, independent_prognostic_claim]
+  enrichment_family:
+    cn: 富集族
+    en: Enrichment family
+    description: 通路富集分析
+    members: [gsea_background, enrichment_correction]
+  immune_family:
+    cn: 免疫族
+    en: Immune family
+    description: 免疫相关分析（免疫浸润相关/纯度混杂）
+    members: [immune_correlation_method, purity_confounding, immune_expression_consistency]
+  trajectory_family:
+    cn: 轨迹族
+    en: Trajectory family
+    description: 拟时序/轨迹推断
+    members: [trajectory_inference, trajectory_validation, trajectory_annotation_consistency]
+  clustering_family:
+    cn: 聚类族
+    en: Clustering family
+    description: 降维与聚类
+    members: [dim_reduction, pca_dimension, clustering_method, clustering_resolution]

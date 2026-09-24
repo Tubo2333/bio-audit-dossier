@@ -1,0 +1,79 @@
+rule_id: "M1.2-DEG-001"
+domain: "statistical_rigor.multiple_testing"
+status: "active"
+version: 2
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-13"  # 领域复核已定：本条依据全部有结论（Bonferroni 不等式的假阳性算术 / Benjamini-Hochberg 1995 FDR 控制）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [1995, 1995]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "该规则所属分析家族；适用范围的正式声明待领域复核填写（本字段在家族副本之间保持一致）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "多重检验校正方法选择"
+description: >
+  RNA-seq DEG 涉及对 ~20000 个基因同时检验。不做多重检验校正 → 假阳性海量。
+
+condition:
+  decision_type: "multiple_testing_correction"
+  required_context:
+    analysis_type: "differential_expression"
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+    description: "v0.2 — 由模型给出理由的评估"
+  level_3:
+    methods:
+      - "BH"
+      - "Benjamini-Hochberg"
+      - "FDR"
+    description: "Benjamini-Hochberg FDR 校正 — DEG 探索性分析的标准做法"
+  level_2:
+    methods:
+      - "BY"
+      - "Benjamini-Yekutieli"
+      - "q_value_storey"
+      - "Storey_q_value"
+    note: "BY 比 BH 更保守；q-value 考虑了 pi0 估计"
+  level_1:
+    methods:
+      - "Bonferroni"
+    note: "FWER 控制 — 对全基因组探索性分析过保守，但在验证性场景（少量预定义基因）下是正确选择"
+    conditions_when_acceptable: "当只检验 <=20 个预定义候选基因时，Bonferroni 是合理选择"
+  level_0:
+    methods:
+      - "no_correction"
+      - "raw_p_value"
+      - "uncorrected"
+    note: "不做多重检验校正 → 在 20000 个检验中，α=0.05 下期望 ~1000 个假阳性"
+    conditions_when_acceptable: "仅做描述性分析、不做统计推断时可接受"
+
+evidence:
+  - source_type: "math_theorem"
+    title: "Bonferroni inequality — mathematical fact (not a publication)"   # 2026-09-14 处置：原条目标题并非一篇文献；按「降级为说明」处理，档位依据不变（DEG 族已复核仍成立）
+    confidence: "L-Confirmed"
+    excerpt: "Arithmetic fact: for n independent tests at level α, the expected number of false positives under the global null is n×α (n=20,000, α=0.05 → ~1,000)。该陈述是数学定理，不存在对应文献条目；本条保留为说明，不冒充出处。"
+
+  - source_type: "method_paper"
+    doi: "10.1111/j.2517-6161.1995.tb02031.x"
+    url: "https://www.jstor.org/stable/2346101"
+    title: "Benjamini & Hochberg (1995) — Controlling the FDR"
+    confidence: "L-Consensus"
+    excerpt: "BH procedure controls the expected proportion of false rejections among all rejections."
+    supports_levels: ["level_3"]

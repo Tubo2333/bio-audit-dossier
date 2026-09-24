@@ -1,0 +1,130 @@
+{
+  "generated_at": "2026-09-23T04:59:54+00:00",
+  "exported_by": "demo/scripts/export_demo_data.py",
+  "sources_note": "源为 cellvoyager-outputs（仓库外，--sources 传入；文件指纹登记于各条目 source_sha256）",
+  "files": {
+    "golden_summary.json": {
+      "sha256": "064db9e8f299cafc546f7b861f5a16efaaa5c83eefa1fcc1c53cfd5eeecfc432"
+    },
+    "eval_summary.json": {
+      "sha256": "c3acfcf979b5d0a09778971834ad9e702100523da325016afcca976ed7804d41"
+    },
+    "benchmark_summary.json": {
+      "sha256": "9485dc4d7bb80ba2c82503b4c01db45fdbfa2aa488bd4347036cdd6d5892b26d"
+    },
+    "r0_summary.json": {
+      "sha256": "9df22523303ee96200058104a2cbdca9d81f61d2b600bcb9651125c1e94e8001"
+    },
+    "reward_summary.json": {
+      "sha256": "fd80361ea1b36b9971b010b0196d5abfaba56a1a87b049918b5a0e45004ee5a6"
+    },
+    "engineering_summary.json": {
+      "sha256": "9e726f55f375f519b63d8d20217269d03d347dfea7235932d34e63ca2fa5727f"
+    },
+    "trajectories_index.json": {
+      "sha256": "2860f4c76ebd14b63a619392ee0c336953968c01ec4d0b734ddbd8e18a69cb55"
+    },
+    "verdicts_10X_B.jsonl": {
+      "sha256": "a7f050254057911313337a81ed82249e898bc0c19f2b19969b290dde821f29c1",
+      "n_verdicts": 25,
+      "source": "golden_winL_10X_B_20260816.jsonl",
+      "source_sha256": "2ac5470d6c6ac0544dd372d4e7db865f0055895133ff8df7ef5bbb881d925aaa"
+    },
+    "golden_agent_10X_B_executed.py": {
+      "sha256": "841beabc5132e2a7251e40dca7f6ea9d78d28c52ed49b319cc44c7dbf5f34339",
+      "source": "golden_agent_10X_B_executed.py",
+      "source_sha256": "143f04050fe6240bdc20494b3fa2a8cadd3721edfc6ac0b6c776754954beb8c7",
+      "note": "解析专用副本（M3Parser 输入，不执行）；Windows 路径以占位符剥离"
+    },
+    "windowL_10X_B_expected.json": {
+      "sha256": "0470f385279e3fa98323fe2ec7646abccca06537aef95b50afb33db35bb794d0",
+      "source": "windowL_10X_B_expected.json",
+      "source_sha256": "87b3f0ca65f0b8c14117aa84609ee21b677ed768139b85d6398cf7eec69f8dba"
+    },
+    "verdicts_windowI_A.jsonl": {
+      "sha256": "6bc31effb6ebef266b8966f3d0942f9dbb9018fa7785eac3f88d1f68a60acfa4",
+      "n_verdicts": 20,
+      "source": "golden_winI_A_20260816.jsonl",
+      "source_sha256": "e75d1d3409bf1320305148453a408fee82749794aa7e155ac608d8ef273e4a7a"
+    },
+    "golden_agent_A_executed.py": {
+      "sha256": "32d2d4a4b3b0c93ef4b8c7e6db46efee2b9fb148217667459ae1f1ce78f7f873",
+      "source": "golden_agent_A_executed.py",
+      "source_sha256": "98367194354f0e3bab3c6bef8339a850298e12163b36fd1a7bebd7f94252a255",
+      "note": "解析专用副本（M3Parser 输入，不执行）；Windows 路径以占位符剥离"
+    },
+    "windowI_A_benchmark.json": {
+      "sha256": "d7700d953f57d9ccaa61532c7cdbbfffe291af1be98c6829d5e3dae8978eb7c1",
+      "source": "windowI_A.json",
+      "source_sha256": "31bd2bfeb4710e4d5848a38d74b76d23fed5e2096bfd73f751f16e95fe470bf9"
+    },
+    "verdicts_windowI_B.jsonl": {
+      "sha256": "fd4fccd118ab629e6f0596b0f25239df068e874f398c6f336bcb57773c038217",
+      "n_verdicts": 20,
+      "source": "golden_winI_B_20260816.jsonl",
+      "source_sha256": "9d1af77a9b5a85a607d38448500e31f830999f7b91458a3d6e2ce25d53aa302f"
+    },
+    "golden_agent_B_executed.py": {
+      "sha256": "d5dcc6cf44139decf7caf21823721d8017760221db3e1f95de2af23b61dc83f5",
+      "source": "golden_agent_B_executed.py",
+      "source_sha256": "3717e7c783ff1b08ff7d054bc6381e8d139106326d659634098b8cc310c12a07",
+      "note": "解析专用副本（M3Parser 输入，不执行）；Windows 路径以占位符剥离"
+    },
+    "windowI_B_benchmark.json": {
+      "sha256": "6d8fe4364d7ed485d9dd6e7a8eac51ff4587afd644f254792ccd116cebe0674c",
+      "source": "windowI_B.json",
+      "source_sha256": "817df161c001047438c43658252af30cf8337d24f363ec864bcef3b100ab88db"
+    },
+    "verdicts_windowI_C.jsonl": {
+      "sha256": "6e7d7feed945ff1b71df8ec49f45113434b2e1cd09cdd9fb73806d46b769acd3",
+      "n_verdicts": 20,
+      "source": "golden_winI_C_20260816.jsonl",
+      "source_sha256": "51bec90078b3181db6df3bffe9badde02f7ff5de5ffc23f95c950d4f20575122"
+    },
+    "golden_agent_C_executed.py": {
+      "sha256": "2af2fd3b1623e052e2b92ccfdd336b5da6a7064e4116122bfad1cc6fe8cf7d5e",
+      "source": "golden_agent_C_executed.py",
+      "source_sha256": "2776054196a3c1aca17ebe37d97371c2772a4fe283249497572d20bb8f7a0291",
+      "note": "解析专用副本（M3Parser 输入，不执行）；Windows 路径以占位符剥离"
+    },
+    "windowI_C_benchmark.json": {
+      "sha256": "328da04e34dda993e58c4df0807f5c2403de2aa4711be212347dc9746068ac50",
+      "source": "windowI_C.json",
+      "source_sha256": "6b1fa1d3a7c658af1b185be6967b047d033a9659b04b391fa601938a6f1ac24b"
+    },
+    "verdicts_windowL_10X_A.jsonl": {
+      "sha256": "88a7a6be128545f5f08389c819a4920fa18cddb2f4155371a9bb5472bf239988",
+      "n_verdicts": 22,
+      "source": "golden_winL_10X_A_20260816.jsonl",
+      "source_sha256": "35b65bb177a18c0fba2202fc40880e0c6a02955347b687a8e96608223794d93e"
+    },
+    "golden_agent_10X_A_executed.py": {
+      "sha256": "a40682887f87a4deaeba2eece6f65cf5eb548cbd69bfab6a6350a7a7aa194aa3",
+      "source": "golden_agent_10X_A_executed.py",
+      "source_sha256": "e69111d0fc03cc20a18c2dda9d1e67df4578803217fecfb2f0c70a556c5c1f3b",
+      "note": "解析专用副本（M3Parser 输入，不执行）；Windows 路径以占位符剥离"
+    },
+    "windowL_10X_A_benchmark.json": {
+      "sha256": "095a22b8011ae09f4fada31049ee79908275c853a9ac6d3870880b4bbc325820",
+      "source": "windowL_10X_A.json",
+      "source_sha256": "a4a94637ae050aed83991e463da4a5fcca20755cb60de470b4e9eaf79b6b5cc4"
+    },
+    "verdicts_cellvoyager_g.jsonl": {
+      "sha256": "3222c89a582952ef5ab1e74e12694b5ebe8334113560903fc66804c2132ea93a",
+      "n_verdicts": 60,
+      "source": "cv_gse115978_winG_20260816.jsonl",
+      "source_sha256": "5d156eb6a82011d21dd469449d344e8d08bfd0f8941d7ed38f67e440805ea360"
+    },
+    "cellvoyager_g_executed.py": {
+      "sha256": "756517f124cd5d7cf8d4b5a89bfc109f120a263356c07b53fcf1828b258cc1f4",
+      "source": "GSE115978_melanoma_analysis_1.ipynb",
+      "source_sha256": "e449d2026de842d780e1d6dc3a5801f579fb36ad5230f6a39603aa3eb92dc58b",
+      "note": "解析专用副本（M3Parser 输入，不执行）；Windows 路径以占位符剥离"
+    },
+    "cellvoyager_g_benchmark.json": {
+      "sha256": "568af7e5f7d04e3fcb8a626f5de8e341f09d4b6098c572b5af5096b1efdfefc9",
+      "source": "windowK1_reeval.json",
+      "source_sha256": "55ad1189b2124283474736d89fa9f4decd0d22ff82d97ba26227a5e6b4eb350e"
+    }
+  }
+}

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>提交一次分析</title>
+<style>
+  :root { --ink: #22303c; --muted: #5b6b7b; --faint: #8a95a3; --line: #d4dde6;
+          --panel: #f7f9fb; --head: #eef3f8; --accent: #1b5e8c; --req: #c0341d; }
+  * { box-sizing: border-box; }
+  body { font-family: system-ui, "Microsoft YaHei", sans-serif; max-width: 900px;
+         margin: 0 auto 60px; padding: 0 20px; color: var(--ink); line-height: 1.6; }
+  h1 { font-size: 21px; margin: 26px 0 6px; }
+  h2 { font-size: 16px; margin: 0; color: #1f3a52; }
+  .hint { color: var(--muted); font-size: 14px; margin: 0 0 16px; }
+
+  /* —— 顶部操作条（下载/导入）—— */
+  .topbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+            background: #f2f6fa; border: 1px solid #c9d9e8; border-radius: 10px;
+            padding: 12px 16px; margin: 14px 0 6px; }
+  .tb-tip { font-size: 14px; color: #33506b; margin-right: 4px; }
+  #importFile { display: none; }
+
+  /* —— 打开方式提示条（file:// 打开时提交不可用）—— */
+  .filewarn { background: #fff4e5; border: 1px solid #e0a33a; color: #6b4400;
+              border-radius: 10px; padding: 10px 14px; margin: 14px 0 0; font-size: 14px; }
+  .filewarn code { font-family: Consolas, monospace; font-size: 13px; }
+
+  /* —— 区块 —— */
+  .group { border: 1px solid var(--line); border-radius: 12px; margin: 16px 0; overflow: hidden; }
+  .group-head { background: var(--head); padding: 12px 18px; display: flex;
+                justify-content: space-between; align-items: center;
+                border-bottom: 1px solid #dbe4ee; }
+  .group-desc { padding: 10px 18px 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
+  .group-body { padding: 10px 18px 16px; }
+  .gr-status { font-size: 12.5px; padding: 2px 12px; border-radius: 10px; background: #e6ebf0; color: #44586b; }
+  .gr-status.done { background: #d9f2e0; color: #1c7a3c; }
+  .gr-status.miss { background: #fdeee0; color: #9a5b00; }
+
+  /* —— 小节标题（组内分类）—— */
+  .sec-tag { font-size: 13.5px; color: #2f5577; font-weight: 600;
+             margin: 16px 0 10px; padding-left: 9px; border-left: 3px solid #6e9cc4; }
+  .sec-tag:first-child { margin-top: 8px; }
+
+  /* —— 标准字段行：左名字列 + 右控件列（全表唯一行模式）—— */
+  .field { display: grid; grid-template-columns: 220px minmax(0, 1fr);
+           gap: 6px 20px; align-items: start; margin: 11px 0; }
+  .fname { font-size: 14px; color: #2b3b4b; line-height: 1.4; padding-top: 8px; }
+  .fname .fhint, .fcn .fhint { display: block; color: var(--faint); font-size: 12.5px;
+           font-weight: 400; margin-top: 3px; line-height: 1.45; }
+  .fctl { max-width: 500px; }
+  .en { color: var(--faint); font-size: 12px; font-weight: 400; }
+
+  /* —— 卡片式字段格（点半卡 / 证据行内用，3 列网格）—— */
+  .pair { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 13px 16px; margin: 6px 0 13px; }
+  .fcell { display: block; background: var(--panel); border: 1px solid #e3e8ee;
+           border-radius: 9px; padding: 11px 13px; }
+  .fcell.wide { grid-column: span 2; }
+  .fcn { display: block; font-size: 13.5px; color: #33465c; margin-bottom: 5px; }
+  .fcn .en { font-size: 11.5px; }
+
+  /* —— 完整性七域 —— */
+  .domains { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
+  .dcell { display: block; background: var(--panel); border: 1px solid #e3e8ee;
+           border-radius: 9px; padding: 11px 13px; }
+  .dcn { display: block; font-size: 13.5px; color: #33465c; margin-bottom: 5px; }
+  .dcn .en { font-size: 11.5px; }
+
+  /* —— 决策点卡片 —— */
+  .point { border: 1px solid #dde5ee; border-radius: 11px; margin: 16px 0;
+           padding: 12px 16px 6px; background: #fff; }
+  .point-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .point-head b { font-size: 15px; color: #1c3a55; }
+  .pt-status { font-size: 12.5px; padding: 2px 12px; border-radius: 10px; background: #eee; }
+  .pt-status.done { background: #d9f2e0; color: #1c7a3c; }
+  .pt-status.miss { background: #fde9e9; color: #b3261e; }
+  .pt-status.ok { background: #d8eaf7; color: #174e7a; }
+
+  /* —— 观测证据行 —— */
+  .ev-row { background: #f7f9fb; border: 1px solid #dfe6ee; border-radius: 10px;
+            padding: 10px 12px 4px; margin: 11px 0; }
+  .ev-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .ev-no { font-size: 12.5px; color: #5a6b7d; font-weight: 600; }
+  .ev-del { background: #fff; color: #a33; border: 1px solid #d8b4b4; padding: 3px 12px; font-size: 12.5px; }
+  .ev-add { margin: 2px 0 10px; background: #fff; border: 1px dashed #7a93a8; padding: 7px 16px;
+            font-size: 13.5px; color: var(--accent); }
+
+  /* —— 控件（全部等宽等高的同一套样式）—— */
+  input, select, textarea { font: inherit; font-size: 15px; padding: 7px 10px;
+            border: 1px solid #b9c4cf; border-radius: 6px; background: #fff; color: #222; }
+  .fctl input, .fctl select { width: 100%; }
+  .fcell input, .fcell select { width: 100%; }
+  .dcell select { width: 100%; }
+  select.field-select { background: #fff; }
+  input.field-other { margin-top: 6px; border-style: dashed; }
+  input.invalid, select.invalid, textarea.invalid { border-color: var(--req); background: #fff5f3; }
+  textarea { width: 94%; min-height: 44px; }
+  .req { color: var(--req); font-weight: 700; margin-right: 3px; }
+
+  button { font: inherit; font-size: 14px; padding: 7px 16px; border-radius: 7px;
+           border: 1px solid #98a8b8; cursor: pointer; background: #f4f7fa; color: #22384c; }
+  button.primary { background: var(--accent); color: #fff; border-color: var(--accent);
+                   padding: 11px 26px; font-size: 16px; margin-top: 12px; }
+  button.ghost { background: #fff; border: 1px dashed #7a93a8; color: var(--accent); }
+  button.mini { font-size: 12.5px; padding: 3px 10px; }
+
+  #ref-panel { white-space: pre-wrap; background: #f7f7f7; border: 1px solid #ddd;
+    padding: 12px; max-height: 260px; overflow: auto; font-size: 12.5px; display: none;
+    margin-top: 10px; border-radius: 8px; }
+  #result { margin-top: 16px; padding: 12px; border-radius: 8px; }
+  #errors { color: #943c3c; font-size: 14px; margin: 8px 0; }
+  .ok { background: #e7f5ec; border: 1px solid #67a67a; }
+  .bad { background: #fdeeee; border: 1px solid #c86a6a; }
+
+  @media (max-width: 760px) {
+    .field { grid-template-columns: 1fr; gap: 3px; }
+    .pair { grid-template-columns: 1fr; }
+    .fcell.wide { grid-column: auto; }
+    .domains { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+</style>
+</head>
+<body>
+<h1>提交一次分析</h1>
+<p class="hint">一次提交对应一份分析：先填写编号与审计范围，再声明完整性，然后逐点填写方法与实际观测，最后检查并提交。
+本表不索取任何密码或密钥；带 <span class="req">*</span> 的字段必填。</p>
+
+<div class="topbar">
+  <span class="tb-tip"><b>可选：模板导入回填</b>下载空白模板，由工具或大模型填写后导入本页回填；导入只作检查，最终仍在本页提交。</span>
+  <button type="button" class="ghost" onclick="downloadTemplate()">下载空白模板</button>
+  <button type="button" class="ghost" onclick="document.getElementById('importFile').click()">导入已填好的模板</button>
+  <input type="file" id="importFile" accept="application/json,.json" onchange="importJson()">
+</div>
+
+<div class="group" data-g="1">
+  <div class="group-head"><h2>① 审计对象与范围</h2><span class="gr-status" id="gst-1">待填</span></div>
+  <p class="group-desc">先说明这份提交对应哪一次分析：提交编号、项目与分析、比较组，以及数据与用途边界。排除项没有就写 none；其余全部必填。</p>
+  <div class="group-body">
+    <div class="sec-tag">编号与归属</div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>提交编号 <span class="en">audit_id</span>
+        <span class="fhint">每次打开自动生成新编号；重复提交会被账本拒绝</span></label>
+      <div class="fctl"><input id="audit_id" data-f="audit_id" data-required></div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>项目 <span class="en">project_id</span>
+        <span class="fhint">标识符，照你项目里的写法填</span></label>
+      <div class="fctl"><input id="project_id" data-f="project_id" data-required value="project-web"></div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>分析 <span class="en">analysis_id</span>
+        <span class="fhint">标识符，照你分析里的写法填</span></label>
+      <div class="fctl"><input id="analysis_id" data-f="analysis_id" data-required value="analysis-web"></div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>比较组 <span class="en">comparison</span>
+        <span class="fhint">常用比较直接选；别的选「其他（手填）」</span></label>
+      <div class="fctl">
+        <select id="comparison" class="field-select" data-f="comparison" data-required onchange="toggleOther(this)">
+          <option value="treated_vs_control" selected>treated_vs_control（处理组 vs 对照组）</option>
+          <option value="case_vs_control">case_vs_control（病例 vs 对照）</option>
+          <option value="mutant_vs_wildtype">mutant_vs_wildtype（突变 vs 野生型）</option>
+          <option value="before_vs_after">before_vs_after（处理前 vs 处理后）</option>
+          <option value="__other__">其他（手填）</option>
+        </select>
+        <input class="field-other" data-f-other="comparison" style="display:none"
+               placeholder="手填比较组名称，如 tumor_vs_normal">
+      </div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>分组样本量 <span class="en">n_samples</span>
+        <span class="fhint">每组一个计数，组名与上面的比较组对齐；写成 JSON 对象，例如 treated 组 8、control 组 8（缺了这条，跨步骤连贯里的样本量维度只能如实标「未知」，不会替你猜）</span></label>
+      <div class="fctl"><textarea id="n_samples" data-f="n_samples" data-required placeholder='{"treated": 8, "control": 8}'>{"treated": 8, "control": 8}</textarea></div>
+    </div>
+    <div class="sec-tag">审计边界</div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>数据类型 <span class="en">data_type</span>
+        <span class="fhint">决定用哪一族规则；三选一</span></label>
+      <div class="fctl"><select id="data_type" class="field-select" data-f="data_type" data-required>
+        <option value="bulk_rnaseq" selected>bulk_rnaseq（批量转录组）</option>
+        <option value="pancancer">pancancer（泛癌）</option>
+        <option value="scrna">scrna（单细胞）</option>
+      </select></div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>审计范围 <span class="en">audit_scope</span>
+        <span class="fhint">本次审计覆盖到哪一步，照实写</span></label>
+      <div class="fctl"><input id="audit_scope" data-f="audit_scope" data-required value="five-point-mvp"></div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>预期用途 <span class="en">intended_use</span>
+        <span class="fhint">这份分析打算拿来干什么</span></label>
+      <div class="fctl">
+        <select id="intended_use" class="field-select" data-f="intended_use" data-required onchange="toggleOther(this)">
+          <option value="internal scientific review" selected>internal scientific review（内部科学复核）</option>
+          <option value="research use">research use（研究用途）</option>
+          <option value="teaching use">teaching use（教学用途）</option>
+          <option value="__other__">其他（手填）</option>
+        </select>
+        <input class="field-other" data-f-other="intended_use" style="display:none"
+               placeholder="手填用途，如 clinical exploratory use">
+      </div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>排除项 <span class="en">exclusions</span>
+        <span class="fhint">没有排除项就选 none；有就选「其他（手填）」照实写</span></label>
+      <div class="fctl">
+        <select id="exclusions" class="field-select" data-f="exclusions" data-required onchange="toggleOther(this)">
+          <option value="none" selected>none（没有排除项）</option>
+          <option value="__other__">其他（手填排除内容）</option>
+        </select>
+        <input class="field-other" data-f-other="exclusions" style="display:none"
+               placeholder="如 batch 3 excluded (instrument drift)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="group" data-g="2">
+  <div class="group-head"><h2>② 完整性声明</h2><span class="gr-status" id="gst-2">待填</span></div>
+  <p class="group-desc">七个完整性域——身份 / 版本 / 来源 / 绑定 / 快照 / 权限 / 唯一权威——逐一声明。只有 confirmed 才算确认；不确定就先选 unverified，未确认的域会被如实标注。</p>
+  <div class="group-body">
+    <div class="sec-tag">七个完整性域</div>
+    <div class="domains">
+      <label class="dcell"><span class="dcn">身份 <span class="en">identity</span></span>
+        <select class="domain" data-d="identity" data-required><option>confirmed</option><option>unverified</option><option>failed</option><option>conflicted</option></select></label>
+      <label class="dcell"><span class="dcn">版本 <span class="en">version</span></span>
+        <select class="domain" data-d="version" data-required><option>confirmed</option><option>unverified</option><option>failed</option><option>conflicted</option></select></label>
+      <label class="dcell"><span class="dcn">来源 <span class="en">source</span></span>
+        <select class="domain" data-d="source" data-required><option>confirmed</option><option>unverified</option><option>failed</option><option>conflicted</option></select></label>
+      <label class="dcell"><span class="dcn">绑定 <span class="en">binding</span></span>
+        <select class="domain" data-d="binding" data-required><option>confirmed</option><option>unverified</option><option>failed</option><option>conflicted</option></select></label>
+      <label class="dcell"><span class="dcn">快照 <span class="en">snapshot</span></span>
+        <select class="domain" data-d="snapshot" data-required><option>confirmed</option><option>unverified</option><option>failed</option><option>conflicted</option></select></label>
+      <label class="dcell"><span class="dcn">权限 <span class="en">permission</span></span>
+        <select class="domain" data-d="permission" data-required><option>confirmed</option><option>unverified</option><option>failed</option><option>conflicted</option></select></label>
+      <label class="dcell"><span class="dcn">唯一权威 <span class="en">unique_authority</span></span>
+        <select class="domain" data-d="unique_authority" data-required><option>confirmed</option><option>unverified</option><option>failed</option><option>conflicted</option></select></label>
+    </div>
+    <div class="sec-tag">材料与目标</div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>材料 id <span class="en">material_ids</span>
+        <span class="fhint">多个用逗号分隔</span></label>
+      <div class="fctl"><input id="material_ids" data-f="material_ids" data-required value="material-web-1"></div>
+    </div>
+    <div class="field">
+      <label class="fname"><span class="req">*</span>待确认目标 <span class="en">pending_targets</span>
+        <span class="fhint">这份材料最终要为哪个对象作证</span></label>
+      <div class="fctl"><input id="pending_targets" data-f="pending_targets" data-required value="decision_support"></div>
+    </div>
+  </div>
+</div>
+
+<div class="group" data-g="3">
+  <div class="group-head"><h2>③ 五个方法学决策点</h2><span class="gr-status" id="gst-3">待填</span></div>
+  <p class="group-desc">五个点按分析从前到后的顺序各一张卡：低表达过滤 → 归一化 → 差异分析方法 → 多重检验校正 → 显著性阈值。
+  每张卡两小节：<b>声明</b>（宣称用什么）与<b>观测证据</b>（实际跑的是什么）。
+  方法与证据值都从下拉里选；方法不在表里就选「其他（手填）」。</p>
+  <div class="group-body" id="points"></div>
+</div>
+
+<div class="group">
+  <div class="group-head"><h2>④ 上传材料（选填 · 只作参照）</h2></div>
+  <p class="group-desc">上传分析过程文件或报告文本，页面读回原文显示在旁边供对照填写——不自动解析，也不保存。</p>
+  <div class="group-body">
+    <div class="field">
+      <label class="fname">参照材料 <span class="en">material</span>
+        <span class="fhint">选填：只读回文本作参照</span></label>
+      <div class="fctl"><input type="file" id="material" style="max-width:none">
+        <button type="button" class="ghost" onclick="uploadRef()" style="margin-left:8px">读取作参照</button></div>
+    </div>
+    <div id="ref-panel"></div>
+  </div>
+</div>
+
+<div id="errors"></div>
+<button class="primary" onclick="doSubmit()">提交这次分析（先检查必填）</button>
+<div id="result"></div>
+
+<script>
+  var OTHER = '__other__';
+
+  var POINTS = [
+    { key: "filtering", zh: "低表达过滤", method: "low_count_filter",
+      methods: ["low_count_filter", "filterByExpr", "CPM_filter_min_samples", "no_filtering"] },
+    { key: "normalization", zh: "归一化", method: "TMM",
+      methods: ["TMM", "RLE", "DESeq2_median_of_ratios", "TPM", "FPKM", "CPM_no_log", "raw_counts_no_normalization"] },
+    { key: "differential_method", zh: "差异分析方法", method: "DESeq2",
+      methods: ["DESeq2", "edgeR", "limma_voom", "limma_trend", "Wilcoxon_rank_sum", "ttest_equal_variance"] },
+    { key: "multiple_testing_correction", zh: "多重检验校正", method: "BH",
+      methods: ["BH", "BY", "Bonferroni", "q_value_storey", "no_correction"] },
+    { key: "significance_threshold", zh: "显著性/效应量阈值", method: "padj_and_logFC",
+      methods: ["padj_and_logFC", "padj_0.05", "logFC_only", "raw_p_value", "no_threshold"] }
+  ];
+
+  // 字段表：[中文标签, 提示, 下拉选项]（无第三项 = 手填框）
+  var FIELDS = {
+    method:        ['声明方法', '不在表里就选「其他（手填）」', null],
+    threshold:     ['阈值', '没有阈值就选 not_applicable', ['not_applicable', 'padj_0.05', 'padj_0.01', 'lfc_1']],
+    sample_rule:   ['样本规则', '', ['at_least_two_samples', 'at_least_three_samples', 'no_replication']],
+    unit:          ['单位', '', ['gene', 'transcript', 'variant']],
+    source:        ['来源', '契约固定：本提交由提交方声明', ['declared']],
+    n_samples:     ['分组样本量', '每组一个计数，写成 JSON 对象（组名与比较组对齐）', null],
+    source_type:   ['来源类型', '', ['observed', 'declared', 'referenced']],
+    verification:  ['核实', '', ['confirmed', 'unverified', 'conflicted']],
+    evidence_role: ['证据角色', '选填', ['support', 'limitation', 'conflict']],
+    value:         ['观测值', '必须等于上方「声明方法」', null],
+    observed_at:   ['观测时刻', '带时区的过去时刻；可用「填当前时刻」一键填', null],
+    valid_for_seconds: ['有效期（秒）', '如 31536000 = 1 年', ['31536000', '15768000', '7776000']],
+    provenance:    ['出处', '选填：材料来源', null],
+    supports:      ['为哪条主张作证', '选填', null]
+  };
+  var EV_FIELDS = ['source_type', 'verification', 'evidence_role', 'value',
+                   'observed_at', 'valid_for_seconds', 'provenance', 'supports'];
+  var DECL_FIELDS = ['method', 'threshold', 'sample_rule', 'unit', 'source'];
+
+  function escHtml(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  // —— 控件渲染：有选项 → 下拉 + 「其他（手填）」空框；无选项 → 文本框 ——
+  function ctrlHtml(f, need, value, opts) {
+    var d = FIELDS[f] || [f, ''];
+    var list = opts || d[2] || null;
+    value = value == null ? '' : String(value);
+    if (!list) {
+      var mini = (f === 'observed_at')
+        ? ' <button type="button" class="mini" onclick="fillNow(this)">填当前时刻</button>' : '';
+      return '<input data-f="' + f + '"' + (need ? ' data-required' : '') +
+             ' value="' + escHtml(value) + '">' + mini;
+    }
+    var inList = list.indexOf(value) >= 0;
+    var html = '<select class="field-select" data-f="' + f + '"' + (need ? ' data-required' : '') +
+               ' onchange="toggleOther(this)">';
+    list.forEach(function (o) {
+      html += '<option value="' + escHtml(o) + '"' +
+              ((inList && o === value) ? ' selected' : '') + '>' + escHtml(o) + '</option>';
+    });
+    html += '<option value="' + OTHER + '"' + (inList ? '' : ' selected') + '>其他（手填）</option></select>' +
+            '<input class="field-other" data-f-other="' + f + '" style="' +
+            (inList ? 'display:none' : '') + '" placeholder="手填具体值" value="' +
+            escHtml(inList ? '' : value) + '">';
+    return html;
+  }
+
+  function toggleOther(sel) {
+    var box = sel.parentNode.querySelector('[data-f-other="' + sel.getAttribute('data-f') + '"]');
+    if (box) {
+      box.style.display = (sel.value === OTHER) ? '' : 'none';
+      if (sel.value === OTHER) box.focus();
+    }
+    refreshAll();
+  }
+
+  function fillNow(btn) {
+    var input = btn.parentNode.querySelector('input[data-f="observed_at"]');
+    if (!input) return;
+    var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    var off = -d.getTimezoneOffset(), sign = off >= 0 ? '+' : '-', ab = Math.abs(off);
+    input.value = d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + 'T' +
+      p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()) + sign +
+      p(Math.floor(ab / 60)) + ':' + p(ab % 60);
+    refreshAll();
+  }
+
+  // —— 取值 / 赋值（下拉与其他框合并成一个字段值）——
+  function pairFor(scope, f) {
+    var root = scope || document;
+    return {
+      main: root.querySelector('[data-f="' + f + '"]'),
+      other: root.querySelector('[data-f-other="' + f + '"]')
+    };
+  }
+  function fxValue(scope, f) {
+    var p = pairFor(scope, f), el = p.main;
+    if (!el) return '';
+    if (el.classList.contains('field-select')) {
+      if (el.value === OTHER) return p.other ? p.other.value.trim() : '';
+      return el.value;
+    }
+    return (el.value || '').trim();
+  }
+  function fieldKeyOf(el) { return el.getAttribute('data-f'); }
+  // 单个控件的取值：下拉若选「其他」→ 取配对空框的值。域选择（data-d）等无 data-f 的
+  // 控件也走这里，所以必填统计不依赖字段键。
+  function valueOfEl(el) {
+    if (el.classList && el.classList.contains('field-select')) {
+      var f = el.getAttribute('data-f');
+      var box = f ? el.parentNode.querySelector('[data-f-other="' + f + '"]') : null;
+      if (el.value === OTHER) return box ? box.value.trim() : '';
+      return el.value;
+    }
+    return (el.value || '').trim();
+  }
+  function requiredEls(scope) {
+    return [].slice.call(scope.querySelectorAll('[data-required]'));
+  }
+  function markInvalid(el) {
+    var target = el;
+    if (el.classList && el.classList.contains('field-select') && el.value === OTHER) {
+      var f = el.getAttribute('data-f');
+      var box = f ? el.parentNode.querySelector('[data-f-other="' + f + '"]') : null;
+      if (box) target = box;
+    }
+    target.classList.add('invalid');
+  }
+  function setField(scope, f, value) {
+    var p = pairFor(scope, f);
+    if (!p.main) return;
+    if (p.main.classList.contains('field-select')) {
+      var v = String(value == null ? '' : value), found = false;
+      [].slice.call(p.main.options).forEach(function (o) { if (o.value === v) found = true; });
+      if (found) {
+        p.main.value = v;
+        if (p.other) { p.other.value = ''; p.other.style.display = 'none'; }
+      } else {
+        p.main.value = OTHER;
+        if (p.other) { p.other.value = v; p.other.style.display = ''; }
+      }
+    } else {
+      p.main.value = value == null ? '' : String(value);
+    }
+  }
+
+  function lab(f, need) {
+    var d = FIELDS[f] || [f, ''];
+    return '<label class="fname">' + (need ? '<span class="req">*</span>' : '') + d[0] +
+      ' <span class="en">' + f + '</span>' +
+      (d[1] ? '<span class="fhint">' + d[1] + '</span>' : '') + '</label>';
+  }
+  function fcell(f, need, ctrl, wide) {
+    var d = FIELDS[f] || [f, ''];
+    return '<label class="fcell' + (wide ? ' wide' : '') + '"><span class="fcn">' +
+      (need ? '<span class="req">*</span>' : '') + d[0] +
+      ' <span class="en">' + f + '</span>' +
+      (d[1] ? '<span class="fhint">' + d[1] + '</span>' : '') + '</span>' + ctrl + '</label>';
+  }
+  function evRow(pKey, pMethod) {
+    var m = pMethod || '';
+    var methods = (POINTS.filter(function (p) { return p.key === pKey; })[0] || {}).methods || null;
+    return '<div class="ev-row">' +
+      '<div class="ev-top"><span class="ev-no">证据 1</span>' +
+      '<button type="button" class="ev-del" onclick="this.closest(\'.ev-row\').remove(); refreshAll();">删除此行</button></div>' +
+      '<div class="pair">' +
+      fcell('source_type', true, ctrlHtml('source_type', true, 'observed')) +
+      fcell('verification', true, ctrlHtml('verification', true, 'confirmed')) +
+      fcell('evidence_role', false, ctrlHtml('evidence_role', false, 'support')) +
+      '</div><div class="pair">' +
+      fcell('value', true, ctrlHtml('value', true, m, methods)) +
+      fcell('observed_at', true, ctrlHtml('observed_at', true, '2026-09-13T00:00:00+00:00')) +
+      fcell('valid_for_seconds', true, ctrlHtml('valid_for_seconds', true, '31536000')) +
+      fcell('provenance', false, ctrlHtml('provenance', false, '示例定位：run/trace.tsv')) +
+      fcell('supports', false, ctrlHtml('supports', false, '示例：实际执行了 ' + m + ' 且记录在案'), true) +
+      '</div></div>';
+  }
+  function pointCard(p) {
+    return '<div class="point" data-p="' + p.key + '">' +
+      '<div class="point-head"><div><b>' + p.zh + '</b> <span class="en">' + p.key + '</span></div>' +
+      '<span class="pt-status" id="st-' + p.key + '">待填</span></div>' +
+      '<div class="sec-tag">声明 · 宣称用什么（Declared）</div>' +
+      '<div class="pair">' +
+      fcell('method', true, ctrlHtml('method', true, p.method, p.methods)) +
+      fcell('threshold', true, ctrlHtml('threshold', true, 'not_applicable')) +
+      fcell('sample_rule', true, ctrlHtml('sample_rule', true, 'at_least_two_samples')) +
+      fcell('unit', true, ctrlHtml('unit', true, 'gene')) +
+      fcell('source', true, ctrlHtml('source', true, 'declared'), true) +
+      '</div>' +
+      '<div class="sec-tag">观测证据 · 实际跑的是什么（Observed）</div>' +
+      '<div class="evs">' + evRow(p.key, p.method) + '</div>' +
+      '<button type="button" class="ev-add" onclick="addEv(this, \'' + p.key + '\', \'' + p.method + '\')">+ 加一条观测</button></div>';
+  }
+  function addEv(btn, pKey, pMethod) {
+    btn.parentNode.insertBefore(evRowWrap(pKey, pMethod), btn);
+    refreshAll();
+  }
+  function evRowWrap(pKey, pMethod) {
+    var d = document.createElement('div');
+    d.innerHTML = evRow(pKey, pMethod);
+    return d.firstChild;
+  }
+  function refreshAll() {
+    document.querySelectorAll('[data-p]').forEach(function (card) {
+      var els = requiredEls(card);
+      var miss = 0;
+      els.forEach(function (el) { if (valueOfEl(el) === '') miss++; });
+      var err = card.querySelectorAll('.invalid').length;
+      var st = document.getElementById('st-' + card.getAttribute('data-p'));
+      if (err) { st.textContent = '有错误'; st.className = 'pt-status miss'; }
+      else if (miss === 0) { st.textContent = '已填'; st.className = 'pt-status done'; }
+      else { st.textContent = '待填 ' + miss + '/' + els.length; st.className = 'pt-status ok'; }
+    });
+    document.querySelectorAll('[data-p] .ev-row').forEach(function (r, i) {
+      var no = r.querySelector('.ev-no'); if (no) no.textContent = '证据 ' + (i + 1);
+    });
+    [1, 2, 3].forEach(function (g) {
+      var el = document.getElementById('gst-' + g);
+      if (!el) return;
+      var root = document.querySelector('.group[data-g="' + g + '"]');
+      var els = requiredEls(root);
+      var miss = 0;
+      els.forEach(function (e) { if (valueOfEl(e) === '') miss++; });
+      if (miss === 0) { el.textContent = '已填满'; el.className = 'gr-status done'; }
+      else { el.textContent = '待填 ' + miss + '/' + els.length; el.className = 'gr-status miss'; }
+    });
+  }
+  function parsedNSamples() {
+    var raw = fxValue(document, 'n_samples');
+    if (!raw) return null;
+    try { var v = JSON.parse(raw); return (v && typeof v === 'object' && !Array.isArray(v)) ? v : null; }
+    catch (e) { return null; }
+  }
+  function build() {
+    var decisionPoints = {};
+    document.querySelectorAll('[data-p]').forEach(function (card) {
+      var p = card.getAttribute('data-p');
+      var decl = {};
+      DECL_FIELDS.forEach(function (f) { decl[f] = fxValue(card, f); });
+      var evs = [];
+      card.querySelectorAll('.evs > .ev-row').forEach(function (r) {
+        var o = {};
+        EV_FIELDS.forEach(function (f) {
+          var v = fxValue(r, f);
+          o[f] = (f === 'valid_for_seconds') ? Number(v) : v;
+        });
+        evs.push(o);
+      });
+      decisionPoints[p] = { decision_declaration: decl, evidence_observations: evs };
+    });
+    var integrity = { material_ids: fxValue(document, 'material_ids').split(',').map(function (s) { return s.trim(); }).filter(Boolean),
+                      pending_targets: fxValue(document, 'pending_targets').split(',').map(function (s) { return s.trim(); }).filter(Boolean) };
+    document.querySelectorAll('.domain').forEach(function (s) {
+      integrity[s.getAttribute('data-d')] = { state: s.value };
+    });
+    return {
+      audit_id: fxValue(document, 'audit_id'),
+      analysis_context: {
+        project_id: fxValue(document, 'project_id'),
+        analysis_id: fxValue(document, 'analysis_id'),
+        comparison: fxValue(document, 'comparison'),
+        n_samples: parsedNSamples(),
+        data_type: document.getElementById('data_type').value,
+        audit_scope: fxValue(document, 'audit_scope'),
+        intended_use: fxValue(document, 'intended_use'),
+        exclusions: fxValue(document, 'exclusions')
+      },
+      integrity_metadata: integrity,
+      decision_points: decisionPoints
+    };
+  }
+  function fieldLabelOf(f) {
+    if (f && FIELDS[f]) return FIELDS[f][0];
+    return (f || '').replace(/[_]/g, ' ') || '这一项';
+  }
+  function validate() {
+    var problems = [];
+    document.querySelectorAll('.invalid').forEach(function (e) { e.classList.remove('invalid'); });
+    document.querySelectorAll('[data-required]').forEach(function (el) {
+      if (valueOfEl(el) === '') { markInvalid(el); problems.push(fieldLabelOf(fieldKeyOf(el)) + '是必填的'); }
+    });
+    document.querySelectorAll('[data-f="observed_at"]').forEach(function (f) {
+      var v = f.value.trim();
+      if (!v) return;
+      var tz = /([+-]\d{2}:\d{2}|Z)$/.test(v);
+      if (isNaN(Date.parse(v)) || !tz) { f.classList.add('invalid'); problems.push('观测时刻不是带时区的 ISO8601（如 2026-09-13T00:00:00+00:00）'); }
+    });
+    var ns = parsedNSamples();
+    if (ns !== null) {
+      var nsBad = Object.keys(ns).length === 0 ||
+        Object.keys(ns).some(function (k) {
+          var v = ns[k];
+          return !k || typeof v !== 'number' || !isFinite(v) || v <= 0 || Math.floor(v) !== v;
+        });
+      if (nsBad) {
+        document.getElementById('n_samples').classList.add('invalid');
+        problems.push('分组样本量需是 JSON 对象：每个组名一个正整数，如 {"treated": 8, "control": 8}');
+      }
+    } else if (fxValue(document, 'n_samples') !== '') {
+      document.getElementById('n_samples').classList.add('invalid');
+      problems.push('分组样本量需是 JSON 对象：每个组名一个正整数，如 {"treated": 8, "control": 8}');
+    }
+    document.querySelectorAll('[data-p]').forEach(function (card) {
+      var method = fxValue(card, 'method');
+      card.querySelectorAll('.evs > .ev-row').forEach(function (r) {
+        var v = fxValue(r, 'value');
+        if (v && v !== method) {
+          var p = pairFor(r, 'value');
+          (p.main && p.main.value === OTHER ? p.other : p.main).classList.add('invalid');
+          problems.push('「' + card.getAttribute('data-p') + '」观测值必须与声明方法一致（' + method + '）');
+        }
+      });
+    });
+    refreshAll();
+    return problems;
+  }
+  function downloadTemplate() {
+    fetch('/api/skeleton').then(function (r) { return r.json(); }).then(function (j) {
+      var blob = new Blob([JSON.stringify(j, null, 1)], { type: 'application/json' });
+      var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'a1-submission-template.json'; a.click();
+    }).catch(function () {
+      alert('无法连接提交服务：请回到仓库根目录双击 start-a1-web.bat，' +
+            '用它打开的 http://127.0.0.1:5050 页面下载模板。');
+    });
+  }
+  function importJson() {
+    var f = document.getElementById('importFile').files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var j = JSON.parse(reader.result);
+        var errors = applyImport(j);
+        var box = document.getElementById('result');
+        if (errors) {
+          box.className = 'bad'; box.innerHTML = '<b>导入失败：</b>' + errors;
+        } else {
+          box.className = 'ok'; box.innerHTML = '<b>已导入</b>，请滚动检查各组；确认无误后点「提交这次分析」。';
+          refreshAll();
+        }
+      } catch (e) { alert('不是合法 JSON：' + e.message); }
+    };
+    reader.readAsText(f);
+  }
+  function applyImport(j) {
+    if (!j || typeof j !== 'object') return '文件不是对象';
+    if (!j.analysis_context || !j.integrity_metadata || !j.decision_points) return '缺 analysis_context / integrity_metadata / decision_points';
+    var c = j.analysis_context;
+    ['audit_id', 'project_id', 'analysis_id', 'comparison', 'data_type', 'audit_scope', 'intended_use', 'exclusions'].forEach(function (k) {
+      if (k === 'data_type') { if (c[k] !== undefined) document.getElementById('data_type').value = c[k]; return; }
+      setField(document, k, c[k]);
+    });
+    if (c.n_samples !== undefined) {
+      document.getElementById('n_samples').value =
+        (typeof c.n_samples === 'string') ? c.n_samples : JSON.stringify(c.n_samples, null, 1);
+    }
+    var dom = document.querySelectorAll('.domain');
+    dom.forEach(function (s) {
+      var v = (j.integrity_metadata[s.getAttribute('data-d')] || {}).state;
+      if (v) s.value = v;
+    });
+    if (j.integrity_metadata.material_ids) setField(document, 'material_ids', j.integrity_metadata.material_ids.join(','));
+    if (j.integrity_metadata.pending_targets) setField(document, 'pending_targets', j.integrity_metadata.pending_targets.join(','));
+    POINTS.forEach(function (p) {
+      var dp = j.decision_points[p.key];
+      var card = document.querySelector('[data-p="' + p.key + '"]');
+      if (!dp) return;
+      if (dp.decision_declaration) {
+        Object.keys(dp.decision_declaration).forEach(function (f) {
+          if (DECL_FIELDS.indexOf(f) >= 0 && dp.decision_declaration[f] !== undefined) {
+            setField(card, f, dp.decision_declaration[f]);
+          }
+        });
+      }
+      var evs = dp.evidence_observations || [];
+      card.querySelectorAll('.evs > .ev-row').forEach(function (r) { r.remove(); });
+      evs.forEach(function () { card.querySelector('.evs').appendChild(evRowWrap(p.key, p.method)); });
+      var rows = card.querySelectorAll('.evs > .ev-row');
+      evs.forEach(function (ev, idx) {
+        var r = rows[idx]; if (!r) return;
+        EV_FIELDS.forEach(function (f) {
+          if (f === 'evidence_role' && ev.evidence_role === undefined) return;
+          if (ev[f] !== undefined) setField(r, f, ev[f]);
+        });
+      });
+    });
+    return null;
+  }
+  function uploadRef() {
+    var f = document.getElementById('material').files[0];
+    if (!f) return alert('先选一个文件');
+    var fd = new FormData(); fd.append('material', f);
+    fetch('/api/upload', { method: 'POST', body: fd })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (x) {
+        var panel = document.getElementById('ref-panel');
+        if (!x.ok) return alert('上传失败：' + (x.j.error || ''));
+        panel.style.display = 'block';
+        panel.textContent = '—— 参照材料：' + x.j.name + ' ——\n\n' + x.j.text;
+      })
+      .catch(function () {
+        alert('无法连接提交服务：上传参照需要先用 start-a1-web.bat 打开本页。');
+      });
+  }
+  function serviceHint() {
+    return (location.protocol === 'file:')
+      ? '当前页面是以文件方式打开的，浏览器会拦截向本地服务的请求——请回到仓库根目录双击 start-a1-web.bat，' +
+        '用它自动打开的 http://127.0.0.1:5050 页面重新提交。'
+      : '提交服务可能未启动——请回到仓库根目录双击 start-a1-web.bat，再用它打开的页面提交。';
+  }
+  function doSubmit() {
+    var errors = document.getElementById('errors');
+    var problems = validate();
+    if (problems.length) {
+      errors.innerHTML = '还有 ' + problems.length + ' 处需要填/改（已红框标出）：<br>' +
+        problems.map(function (p) { return '· ' + p; }).join('<br>');
+      var first = document.querySelector('.invalid');
+      if (first) { first.focus(); first.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+      return;
+    }
+    errors.innerHTML = '';
+    var res = document.getElementById('result');
+    res.className = ''; res.innerHTML = '提交中…（正在跑三道门，请勿关闭页面）';
+    fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(build())
+    }).then(function (r) {
+      return r.json().then(function (j) { return { ok: r.ok, j: j }; },
+        function () { return { ok: r.ok, j: { error: '服务返回的不是 JSON（HTTP ' + r.status + '）' } }; });
+    }).then(function (x) {
+      if (x.ok) {
+        res.className = 'ok';
+        res.innerHTML = '<b>记录已写入账本并生成报告。</b><br>audit_id=' + x.j.audit_id +
+          '<br>五点判定：' + JSON.stringify(x.j.judgments) +
+          '<br><a href="' + x.j.links['report.html'] + '" target="_blank">检查页</a> · ' +
+          '<a href="' + x.j.links['deliverable.html'] + '" target="_blank">交付文档</a> · ' +
+          '<a href="' + x.j.links['report.json'] + '" target="_blank">report.json</a>';
+      } else {
+        res.className = 'bad';
+        var msg = x.j.reasons ? '提交未通过检查（未写入账本）：<br>' + x.j.reasons.join('<br>') : (x.j.error || '未知错误');
+        res.innerHTML = '<b>被拒（未写任何账）：</b><br>' + msg;
+      }
+    }).catch(function (e) {
+      res.className = 'bad';
+      res.innerHTML = '<b>提交未送达（未写入账本）。</b><br>' + serviceHint() +
+        '<br><span class="muted">技术原因：' + ((e && e.message) ? e.message : '网络错误') + '</span>';
+    });
+  }
+  document.getElementById('points').innerHTML = POINTS.map(pointCard).join('');
+  (function () {
+    if (location.protocol === 'file:') {
+      var bar = document.createElement('div');
+      bar.className = 'filewarn';
+      bar.innerHTML = '<b>当前是以文件方式打开的页面：提交、下载模板、上传参照都用不了</b>' +
+        '（浏览器会拦截文件页面向本地服务的请求）。请回到仓库根目录双击 <code>start-a1-web.bat</code>，' +
+        '用它自动打开的 <code>http://127.0.0.1:5050</code> 页面填写与提交。';
+      var tb = document.querySelector('.topbar');
+      tb.parentNode.insertBefore(bar, tb);
+    }
+    var d = new Date(), p = function (n) { return (n < 10 ? '0' : '') + n; };
+    document.getElementById('audit_id').value =
+      'audit-web-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' +
+      p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds());
+    refreshAll();
+  })();
+  document.addEventListener('input', refreshAll);
+  document.addEventListener('change', refreshAll);
+</script>
+</body>
+</html>

@@ -1,0 +1,283 @@
+{
+ "version": 2,
+ "trajectory_id": "bmd_pan_015",
+ "act": "pan",
+ "provenance": {
+  "source": "benchmark",
+  "migrated_from": null,
+  "migrated_at": null,
+  "migrator": null,
+  "note": "benchmark 任务草稿：语料变换生成（E6：错误注入来自真实语料，非规则反推）；gold/difficulty 由标注管线填充",
+  "base_trajectories": [
+   "pan_correct"
+  ],
+  "error_pattern_sources": [
+   "pan_error"
+  ],
+  "generator": {
+   "model": "deepseek-v4-flash",
+   "prompt_version": "943fc2f11acd",
+   "transform_version": "generator.transform.v1",
+   "reviewed_by": "window-F review",
+   "reviewed_at": "2026-08-16"
+  }
+ },
+ "decisions": [
+  {
+   "step_id": "D1",
+   "decision_type": "filtering",
+   "choice": "filterByExpr",
+   "rationale": "使用 edgeR filterByExpr() 根据实验设计自适应过滤低表达基因,保留有足够counts进行统计检验的基因 (Conesa et al. 2016, PMID 26813401)",
+   "context": {
+    "sequencing": "bulk_RNA_seq",
+    "n_replicates": 5
+   }
+  },
+  {
+   "step_id": "D2",
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  {
+   "step_id": "D3",
+   "decision_type": "deg_method",
+   "choice": "DESeq2",
+   "rationale": "DESeq2 Wald test — 负二项分布模型,最佳FDR控制。验证了离散度-均值诊断图 (Love et al. 2014, PMID 25516281)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq",
+    "design": "simple_two_group",
+    "n_replicates": 3
+   }
+  },
+  {
+   "step_id": "D4",
+   "decision_type": "multiple_testing_correction",
+   "choice": "BH",
+   "rationale": "Benjamini-Hochberg FDR校正 — 基因组学探索性分析标准,在~450K检验中控制期望FDR在5% (Benjamini & Hochberg 1995)",
+   "context": {
+    "analysis_type": "differential_expression"
+   }
+  },
+  {
+   "step_id": "D5",
+   "decision_type": "significance_threshold",
+   "choice": "padj <= 0.05, |logFC| >= 1.0",
+   "rationale": "双阈值: FDR<0.05保证统计显著性, |logFC|≥1保证生物学效应量。符合ENCODE标准推荐",
+   "context": {
+    "analysis_type": "differential_expression"
+   }
+  },
+  {
+   "step_id": "D6",
+   "decision_type": "cox_ph_assumption",
+   "choice": "Schoenfeld_residuals_test",
+   "rationale": "使用 cox.zph() 进行 Schoenfeld 残差检验,验证比例风险假设是否成立 (Grambsch & Therneau 1994)",
+   "context": {
+    "analysis_type": "survival_analysis",
+    "method": "Cox_regression"
+   }
+  },
+  {
+   "step_id": "D7",
+   "decision_type": "independent_prognostic_claim",
+   "choice": "multivariate_Cox_with_clinical_covariates",
+   "rationale": "多变量Cox回归调整年龄+分期+分级后CSTB仍显著(HR=1.42, p=0.0002),可声称独立预后因素 (Bradburn et al. 2003, PMID 12578478)",
+   "context": {
+    "analysis_type": "survival_analysis"
+   }
+  },
+  {
+   "step_id": "D8",
+   "decision_type": "events_per_variable",
+   "choice": "EPV_gte_10_verified",
+   "rationale": "死亡事件数48,协变量4个,EPV=12≥10,多变量Cox模型估计稳定 (Peduzzi et al. 1995, PMID 7474269)",
+   "context": {
+    "analysis_type": "survival_analysis"
+   }
+  },
+  {
+   "step_id": "D9",
+   "decision_type": "cbioportal_projection",
+   "choice": "DETAILED",
+   "rationale": "使用 projection=DETAILED 确保返回完整 hugoGeneSymbol,避免 SUMMARY 模式返回'?' (cBioPortal API文档)",
+   "context": {
+    "data_source": "cBioPortal"
+   }
+  },
+  {
+   "step_id": "D10",
+   "decision_type": "immune_correlation_method",
+   "choice": "Pearson_no_normality_check",
+   "rationale": "Pearson correlation is the standard linear correlation method.",
+   "context": {
+    "analysis_type": "immune_expression_correlation"
+   }
+  },
+  {
+   "step_id": "D11",
+   "decision_type": "purity_confounding",
+   "choice": "ESTIMATE_purity_correction",
+   "rationale": "使用偏相关控制ESTIMATE肿瘤纯度后评估免疫-表达关联,减少虚假关联 (Aran et al. 2015, PMID 26573719)",
+   "context": {
+    "analysis_type": "immune_expression_correlation"
+   }
+  },
+  {
+   "step_id": "D12",
+   "decision_type": "gsea_background",
+   "choice": "expressed_genes_background",
+   "rationale": "使用实际表达的13,847个基因作为GSEA背景基因集(非全基因组~20,000个),避免未检测基因影响富集分数的零分布 (Subramanian et al. 2005, PMID 16199512)",
+   "context": {
+    "analysis_type": "pathway_enrichment",
+    "method": "GSEA"
+   }
+  },
+  {
+   "step_id": "D13",
+   "decision_type": "enrichment_correction",
+   "choice": "BH_FDR",
+   "rationale": "对236条通路做BH FDR多重检验校正,控制通路富集分析的假阳性率 (Huang et al. 2009, PMID 19131956)",
+   "context": {
+    "analysis_type": "pathway_enrichment"
+   }
+  },
+  {
+   "step_id": "D14",
+   "decision_type": "ic50_sample_size",
+   "choice": "n_gte_30_with_power_analysis",
+   "rationale": "GDSC2包含809个细胞系(n≥30),样本量充足,Spearman相关估计稳定 (Barretina et al. 2012, PMID 22950953)",
+   "context": {
+    "analysis_type": "drug_sensitivity",
+    "data_source": "GDSC2"
+   }
+  },
+  {
+   "step_id": "D15",
+   "decision_type": "expression_survival_consistency",
+   "choice": "direction_inconsistent_not_discussed",
+   "rationale": "Two results reported separately.",
+   "context": {
+    "integration_type": "cross_module"
+   }
+  },
+  {
+   "step_id": "D16",
+   "decision_type": "immune_expression_consistency",
+   "choice": "direction_consistent_with_known_function",
+   "rationale": "CSTB参与抗原呈递和免疫调控,其表达与免疫浸润(CD8+ T细胞)正相关符合已知功能。方向一致且文献支持",
+   "context": {
+    "integration_type": "cross_module"
+   }
+  }
+ ],
+ "gold": {
+  "version": "annotation.v1.1",
+  "annotated_at": "2026-08-15T13:07:18.133974+00:00",
+  "irr": {
+   "n_items": 275,
+   "n_agreed": 267,
+   "cohen_kappa": 0.9336,
+   "krippendorff_alpha": 0.9336
+  },
+  "labels": [
+   {
+    "step_id": "D1",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D10",
+    "label": "edge",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D11",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D12",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D13",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D14",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D15",
+    "label": "edge",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D16",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D2",
+    "label": "edge",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D3",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D4",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D5",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D6",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D7",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D8",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "D9",
+    "label": "correct",
+    "consensus": "strong"
+   }
+  ]
+ },
+ "difficulty": {
+  "label": 2,
+  "rubric_version": "difficulty.v1",
+  "features": {
+   "n_decisions": 16,
+   "n_errors": 0,
+   "n_edge": 3,
+   "n_subtle_errors": 0,
+   "n_consistency_family": 2
+  },
+  "note": "按预注册 rubric 由 gold 特征计算（E4：不使用审计分数定义难度）"
+ }
+}

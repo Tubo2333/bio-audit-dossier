@@ -1,0 +1,21 @@
+# 决策类型：immune_correlation_method（免疫浸润相关方法）— interpretation / pan-cancer + scRNA
+# 0.1.2（2026-08-16 窗口 K1）：paradigms 扩至 [pan-cancer, scRNA]——scRNA 版规则
+# I4.1-IMMU-001_scRNA_correlation_method 落地（范式隔离各自锚定，与 pan I4.1 不共享评级）
+decision_type: immune_correlation_method
+display:
+  cn: 免疫浸润相关分析方法
+  en: Immune correlation method
+stage: interpretation
+paradigms: [pan-cancer, scRNA]
+dimension: method_selection
+optional: true
+when_not_applicable: no_immune_analysis
+aliases: []
+depends_on: [deg_method]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [immune_expression_correlation, differential_expression, survival_analysis, pathway_enrichment, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（I4.1）引用 → 禁止 fail-open
+    missing: fail-closed

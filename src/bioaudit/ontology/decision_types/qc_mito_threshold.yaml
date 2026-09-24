@@ -1,0 +1,22 @@
+# 决策类型：qc_mito_threshold（线粒体比例阈值）— qc / scRNA
+decision_type: qc_mito_threshold
+display:
+  cn: 线粒体基因比例阈值
+  en: Mitochondrial threshold
+stage: qc
+paradigms: [scRNA]
+dimension: data_handling
+optional: false
+aliases: []
+depends_on: [qc_filtering]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: mito_percent
+    type: int
+    min: 0
+    required: false
+    missing: fail-open

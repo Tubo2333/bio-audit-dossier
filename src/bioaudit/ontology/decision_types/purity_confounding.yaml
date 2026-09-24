@@ -1,0 +1,19 @@
+# 决策类型：purity_confounding（肿瘤纯度混杂处理）— interpretation / pan-cancer
+decision_type: purity_confounding
+display:
+  cn: 肿瘤纯度混杂处理
+  en: Purity confounding
+stage: interpretation
+paradigms: [pan-cancer]
+dimension: data_handling
+optional: true
+when_not_applicable: no_immune_analysis
+aliases: []
+depends_on: [immune_correlation_method, deg_method]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [immune_expression_correlation, differential_expression, survival_analysis, pathway_enrichment, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（I4.2）引用 → 禁止 fail-open
+    missing: fail-closed

@@ -1,0 +1,69 @@
+rule_id: A1.1-API-001_data_integrity
+domain: API
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2019, 2020]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "单细胞数据获取的完整性检查 / scRNA data acquisition integrity"
+description: "从公共数据库(GEO/ArrayExpress/HCA)获取单细胞数据时, 必须验证数据完整性:基因符号一致性、barcode格式正确、obs/var元数据完整、无空值/重复。不验证可能导致下游分析静默失败(如基因符号映射错误使marker验证失效)。此规则是对pancancer-audit中cBioPortal规则的泛化(D14)。"
+condition:
+  decision_type: api_data_integrity
+  required_context: {}
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - DETAILED_with_validation
+      - full_validation
+    description: "获取数据后验证: gene符号一致性、barcode非空、obs/var索引完整"
+  level_2:
+    methods:
+      - basic_validation
+    description: "只做了基本验证(维度检查)但未深度验证基因符号/barcode"
+    conditions_when_acceptable: "当数据来自标准化pipeline(如CellXGene)且格式已知时"
+  level_1:
+    methods:
+      - no_validation
+    description: "无验证直接使用 — 可能包含静默错误"
+    note: "基因符号映射错误(如'1-Mar'被Excel转为日期'Mar-1')是最常见的静默错误"
+  level_0:
+    methods:
+      - dataset_not_specified
+      - wrong_format
+    description: "数据来源不明或使用了不兼容的格式进行下游分析"
+
+evidence:
+  # 2026-09-16 收尾核对（窗口自查原文）：Luecken & Theis 2019 无「导入时验证基因符号/条码/元数据」主张（gene symbol / metadata 全文 0 命中；barcode 均为概念介绍）→ 槽位删除；gene-symbol 验证主张由 Ziemann 2021 槽位承担
+  - source_type: method_paper
+    pmid: "34329294"
+    doi: "10.1371/journal.pcbi.1008984"
+    title: "Gene name errors: Lessons not learned — Ziemann et al. 2021, PLoS Computational Biology"
+    confidence: L-Evidenced
+    excerpt: "Gene name conversion errors (e.g., MARCH1 → Mar-1 → 1-Mar) remain pervasive in genomic analyses."
+    supports_levels: ["level_3", "level_1"]
+conflicts_with: []

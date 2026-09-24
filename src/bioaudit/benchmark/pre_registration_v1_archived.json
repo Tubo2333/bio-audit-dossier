@@ -1,0 +1,30 @@
+{
+ "record_id": "benchmark-pr-2026-08-16-01",
+ "date": "2026-08-16",
+ "version": "pr.v1",
+ "split": {
+  "method": "stratified_random_by_paradigm_and_difficulty",
+  "seed": 42,
+  "public_ratio": 0.7,
+  "note": "按范式×难度分层后按 seed 确定性划分；划分在 gold+难度冻结后执行并写入 taskset.json"
+ },
+ "gap": {
+  "statistic": "mean(trajectory_score/100) over tasks: public - hidden",
+  "tolerance_interval": [
+   -0.1,
+   0.1
+  ],
+  "alarm_rule": "Δ 超出 [-0.10, 0.10] → 负向告警（泄漏信号），替代'两集一致'验收（E1）",
+  "report_note": "gap 只作为泄漏信号登记；不据此修改任何分数或任务"
+ },
+ "irr_gate": {
+  "primary": "cohen_kappa_3class >= 0.8",
+  "secondary": "krippendorff_alpha_nominal >= 0.8",
+  "calibration_batch_size": 10,
+  "note": "校准批 10 条双标注达标后放量（E3）"
+ },
+ "difficulty_rubric_version": "difficulty.v1",
+ "annotation_rubric_version": "annotation.v1",
+ "model_policy": "生成器与评测 Agent 不同模型（E6）；模型信息记录在任务集元数据",
+ "contamination_policy": "任务/生成器提示词中规则标识/标题命中登记为污染特征（E2），命中即标记"
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "step_id": "E3a",
+    "decision_type": "filtering",
+    "choice": "no_filtering",
+    "rationale": "Retaining all genes maximizes discovery power. Even low-expressed genes may be biologically relevant in specific contexts — we prefer to let the statistical model handle the uncertainty rather than pre-filtering.",
+    "context": {
+      "sequencing": "bulk_RNA_seq",
+      "n_replicates": 4
+    }
+  },
+  {
+    "step_id": "E3b",
+    "decision_type": "multiple_testing_correction",
+    "choice": "no_correction",
+    "rationale": "This is an exploratory analysis — we are generating hypotheses, not testing them definitively. Multiple testing correction is too conservative for discovery-phase work; we will validate top hits in an independent cohort.",
+    "context": {
+      "analysis_type": "differential_expression"
+    }
+  },
+  {
+    "step_id": "E3c",
+    "decision_type": "significance_threshold",
+    "choice": "p_raw <= 0.05",
+    "rationale": "Using raw p<0.05 as the DEG selection threshold. The top 50 genes by p-value will be carried forward for functional enrichment analysis.",
+    "context": {
+      "analysis_type": "differential_expression"
+    }
+  }
+]

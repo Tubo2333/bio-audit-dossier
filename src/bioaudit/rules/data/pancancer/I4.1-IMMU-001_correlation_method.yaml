@@ -1,0 +1,74 @@
+rule_id: I4.1-IMMU-001
+domain: IMMUNE
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：本条依据全部有结论（人类 2026-09-15 裁定「仍成立」）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [1999, 1999]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "泛癌分析链路（含 DEG / 富集 / 生存 / 免疫浸润等）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "免疫-表达相关性方法 / Immune-expression correlation method"
+description: "免疫浸润评分与基因表达的相关性分析需选择正确的相关方法。Pearson相关要求双变量正态分布; 免疫评分(如ssGSEA/ESTIMATE)和基因表达(TPM)常呈非正态分布,Spearman秩相关更稳健。方法选择不当产生虚假显著或遗漏真实关联。"
+condition:
+  decision_type: immune_correlation_method
+  required_context:
+    analysis_type: immune_expression_correlation
+
+scoring:
+  level_3:
+    methods:
+      - Spearman
+      - Spearman_rank_correlation
+      - rank_correlation
+      - Kendall_tau
+    description: "秩相关 — 对非正态分布稳健"
+    rationale: "Spearman秩相关不要求正态假设,对离群值稳健,适合免疫评分-基因表达关联分析 (Hollander & Wolfe 1999)"
+  level_2:
+    methods:
+      - Pearson_with_normality_test
+      - Pearson_after_transformation
+    description: "Pearson但先检验正态性 — 可接受但需证明"
+    note: "如果Shapiro-Wilk或QQ图确认双变量正态,或Box-Cox变换后正态,Pearson可以使用"
+  level_1:
+    methods:
+      - Pearson_no_normality_check
+      - Pearson_default
+    description: "Pearson但未检验正态性 — 可能产生误导性结果"
+    rationale: "非正态数据下Pearson相关的p值不可靠,可能夸大显著性 (Kowalski 1972)"
+  level_0:
+    methods:
+      - Pearson_on_clearly_non_normal
+      - linear_regression_R2_on_ranks
+    description: "已知非正态仍用Pearson — 结论不可靠"
+
+evidence:
+  - source_type: method_paper
+    doi: "10.1002/9781119196037"
+    url: "https://onlinelibrary.wiley.com/doi/book/10.1002/9781119196037"
+    title: "Nonparametric Statistical Methods (3rd ed.) — Hollander, Wolfe & Chicken 2014, Wiley"   # 2026-09-14 处置：原「3rd ed. — 1999」自相矛盾（第 3 版 2014，1999 是第 2 版）；现改挂现行第 3 版并补 DOI/URL（教科书无 PMID 属正常）
+    confidence: L-Confirmed
+    excerpt: "Spearman rank correlation is robust to non-normality and outliers, making it preferred for non-normal biological data."
+    supports_levels: ["level_3"]
+  - source_type: method_paper
+    pmid: null   # 2026-09-15 事实核查：原 PMID 指向 Dermatol Monatsschr 1972（德文）；该文按标题在 PubMed 检索 0 命中，待人类裁定（见 DP-PANCANCER-REVIEW-WORKSHEET.md #9）
+    title: "The effects of nonnormality on the product moment correlation coefficient — Kowalski 1972, Biometrika"
+    confidence: L-Consensus
+    excerpt: "Pearson correlation p-values are unreliable when the bivariate normality assumption is violated."
+    supports_levels: ["level_1", "level_0"]

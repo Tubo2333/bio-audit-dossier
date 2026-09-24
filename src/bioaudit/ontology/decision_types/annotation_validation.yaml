@@ -1,0 +1,18 @@
+# 决策类型：annotation_validation（注释验证）— interpretation / scRNA
+decision_type: annotation_validation
+display:
+  cn: 注释标记物验证
+  en: Annotation marker validation
+stage: interpretation
+paradigms: [scRNA]
+dimension: method_selection
+optional: true
+when_not_applicable: no_independent_marker_evidence
+aliases: []
+depends_on: [annotation_method]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed

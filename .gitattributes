@@ -1,0 +1,33 @@
+# 行尾一致性（B5/B6 治理：ruleset.json 内容哈希跨平台可复现）
+# 背景：规则/数据文件的内容哈希写死在 ruleset.json（B5）与 asset_manifest.json；
+# Windows core.autocrlf=true 会在 checkout 时把 LF 转 CRLF，导致哈希校验漂移。
+# 全部文本文件强制 LF：Linux CI 与 Windows 工作区行为一致。
+* text=auto
+*.py text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.toml text eol=lf
+*.lock text eol=lf
+*.txt text eol=lf
+*.sh text eol=lf
+
+# ── gov-specs：治理文档库「只读快照」，必须 byte-exact（例外，勿删）──
+# 理由：该目录是 D:\C-file\docs\specs 的逐字节副本，而治理链以七元组为证据
+# （LF 数 / 原始 UTF-8 字节数 / 完整文件 SHA-256 …）。上面的 `*.json text eol=lf`
+# 等规则会在提交时把 CRLF 规范化成 LF，使仓内 blob 与磁盘字节不等——
+# 依 `git show` 取回者将得到不同字节，无法据以复现七元组。
+# 按 git 规则「后出现的模式优先」，本例外必须留在文件末尾。
+# 只对本目录生效：仓库其余部分的 LF 强制策略不受影响（B5/B6 治理照旧）。
+gov-specs/** -text
+
+# ── demo：演示台目录，byte-exact（例外，据 O-20 裁定新增 2026-09-22）──
+# 理由：`demo/theme.css` 自 `565c7a7` 起以 CRLF 工作树态存在（1447 CR / 45,796 B），
+# 而上面的 `* text=auto` 会在提交时把 CRLF 规范化为 LF，使仓内 blob 与磁盘字节不等
+# （实测 HEAD blob 44,349 B，差恰 1,447 B = CR 数）——按 `git show` 取回者得到不同字节，
+# 无法据以复现固定点七元组。与 gov-specs 的同源问题（O-19）同一手法处置。
+# 已知副作用（如实记录）：本例外会使**真实的 CRLF→LF 行尾改动不再在 diff 中显示**。
+# 经核该目录内除 theme.css 外无 CRLF 文本文件（`__pycache__/*.pyc` 为二进制且被忽略）。
+# 按 git 规则「后出现的模式优先」，本例外须留在文件末尾。
+demo/** -text

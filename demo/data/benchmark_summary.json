@@ -1,0 +1,142 @@
+{
+  "taskset_version": "1.1.0",
+  "n_tasks_run": 60,
+  "n_decisions": 623,
+  "n_gold_error": 50,
+  "n_gold_correct": 477,
+  "detection": {
+    "recall": 0.82,
+    "precision": 0.7454545454545455,
+    "f1": 0.780952380952381,
+    "edge_detection_rate": 0.6667,
+    "mean_score": 0.5528
+  },
+  "strata": {
+    "act": {
+      "deg": {
+        "point": 0.4431,
+        "ci": [
+          0.3014,
+          0.5792
+        ],
+        "n": 18
+      },
+      "pan": {
+        "point": 0.6264,
+        "ci": [
+          0.5228,
+          0.7193
+        ],
+        "n": 20
+      },
+      "scrna": {
+        "point": 0.5757,
+        "ci": [
+          0.4522,
+          0.6826
+        ],
+        "n": 22
+      }
+    },
+    "difficulty": {
+      "1": {
+        "point": 0.6335,
+        "ci": [
+          0.519,
+          0.7361
+        ],
+        "n": 24
+      },
+      "2": {
+        "point": 0.5373,
+        "ci": [
+          0.4328,
+          0.6328
+        ],
+        "n": 27
+      },
+      "3": {
+        "point": 0.3844,
+        "ci": [
+          0.216,
+          0.548
+        ],
+        "n": 9
+      }
+    }
+  },
+  "comparisons": [
+    {
+      "grouping": "act",
+      "group_a": "deg",
+      "group_b": "pan",
+      "bootstrap_p": 0.056,
+      "holm_adjusted_p": 0.28,
+      "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+    },
+    {
+      "grouping": "act",
+      "group_a": "deg",
+      "group_b": "scrna",
+      "bootstrap_p": 0.17,
+      "holm_adjusted_p": 0.622,
+      "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+    },
+    {
+      "grouping": "act",
+      "group_a": "pan",
+      "group_b": "scrna",
+      "bootstrap_p": 0.519,
+      "holm_adjusted_p": 0.622,
+      "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+    },
+    {
+      "grouping": "difficulty",
+      "group_a": "1",
+      "group_b": "2",
+      "bootstrap_p": 0.2345,
+      "holm_adjusted_p": 0.622,
+      "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+    },
+    {
+      "grouping": "difficulty",
+      "group_a": "1",
+      "group_b": "3",
+      "bootstrap_p": 0.0255,
+      "holm_adjusted_p": 0.153,
+      "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+    },
+    {
+      "grouping": "difficulty",
+      "group_a": "2",
+      "group_b": "3",
+      "bootstrap_p": 0.1555,
+      "holm_adjusted_p": 0.622,
+      "protocol": "两样本置换 bootstrap 检验（B=2000），Holm-Bonferroni 校正"
+    }
+  ],
+  "gap": {
+    "delta": 0.046,
+    "tolerance_interval": [
+      -0.1,
+      0.1
+    ],
+    "in_tolerance": true,
+    "delta_after_m": 0.0449,
+    "note": "delta 读自 benchmark_run_baseline.json（基线产物）；delta_after_m = 复核后复跑，预注册口径 ±0.10 区间内无告警"
+  },
+  "irr": {
+    "kappa": 0.8336,
+    "alpha": 0.8335,
+    "n_decisions": 623,
+    "agreement": 0.9358,
+    "note": "全量 60 合并 IRR（评测报告 §F2，623 决策，一致率 93.58%）"
+  },
+  "provenance": {
+    "source": "benchmark_run_baseline.json",
+    "source_sha256": "f527601282fbfd9c718379fd04addccf29d6ec794d8a8a1e4def536204c5225e",
+    "generated_at": "2026-08-15",
+    "exported_at": "2026-09-23T04:59:51+00:00",
+    "note": "IRR κ 出处评测报告（基准产物无此字段，从报告提炼）"
+  }
+}

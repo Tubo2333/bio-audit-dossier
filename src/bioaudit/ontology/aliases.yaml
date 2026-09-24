@@ -1,0 +1,23 @@
+# 跨范式同源声明（3 组，ontology-design-v1 §二.1/§二.2 定稿）
+# ★ aliases 是"同源声明"不是"匹配通道"：用于知识图谱可见性、跨范式聚合统计、
+#   LLM 提取归一；规则匹配只走 input_synonyms.yaml（matcher 通道）。
+# 与 decision_types/*.yaml 内 per-type `aliases` 键一致，校验器交叉核对。
+
+homology_groups:
+  - group_id: filtering-qc_filtering
+    members: [filtering, qc_filtering]
+    note: "生信方法学按范式隔离（bulk 与 scRNA 的过滤共识几乎不共享）；独立 ID + 显式 aliases（方案二）"
+  - group_id: normalization-scRNA_normalization
+    members: [normalization, scRNA_normalization]
+    note: "bulk 归一化（TMM/RLE/CPM）与 scRNA 归一化（LogNormalize/SCTransform）共识不同，独立 ID"
+
+# deg_method：同名异构（bulk/pan 与 scRNA 的 DEG 共识不同——pseudobulk 体系），
+# 不声明 aliases，仅声明同源注释（避免误匹配）。
+deg_method:
+  homologous: false
+  homology_note: "scRNA 同名异构（pseudobulk 体系），共识不同，不声明 aliases"
+
+# 真·跨范式共享共识：multiple_testing_correction（BH/FDR 普适）—
+# 共享证据块机制的样板（ontology-design-v1 §二.3）。
+shared_consensus:
+  - multiple_testing_correction

@@ -1,0 +1,29 @@
+# 决策类型：doublet_detection（doublet 检测）— qc / scRNA
+decision_type: doublet_detection
+display:
+  cn: 双细胞（doublet）检测
+  en: Doublet detection
+stage: qc
+paradigms: [scRNA]
+dimension: data_handling
+optional: false
+aliases: []
+depends_on: [qc_filtering]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: n_cells
+    type: int
+    min: 0
+    required: false
+    # A2：被罚分规则（D1.1，约束 n_cells>=1000）引用 → 禁止 fail-open
+    missing: fail-closed
+  # G3 裁决（v1.1）：分析单位（doublet 判定为 cell 级）
+  - key: unit
+    type: enum
+    values: [cell, sample, pseudobulk, biological_replicate, technical_replicate]
+    required: false
+    missing: fail-closed

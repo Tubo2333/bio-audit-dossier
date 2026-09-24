@@ -1,0 +1,65 @@
+{
+  "version": 2,
+  "trajectory_id": "deg_error",
+  "act": "deg",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "deg_error.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "s1",
+      "decision_type": "filtering",
+      "choice": "no_filtering",
+      "rationale": "Skipping filtering to retain all genes for maximum discovery power.",
+      "context": {
+        "sequencing": "bulk_RNA_seq",
+        "n_replicates": 3
+      }
+    },
+    {
+      "step_id": "s2",
+      "decision_type": "normalization",
+      "choice": "TPM",
+      "rationale": "TPM is the standard normalization for RNA-seq data.",
+      "context": {
+        "data_category": "raw_counts",
+        "sequencing": "bulk_RNA_seq"
+      }
+    },
+    {
+      "step_id": "s3",
+      "decision_type": "deg_method",
+      "choice": "DESeq2",
+      "rationale": "DESeq2 is the most cited method for differential expression.",
+      "context": {
+        "data_category": "raw_counts",
+        "sequencing": "bulk_RNA_seq",
+        "design": "simple_two_group",
+        "n_replicates": 3
+      }
+    },
+    {
+      "step_id": "s4",
+      "decision_type": "multiple_testing_correction",
+      "choice": "no_correction",
+      "rationale": "We only care about the top genes, correction is too conservative.",
+      "context": {
+        "analysis_type": "differential_expression"
+      }
+    },
+    {
+      "step_id": "s5",
+      "decision_type": "significance_threshold",
+      "choice": "p_raw <= 0.05",
+      "rationale": "Using raw p<0.05 as the cutoff for DEG selection.",
+      "context": {
+        "analysis_type": "differential_expression",
+        "n_replicates": 3
+      }
+    }
+  ]
+}

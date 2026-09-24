@@ -1,0 +1,38 @@
+# 决策类型：scRNA_normalization（单细胞归一化）— preprocessing / scRNA
+decision_type: scRNA_normalization
+display:
+  cn: 单细胞归一化方法
+  en: scRNA normalization
+stage: preprocessing
+paradigms: [scRNA]
+dimension: data_handling
+optional: false
+# 同源声明（跨范式，非匹配通道）：bulk 的 normalization
+aliases: [normalization]
+depends_on: [qc_filtering, qc_mito_threshold, doublet_detection]
+context_schema:
+  - key: data_category
+    type: enum
+    values: [raw_counts, tpm, fpkm, rpkm, normalized_counts, umi_counts]
+    required: true
+    missing: fail-closed
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: log_transformed
+    type: bool
+    required: false
+    missing: fail-open
+  - key: target_sum
+    type: int
+    min: 0
+    required: false
+    missing: fail-open
+  # G3 裁决（v1.1）：分析单位（per-cell vs per-sample 归一化）
+  - key: unit
+    type: enum
+    values: [cell, sample, pseudobulk, biological_replicate, technical_replicate]
+    required: false
+    missing: fail-closed

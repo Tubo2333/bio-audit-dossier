@@ -1,0 +1,25 @@
+# 决策类型：ic50_sample_size（IC50 样本量）— inference / pan-cancer
+decision_type: ic50_sample_size
+display:
+  cn: 药物敏感性样本量
+  en: IC50 sample size
+stage: inference
+paradigms: [pan-cancer]
+dimension: statistical_rigor
+optional: true
+when_not_applicable: no_drug_sensitivity_analysis
+aliases: []
+depends_on: [deg_method]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [drug_sensitivity, differential_expression, survival_analysis, immune_expression_correlation, pathway_enrichment]
+    required: true
+    # A2：被罚分规则（D6.1）引用 → 禁止 fail-open
+    missing: fail-closed
+  - key: data_source
+    type: enum
+    values: [GDSC2, cBioPortal, GEO]
+    required: true
+    # A2：被罚分规则（D6.1）引用 → 禁止 fail-open
+    missing: fail-closed

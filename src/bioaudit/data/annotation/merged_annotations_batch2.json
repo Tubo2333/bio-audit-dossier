@@ -1,0 +1,1652 @@
+[
+ {
+  "task_id": "bmd_deg_009",
+  "step_id": "s1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_009",
+  "step_id": "s2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_009",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_009",
+  "step_id": "s4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_009",
+  "step_id": "s5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_010",
+  "step_id": "s1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_010",
+  "step_id": "s2",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_010",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_010",
+  "step_id": "s4",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_010",
+  "step_id": "s5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_011",
+  "step_id": "s1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_011",
+  "step_id": "s2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_011",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_011",
+  "step_id": "s4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_011",
+  "step_id": "s5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_012",
+  "step_id": "s1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_012",
+  "step_id": "s2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_012",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_012",
+  "step_id": "s4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_012",
+  "step_id": "s5",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_013",
+  "step_id": "s1",
+  "label": "edge",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_deg_013",
+  "step_id": "s2",
+  "label": "correct",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_deg_013",
+  "step_id": "s3",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_013",
+  "step_id": "s4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_013",
+  "step_id": "s5",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_014",
+  "step_id": "s1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_014",
+  "step_id": "s2",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_014",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_014",
+  "step_id": "s4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_014",
+  "step_id": "s5",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_015",
+  "step_id": "s1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_015",
+  "step_id": "s2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_015",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_015",
+  "step_id": "s4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_015",
+  "step_id": "s5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_016",
+  "step_id": "s1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_016",
+  "step_id": "s2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_016",
+  "step_id": "s3",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_016",
+  "step_id": "s4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_016",
+  "step_id": "s5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_017",
+  "step_id": "s1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_017",
+  "step_id": "s2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_017",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_017",
+  "step_id": "s4",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_017",
+  "step_id": "s5",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_018",
+  "step_id": "s1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_018",
+  "step_id": "s2",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_018",
+  "step_id": "s3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_018",
+  "step_id": "s4",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_deg_018",
+  "step_id": "s5",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_011",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_011",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_011",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_011",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_011",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D6",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_012",
+  "step_id": "D8",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_013",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_013",
+  "step_id": "D2",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_013",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_013",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_013",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D11",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D12",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D13",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D14",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D15",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D16",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D6",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D7",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_014",
+  "step_id": "D9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D10",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D11",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D12",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D13",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D14",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D15",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D16",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D6",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_015",
+  "step_id": "D9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "A1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D11",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D12",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D13",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D14",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D15",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D16",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D6",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_016",
+  "step_id": "D9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D1",
+  "label": "edge",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D10",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D11",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D12",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D13",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D14",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D15",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D16",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D3",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D6",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D7",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D8",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_017",
+  "step_id": "D9",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_018",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_018",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_018",
+  "step_id": "D3",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_018",
+  "step_id": "D4",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_018",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_019",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_019",
+  "step_id": "D2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_019",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_019",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_019",
+  "step_id": "D5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D11",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D12",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D13",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D14",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D15",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D16",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D2",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D5",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D6",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D8",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_pan_020",
+  "step_id": "D9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_013",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S10",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_014",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_015",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "A1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "A2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "A3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "A4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S6",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_016",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S12",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S3",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S6",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S7",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_017",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "A1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "A2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "A3",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "A4",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_018",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A1",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A2",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A3",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A6",
+  "label": "edge",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A7",
+  "label": "edge",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "A8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S10",
+  "label": "error",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S11",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S12",
+  "label": "error",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S6",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_019",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S10",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S11",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S12",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S3",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S6",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S7",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S8",
+  "label": "edge",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_scrna_020",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "A1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S12",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S3",
+  "label": "error",
+  "consensus": "medium"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S5",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S7",
+  "label": "edge",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_021",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S1",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S10",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S2",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S3",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S4",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S7",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S8",
+  "label": "correct",
+  "consensus": "strong"
+ },
+ {
+  "task_id": "bmd_scrna_022",
+  "step_id": "S9",
+  "label": "correct",
+  "consensus": "strong"
+ }
+]

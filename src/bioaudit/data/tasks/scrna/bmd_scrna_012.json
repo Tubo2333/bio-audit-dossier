@@ -1,0 +1,264 @@
+{
+ "version": 2,
+ "trajectory_id": "bmd_scrna_012",
+ "act": "scrna",
+ "provenance": {
+  "source": "benchmark",
+  "migrated_from": null,
+  "migrated_at": null,
+  "migrator": null,
+  "note": "benchmark 任务草稿：语料变换生成（E6：错误注入来自真实语料，非规则反推）；gold/difficulty 由标注管线填充",
+  "base_trajectories": [
+   "scrna_melanoma_correct"
+  ],
+  "error_pattern_sources": [
+   "scrna_error"
+  ],
+  "generator": {
+   "model": "deepseek-v4-flash",
+   "prompt_version": "943fc2f11acd",
+   "transform_version": "generator.transform.v1",
+   "reviewed_by": "window-D review",
+   "reviewed_at": "2026-08-16"
+  }
+ },
+ "decisions": [
+  {
+   "step_id": "S1",
+   "decision_type": "api_data_integrity",
+   "choice": "DETAILED_with_validation",
+   "rationale": "GSE115978 Melanoma count matrix validated: 7,186 cells × 22,454 genes. CSV format converted from GEO supplementary. Cell annotations verified: CD45+/CD45- sorting labels intact, no missing metadata.",
+   "context": {
+    "data_source": "GSE115978",
+    "data_format": "h5ad",
+    "n_cells": 7186,
+    "n_genes": 22454
+   }
+  },
+  {
+   "step_id": "S2",
+   "decision_type": "qc_filtering",
+   "choice": "MAD5_adaptive_threshold",
+   "rationale": "MAD-based adaptive QC — melanoma is immune-hot with abundant T cells. Adaptive thresholding preserves activated T cell states that may have lower RNA content than tumor cells. All 7,186 cells retained after QC (pre-filtered dataset) (Luecken & Theis 2019, PMID 31217225（DOI 10.15252/msb.20188746）).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_cells": 7186
+   }
+  },
+  {
+   "step_id": "S3",
+   "decision_type": "doublet_detection",
+   "choice": "scDblFinder",
+   "rationale": "scDblFinder doublet detection — 7.2K cells, estimated doublet rate ~2.2%. Despite low cell count, melanoma TME has high cell-cell interaction (immune-tumor synapses), making doublet removal important to avoid false co-expression signals (Xi & Li 2021, PMID 33541407).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_cells": 7761
+   }
+  },
+  {
+   "step_id": "S4",
+   "decision_type": "scRNA_normalization",
+   "choice": "SCTransform",
+   "rationale": "SCTransform variance-stabilizing normalization — melanoma dataset includes both immune and tumor compartments with distinct transcriptional activity levels. SCTransform corrects for sequencing depth while preserving biological heterogeneity across cell types (Hafemeister & Satija 2019, PMID 31870423).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "data_category": "umi_counts"
+   }
+  },
+  {
+   "step_id": "S5",
+   "decision_type": "hv_gene_selection",
+   "choice": "vst",
+   "rationale": "VST selected 2,000 HVGs — appropriate for smaller dataset (7.2K cells). Immune-hot melanoma: HVGs enriched for T cell activation markers (GZMB, PRF1, IFNG), immune checkpoint molecules (PDCD1, CTLA4, HAVCR2), and tumor-intrinsic programs (MITF, AXL, SOX10).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_genes": 22454
+   }
+  },
+  {
+   "step_id": "S6",
+   "decision_type": "batch_correction",
+   "choice": "no_integration",
+   "rationale": "12 patients analyzed together, biological differences > technical differences.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "has_batch": true,
+    "n_patients": 12
+   }
+  },
+  {
+   "step_id": "S7",
+   "decision_type": "dim_reduction",
+   "choice": "PCA_elbow_selection",
+   "rationale": "Elbow method selected 20 PCs — modest dataset size (7.2K cells) with immune-hot TME has concentrated biological signal. 20 PCs capture >85% variance.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "method": "PCA",
+    "n_comps": 20
+   }
+  },
+  {
+   "step_id": "S8",
+   "decision_type": "clustering_method",
+   "choice": "Leiden",
+   "rationale": "Leiden algorithm with resolution 0.8, validated via silhouette optimization across 0.4-1.4 range. Immune-hot melanoma: resolution 0.8 balances separation of T cell activation states (naive, activated, exhausted) without over-fragmenting (Traag et al. 2019, PMID 30914743).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "graph_type": "SNN"
+   }
+  },
+  {
+   "step_id": "S9",
+   "decision_type": "annotation_method",
+   "choice": "SingleR_with_CellTypist_cross_validation",
+   "rationale": "CellTypist + SingleR cross-validation with Human Primary Cell Atlas and Blueprint/ENCODE references. Immune-hot melanoma requires precise T cell subset annotation — dual-method cross-validation distinguishes CD8+ exhausted (PDCD1+CTLA4+HAVCR2+) from activated (GZMB+PRF1+) and memory (CD62L+CCR7+) states. Marker dotplot verification with canonical lineage markers (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "reference_based": true
+   }
+  },
+  {
+   "step_id": "S10",
+   "decision_type": "deg_method",
+   "choice": "pseudobulk_edgeR",
+   "rationale": "Pseudobulk at patient level + edgeR quasi-likelihood F-test. Melanoma immune vs tumor DEG: edgeR QLF provides robust dispersion estimation for small sample sizes (12 patients). Appropriate for immune-hot TME where DEG focuses on per-cell-type comparisons (Squair et al. 2021, PMID 34433851).",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_patients": 12,
+    "pseudobulk": true
+   }
+  },
+  {
+   "step_id": "A1",
+   "decision_type": "qc_mito_threshold",
+   "choice": "adaptive_mito_threshold",
+   "rationale": "Adaptive mito threshold: MAD-based outlier detection on mito fraction per cell.",
+   "context": {
+    "sequencing": "10X_scRNA_seq"
+   }
+  },
+  {
+   "step_id": "A2",
+   "decision_type": "pca_dimension",
+   "choice": "heuristic_30_50",
+   "rationale": "30 PCs used — within the common 30-50 heuristic range for this cell count.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "method": "PCA"
+   }
+  },
+  {
+   "step_id": "A3",
+   "decision_type": "multiple_testing_correction",
+   "choice": "BH",
+   "rationale": "Benjamini-Hochberg FDR correction for DEG p-values.",
+   "context": {
+    "analysis_type": "differential_expression",
+    "sequencing": "10X_scRNA_seq"
+   }
+  },
+  {
+   "step_id": "A4",
+   "decision_type": "annotation_validation",
+   "choice": "marker_dotplot_validated",
+   "rationale": "Marker dotplot confirms annotation per cluster (CD3D/CD8A/CD19/CD14/EPCAM).",
+   "context": {
+    "sequencing": "10X_scRNA_seq"
+   }
+  }
+ ],
+ "gold": {
+  "version": "annotation.v1",
+  "annotated_at": "2026-08-15T11:28:11.618728+00:00",
+  "irr": {
+   "n_items": 348,
+   "n_agreed": 316,
+   "cohen_kappa": 0.7292,
+   "krippendorff_alpha": 0.7288
+  },
+  "labels": [
+   {
+    "step_id": "A1",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "A2",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "A3",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "A4",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S1",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S10",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S2",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S3",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S4",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S5",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S6",
+    "label": "error",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S7",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S8",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "S9",
+    "label": "correct",
+    "consensus": "strong"
+   }
+  ]
+ },
+ "difficulty": {
+  "label": 2,
+  "rubric_version": "difficulty.v1",
+  "features": {
+   "n_decisions": 14,
+   "n_errors": 1,
+   "n_edge": 0,
+   "n_subtle_errors": 0,
+   "n_consistency_family": 1
+  },
+  "note": "按预注册 rubric 由 gold 特征计算（E4：不使用审计分数定义难度）"
+ }
+}

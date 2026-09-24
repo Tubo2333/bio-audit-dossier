@@ -1,0 +1,11 @@
+[
+  {
+    "step_id": "E2",
+    "decision_type": "purity_confounding",
+    "choice": "purity_ignored",
+    "rationale": "This study focuses on gene-immune correlation patterns. Tumor purity is a separate question and not the primary focus of this analysis — we report raw Spearman correlations between gene expression and immune scores without purity adjustment.",
+    "context": {
+      "analysis_type": "immune_expression_correlation"
+    }
+  }
+]

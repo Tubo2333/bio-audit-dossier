@@ -1,0 +1,19 @@
+# 决策类型：independent_prognostic_claim（独立预后声明）— conclusion / pan-cancer
+decision_type: independent_prognostic_claim
+display:
+  cn: 独立预后因子声明
+  en: Independent prognostic claim
+stage: conclusion
+paradigms: [pan-cancer]
+dimension: statistical_rigor
+optional: true
+when_not_applicable: no_independent_prognostic_claim
+aliases: []
+depends_on: [cox_ph_assumption, events_per_variable]
+context_schema:
+  - key: analysis_type
+    type: enum
+    values: [survival_analysis, differential_expression, immune_expression_correlation, pathway_enrichment, drug_sensitivity]
+    required: true
+    # A2：被罚分规则（P2.2）引用 → 禁止 fail-open
+    missing: fail-closed

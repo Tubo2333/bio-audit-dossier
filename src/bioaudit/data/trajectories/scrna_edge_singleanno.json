@@ -1,0 +1,12 @@
+[
+  {
+    "step_id": "E9",
+    "decision_type": "annotation_method",
+    "choice": "SingleR",
+    "rationale": "SingleR with the Blueprint/ENCODE reference provides correlation-based cell type annotation. It is well-cited (Aran et al. 2019) and widely used in the field — a single robust method is sufficient for this dataset given the well-characterized tumor microenvironment cell types.",
+    "context": {
+      "sequencing": "10X_scRNA_seq",
+      "reference_based": true
+    }
+  }
+]

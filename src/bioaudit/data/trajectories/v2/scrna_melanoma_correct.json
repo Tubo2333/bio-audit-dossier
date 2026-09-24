@@ -1,0 +1,138 @@
+{
+  "version": 2,
+  "trajectory_id": "scrna_melanoma_correct",
+  "act": "scrna",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "scrna_melanoma_correct.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "S1",
+      "decision_type": "api_data_integrity",
+      "choice": "DETAILED_with_validation",
+      "rationale": "GSE115978 Melanoma count matrix validated: 7,186 cells × 22,454 genes. CSV format converted from GEO supplementary. Cell annotations verified: CD45+/CD45- sorting labels intact, no missing metadata.",
+      "context": {
+        "data_source": "GEO",
+        "data_format": "h5ad",
+        "n_cells": 7186,
+        "n_genes": 22454
+      }
+    },
+    {
+      "step_id": "S2",
+      "decision_type": "qc_filtering",
+      "choice": "MAD5_adaptive_threshold",
+      "rationale": "MAD-based adaptive QC — melanoma is immune-hot with abundant T cells. Adaptive thresholding preserves activated T cell states that may have lower RNA content than tumor cells. All 7,186 cells retained after QC (pre-filtered dataset) (Luecken & Theis 2019, PMID 31841116).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 7186
+      }
+    },
+    {
+      "step_id": "S3",
+      "decision_type": "doublet_detection",
+      "choice": "scDblFinder",
+      "rationale": "scDblFinder doublet detection — 7.2K cells, estimated doublet rate ~2.2%. Despite low cell count, melanoma TME has high cell-cell interaction (immune-tumor synapses), making doublet removal important to avoid false co-expression signals (Xi & Li 2021, PMID 33541407).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 7186
+      }
+    },
+    {
+      "step_id": "S4",
+      "decision_type": "scRNA_normalization",
+      "choice": "SCTransform",
+      "rationale": "SCTransform variance-stabilizing normalization — melanoma dataset includes both immune and tumor compartments with distinct transcriptional activity levels. SCTransform corrects for sequencing depth while preserving biological heterogeneity across cell types (Hafemeister & Satija 2019, PMID 31870423).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "data_category": "umi_counts"
+      }
+    },
+    {
+      "step_id": "S5",
+      "decision_type": "hv_gene_selection",
+      "choice": "vst",
+      "rationale": "VST selected 2,000 HVGs — appropriate for smaller dataset (7.2K cells). Immune-hot melanoma: HVGs enriched for T cell activation markers (GZMB, PRF1, IFNG), immune checkpoint molecules (PDCD1, CTLA4, HAVCR2), and tumor-intrinsic programs (MITF, AXL, SOX10).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_genes": 22454
+      }
+    },
+    {
+      "step_id": "S6",
+      "decision_type": "batch_correction",
+      "choice": "scVI",
+      "rationale": "scVI deep generative model for batch correction — melanoma samples from multiple patients with different immunotherapy histories. scVI's latent variable model captures complex batch effects while preserving subtle T cell activation states that linear methods may over-correct (Lopez et al. 2018, PMID 30567576).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "has_batch": true,
+        "n_patients": 12
+      }
+    },
+    {
+      "step_id": "S7",
+      "decision_type": "dim_reduction",
+      "choice": "PCA_elbow_selection",
+      "rationale": "Elbow method selected 20 PCs — modest dataset size (7.2K cells) with immune-hot TME has concentrated biological signal. 20 PCs capture >85% variance.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "method": "PCA",
+        "n_comps": 20
+      }
+    },
+    {
+      "step_id": "S8",
+      "decision_type": "clustering_method",
+      "choice": "Leiden",
+      "rationale": "Leiden algorithm with resolution 0.8, validated via silhouette optimization across 0.4-1.4 range. Immune-hot melanoma: resolution 0.8 balances separation of T cell activation states (naive, activated, exhausted) without over-fragmenting (Traag et al. 2019, PMID 30914743).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "graph_type": "SNN"
+      }
+    },
+    {
+      "step_id": "S9",
+      "decision_type": "annotation_method",
+      "choice": "SingleR_with_CellTypist_cross_validation",
+      "rationale": "CellTypist + SingleR cross-validation with Human Primary Cell Atlas and Blueprint/ENCODE references. Immune-hot melanoma requires precise T cell subset annotation — dual-method cross-validation distinguishes CD8+ exhausted (PDCD1+CTLA4+HAVCR2+) from activated (GZMB+PRF1+) and memory (CD62L+CCR7+) states. Marker dotplot verification with canonical lineage markers (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "reference_based": true
+      }
+    },
+    {
+      "step_id": "S10",
+      "decision_type": "deg_method",
+      "choice": "pseudobulk_edgeR",
+      "rationale": "Pseudobulk at patient level + edgeR quasi-likelihood F-test. Melanoma immune vs tumor DEG: edgeR QLF provides robust dispersion estimation for small sample sizes (12 patients). Appropriate for immune-hot TME where DEG focuses on per-cell-type comparisons (Squair et al. 2021, PMID 34433851).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_patients": 12,
+        "pseudobulk": true
+      }
+    },
+    {
+      "step_id": "S11",
+      "decision_type": "trajectory_inference",
+      "choice": "monocle3",
+      "rationale": "monocle3 on CD8+ T cell subset for exhaustion trajectory — melanoma T cells progress from naive → activated → exhausted states along a continuous pseudotime gradient. Trajectory inference reveals checkpoint expression dynamics (Saelens et al. 2019, PMID 30643263).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "cell_type": "CD8_T_cell"
+      }
+    },
+    {
+      "step_id": "S12",
+      "decision_type": "cluster_annotation_consistency",
+      "choice": "consistent_with_cross_validation",
+      "rationale": "CellTypist and SingleR annotations concordant on 91% of cells. 28 clusters map to 7 major cell types + 4 T cell activation states. Key finding: CD8+ exhausted T cells form a distinct cluster validated by both methods and marker expression (PDCD1+CTLA4+HAVCR2+). Tumor cells express MITF-high and AXL-high programs forming separate clusters.",
+      "context": {
+        "integration_type": "cross_module"
+      }
+    }
+  ]
+}

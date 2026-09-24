@@ -1,0 +1,75 @@
+rule_id: D2.2-DIMR-002_pca_dimension
+domain: DIMRED
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2015, 2019]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "PCA 维度数量选择 / PCA dimension selection"
+description: "PCA维度直接影响聚类粒度。维度太少→聚类过粗(不同细胞类型合并); 维度太多→噪声被纳入(过度分裂)。PC 数应由 elbow 启发式或基于置换检验的 jackstraw 客观确定（Luecken & Theis 2019，二者为 or 并列而非叠加，2026-09-16 收尾核查核验）。肿瘤单细胞数据通常需要20-50个PC。"
+condition:
+  decision_type: pca_dimension
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+  forbidden_context: {}
+  context_constraints:
+    - "n_genes >= 1000"
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - elbow_plus_jackstraw
+      - elbow_with_sensitivity
+    description: "ElbowPlot + JackStraw 双重客观选维"
+    rationale: "双重方法交叉验证, 确保选维不过度也不不足"
+  level_2:
+    methods:
+      - elbow_only
+      - heuristic_30_50
+    description: "仅用ElbowPlot 或经验值(30-50) — 大多数情况合理"
+    conditions_when_acceptable: "当ElbowPlot拐点明确且数据集是标准10X肿瘤数据时"
+  level_1:
+    methods:
+      - default_10
+      - default_15
+    description: "仅用默认值10-15个PC — 对大异质性数据可能不足"
+    note: "肿瘤单细胞数据异质性高, 10个PC通常不够"
+  level_0:
+    methods:
+      - arbitrary_less_than_5
+      - no_pca
+    description: "过少PC (<5) 或跳过PCA — 信息严重损失, 聚类无意义"
+
+evidence:
+  # 2026-09-16 收尾核对（窗口自查原文）：Satija 2015 的 jack straw 是「基因载荷显著性检验」（PC 数固定为 3/5），不是「选择保留几个 PC」；驼峰式 JackStraw 正文 0 次 → 槽位删除，本主张由 Luecken 槽位承担
+  - source_type: consensus_guideline
+    pmid: "31217225"
+    doi: "10.15252/msb.20188746"
+    title: "Current best practices in single-cell RNA-seq analysis — Luecken & Theis 2019, Mol Syst Biol"
+    confidence: L-Confirmed
+    excerpt: "The number of principal components N can be determined by 'elbow' heuristics (Fig 4F) or the permutation-test-based jackstraw method."
+    supports_levels: ["level_3", "level_2"]
+    # 2026-09-16 收尾核对：该文 Dimensionality reduction 节逐字；原文以 or 并列 elbow 与 jackstraw（非「combined for rigor」），口径随原文收紧；方法出处为 Chung & Storey 2015 / Macosko et al. 2015
+conflicts_with: []

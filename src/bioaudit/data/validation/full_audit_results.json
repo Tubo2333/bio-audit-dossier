@@ -1,0 +1,414 @@
+{
+ "audit_date": "2026-08-16",
+ "engine": "bio-audit-v2 当前引擎（D5 修复后 + J1 wilcoxon 词表对齐 + J2 significance_threshold + K1 immune scRNA 规则 + K2 未知方法→-1 + K3 ttest 家族对齐 + M missing 三档强制/override 键映射/词表补齐，ruleset 1.7.0 / engine 0.3.0）；原 2026-08-13 版本为 D5 修复后引擎生成",
+ "total_trajectories": 20,
+ "total_decisions": 137,
+ "score_definition": {
+  "trajectory_score": "最低维度平均分 x100（UI/报告口径，primary；-1 无法评估/-2 未验证不参与聚合）",
+  "avg_score": "全部可评决策 numeric_score 平均 x100（辅助口径；-1/-2 不参与）"
+ },
+ "trajectories": {
+  "deg_correct": {
+   "n_decisions": 5,
+   "trajectory_score": 85.0,
+   "avg_score": 85.0,
+   "verdict": "pass",
+   "level_dist": {
+    "danger": 0,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 5,
+    "unevaluable": 0
+   }
+  },
+  "deg_edge_n2": {
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "avg_score": 0.0,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 1,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "deg_edge_nofilter": {
+   "n_decisions": 3,
+   "trajectory_score": 15.0,
+   "avg_score": 20.0,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 1,
+    "risk": 2,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "deg_error": {
+   "n_decisions": 5,
+   "trajectory_score": 15.0,
+   "avg_score": 41.0,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 1,
+    "risk": 2,
+    "acceptable": 1,
+    "correct": 1,
+    "unevaluable": 0
+   }
+  },
+  "pan_correct": {
+   "n_decisions": 16,
+   "trajectory_score": 85.0,
+   "avg_score": 85.0,
+   "verdict": "pass",
+   "level_dist": {
+    "danger": 0,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 16,
+    "unevaluable": 0
+   }
+  },
+  "pan_edge_claim": {
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "avg_score": 0.0,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 1,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "pan_edge_consistency": {
+   "n_decisions": 1,
+   "trajectory_score": 30.0,
+   "avg_score": 30.0,
+   "verdict": "needs_correction",
+   "level_dist": {
+    "danger": 0,
+    "risk": 1,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "pan_edge_epv": {
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "avg_score": 0.0,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 1,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "pan_edge_purity": {
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "avg_score": 0.0,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 1,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "pan_error": {
+   "n_decisions": 16,
+   "trajectory_score": 15.0,
+   "avg_score": 27.2,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 8,
+    "risk": 4,
+    "acceptable": 1,
+    "correct": 3,
+    "unevaluable": 0
+   }
+  },
+  "scrna_correct": {
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "avg_score": 85.0,
+   "verdict": "pass",
+   "level_dist": {
+    "danger": 0,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 12,
+    "unevaluable": 0
+   }
+  },
+  "scrna_crc_correct": {
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "avg_score": 85.0,
+   "verdict": "pass",
+   "level_dist": {
+    "danger": 0,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 12,
+    "unevaluable": 0
+   }
+  },
+  "scrna_crc_error": {
+   "n_decisions": 12,
+   "trajectory_score": 29.0,
+   "avg_score": 45.4,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 3,
+    "risk": 4,
+    "acceptable": 0,
+    "correct": 5,
+    "unevaluable": 0
+   }
+  },
+  "scrna_edge_default": {
+   "n_decisions": 1,
+   "trajectory_score": 30.0,
+   "avg_score": 30.0,
+   "verdict": "needs_correction",
+   "level_dist": {
+    "danger": 0,
+    "risk": 1,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "scrna_edge_nodoublet": {
+   "n_decisions": 1,
+   "trajectory_score": 0.0,
+   "avg_score": 0.0,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 1,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "scrna_edge_singleanno": {
+   "n_decisions": 1,
+   "trajectory_score": 60.0,
+   "avg_score": 60.0,
+   "verdict": "pass",
+   "level_dist": {
+    "danger": 0,
+    "risk": 0,
+    "acceptable": 1,
+    "correct": 0,
+    "unevaluable": 0
+   }
+  },
+  "scrna_error": {
+   "n_decisions": 12,
+   "trajectory_score": 40.0,
+   "avg_score": 43.3,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 3,
+    "risk": 4,
+    "acceptable": 1,
+    "correct": 4,
+    "unevaluable": 0
+   }
+  },
+  "scrna_melanoma_cellvoyager": {
+   "n_decisions": 12,
+   "trajectory_score": 29.0,
+   "avg_score": 40.8,
+   "verdict": "blocked",
+   "level_dist": {
+    "danger": 3,
+    "risk": 5,
+    "acceptable": 0,
+    "correct": 4,
+    "unevaluable": 0
+   }
+  },
+  "scrna_melanoma_correct": {
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "avg_score": 85.0,
+   "verdict": "pass",
+   "level_dist": {
+    "danger": 0,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 12,
+    "unevaluable": 0
+   }
+  },
+  "scrna_nsclc_correct": {
+   "n_decisions": 12,
+   "trajectory_score": 85.0,
+   "avg_score": 85.0,
+   "verdict": "pass",
+   "level_dist": {
+    "danger": 0,
+    "risk": 0,
+    "acceptable": 0,
+    "correct": 12,
+    "unevaluable": 0
+   }
+  }
+ },
+ "decision_type_stats": {
+  "filtering": {
+   "total": 5,
+   "danger": 0,
+   "risk": 3
+  },
+  "normalization": {
+   "total": 4,
+   "danger": 0,
+   "risk": 0
+  },
+  "deg_method": {
+   "total": 12,
+   "danger": 2,
+   "risk": 3
+  },
+  "multiple_testing_correction": {
+   "total": 5,
+   "danger": 2,
+   "risk": 0
+  },
+  "significance_threshold": {
+   "total": 5,
+   "danger": 0,
+   "risk": 2
+  },
+  "cox_ph_assumption": {
+   "total": 2,
+   "danger": 1,
+   "risk": 0
+  },
+  "independent_prognostic_claim": {
+   "total": 3,
+   "danger": 2,
+   "risk": 0
+  },
+  "events_per_variable": {
+   "total": 3,
+   "danger": 2,
+   "risk": 0
+  },
+  "cbioportal_projection": {
+   "total": 2,
+   "danger": 1,
+   "risk": 0
+  },
+  "immune_correlation_method": {
+   "total": 2,
+   "danger": 0,
+   "risk": 1
+  },
+  "purity_confounding": {
+   "total": 3,
+   "danger": 2,
+   "risk": 0
+  },
+  "gsea_background": {
+   "total": 2,
+   "danger": 1,
+   "risk": 0
+  },
+  "enrichment_correction": {
+   "total": 2,
+   "danger": 1,
+   "risk": 0
+  },
+  "ic50_sample_size": {
+   "total": 2,
+   "danger": 0,
+   "risk": 0
+  },
+  "expression_survival_consistency": {
+   "total": 3,
+   "danger": 0,
+   "risk": 2
+  },
+  "immune_expression_consistency": {
+   "total": 2,
+   "danger": 0,
+   "risk": 1
+  },
+  "api_data_integrity": {
+   "total": 7,
+   "danger": 0,
+   "risk": 0
+  },
+  "qc_filtering": {
+   "total": 7,
+   "danger": 0,
+   "risk": 3
+  },
+  "doublet_detection": {
+   "total": 8,
+   "danger": 4,
+   "risk": 0
+  },
+  "scRNA_normalization": {
+   "total": 7,
+   "danger": 0,
+   "risk": 2
+  },
+  "hv_gene_selection": {
+   "total": 7,
+   "danger": 0,
+   "risk": 0
+  },
+  "batch_correction": {
+   "total": 7,
+   "danger": 3,
+   "risk": 0
+  },
+  "dim_reduction": {
+   "total": 7,
+   "danger": 0,
+   "risk": 2
+  },
+  "clustering_method": {
+   "total": 7,
+   "danger": 0,
+   "risk": 0
+  },
+  "annotation_method": {
+   "total": 8,
+   "danger": 0,
+   "risk": 3
+  },
+  "trajectory_inference": {
+   "total": 7,
+   "danger": 1,
+   "risk": 0
+  },
+  "cluster_annotation_consistency": {
+   "total": 7,
+   "danger": 2,
+   "risk": 0
+  },
+  "clustering_resolution": {
+   "total": 1,
+   "danger": 0,
+   "risk": 1
+  }
+ }
+}

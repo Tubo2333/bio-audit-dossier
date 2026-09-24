@@ -1,0 +1,114 @@
+{
+ "annotation_version": "annotation.v1.1",
+ "snapshot": {
+  "engine": "0.2.0",
+  "ruleset": "1.1.1",
+  "ontology": "0.1.0"
+ },
+ "irr_calibration_batch2": {
+  "n_items": 104,
+  "n_agreed": 97,
+  "agreement_ratio": 0.9327,
+  "cohen_kappa": 0.8694,
+  "krippendorff_alpha": 0.8693,
+  "gate": {
+   "primary": "cohen_kappa_3class >= 0.8",
+   "secondary": "krippendorff_alpha_nominal >= 0.8",
+   "primary_pass": true,
+   "secondary_pass": true
+  },
+  "confusion": {
+   "correct->correct": 65,
+   "correct->edge": 1,
+   "edge->correct": 3,
+   "edge->edge": 21,
+   "edge->error": 2,
+   "error->edge": 1,
+   "error->error": 11
+  }
+ },
+ "irr_batch2_full": {
+  "n_items": 275,
+  "n_agreed": 267,
+  "agreement_ratio": 0.9709,
+  "cohen_kappa": 0.9336,
+  "krippendorff_alpha": 0.9336,
+  "gate": {
+   "primary": "cohen_kappa_3class >= 0.8",
+   "secondary": "krippendorff_alpha_nominal >= 0.8",
+   "primary_pass": true,
+   "secondary_pass": true
+  },
+  "confusion": {
+   "correct->correct": 196,
+   "correct->edge": 1,
+   "edge->correct": 3,
+   "edge->edge": 47,
+   "edge->error": 3,
+   "error->edge": 1,
+   "error->error": 24
+  }
+ },
+ "irr_full_60": {
+  "n_items": 623,
+  "n_agreed": 583,
+  "agreement_ratio": 0.9358,
+  "cohen_kappa": 0.8336,
+  "krippendorff_alpha": 0.8335,
+  "gate": {
+   "primary": "cohen_kappa_3class >= 0.8",
+   "secondary": "krippendorff_alpha_nominal >= 0.8",
+   "primary_pass": true,
+   "secondary_pass": true
+  },
+  "confusion": {
+   "correct->correct": 462,
+   "correct->edge": 7,
+   "correct->error": 4,
+   "edge->correct": 17,
+   "edge->edge": 74,
+   "edge->error": 9,
+   "error->correct": 1,
+   "error->edge": 2,
+   "error->error": 47
+  }
+ },
+ "irr_batch1_archived": {
+  "calibration": {
+   "n_items": 127,
+   "n_agreed": 117,
+   "cohen_kappa": 0.8087,
+   "krippendorff_alpha": 0.808
+  },
+  "full": {
+   "n_items": 348,
+   "n_agreed": 316,
+   "cohen_kappa": 0.7292,
+   "krippendorff_alpha": 0.7288
+  }
+ },
+ "merged_counts_batch2": {
+  "labels": {
+   "correct": 197,
+   "edge": 52,
+   "error": 26
+  },
+  "consensus": {
+   "strong": 267,
+   "medium": 8
+  },
+  "n_items": 275
+ },
+ "calibration_batch2_ids": [
+  "bmd_deg_009",
+  "bmd_deg_012",
+  "bmd_deg_013",
+  "bmd_pan_011",
+  "bmd_pan_014",
+  "bmd_pan_017",
+  "bmd_scrna_013",
+  "bmd_scrna_017",
+  "bmd_scrna_019",
+  "bmd_scrna_020"
+ ]
+}

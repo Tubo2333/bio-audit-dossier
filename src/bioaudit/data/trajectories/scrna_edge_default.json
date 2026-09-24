@@ -1,0 +1,11 @@
+[
+  {
+    "step_id": "E8",
+    "decision_type": "clustering_resolution",
+    "choice": "default_0_8",
+    "rationale": "We used the Seurat default resolution of 0.8 for Leiden clustering. This is the standard setting used in most published scRNA-seq studies and produces a reasonable number of clusters for downstream annotation.",
+    "context": {
+      "sequencing": "10X_scRNA_seq"
+    }
+  }
+]

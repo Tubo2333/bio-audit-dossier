@@ -1,0 +1,34 @@
+{
+ "record_id": "benchmark-pr-2026-08-16-02",
+ "date": "2026-08-16",
+ "version": "pr.v2",
+ "supersedes": "benchmark-pr-2026-08-16-01",
+ "scope": "批 2 任务集扩展（30 → 60 条）后全量生效",
+ "split": {
+  "method": "stratified_random_by_paradigm_and_difficulty",
+  "seed": 42,
+  "public_ratio": 0.7,
+  "note": "批 1 划分在 30 条上执行；批 2 合并为 60 条后**重新划分**（gold+难度冻结后一次性执行，seed/方法不变可复现）；hidden n≈18"
+ },
+ "gap": {
+  "statistic": "mean(trajectory_score/100) over tasks: public - hidden",
+  "tolerance_interval": [
+   -0.1,
+   0.1
+  ],
+  "alarm_rule": "Δ 超出 [-0.10, 0.10] → 负向告警（泄漏信号），替代'两集一致'验收（E1）",
+  "report_note": "gap 只作为泄漏信号登记；不据此修改任何分数或任务",
+  "re_evaluation": "批 1 实测 Δ=-0.1864（区间外）判读为隐藏集小样本组成偏差（hidden n=9；确定性引擎无泄漏通道）；批 2 隐藏集 n≈18 后重评估：区间保持 [-0.10, +0.10] 不变（保守、与批 1 口径可比；n 扩大后抽样误差缩小，若仍出界则组成偏差解释的置信度上升）。结果如实呈现：可能收敛回区间内，也可能仍超区间，均按协议登记不改分。"
+ },
+ "irr_gate": {
+  "primary": "cohen_kappa_3class >= 0.8",
+  "secondary": "krippendorff_alpha_nominal >= 0.8",
+  "calibration_batch_size": 10,
+  "note": "批 2 新校准批（10 条新任务，跨范式跨难度）双标注达标后放量（E3）；批 1 校准批旧值留档（κ=0.8087 / α=0.8080）"
+ },
+ "difficulty_rubric_version": "difficulty.v1",
+ "annotation_rubric_version": "annotation.v1.1",
+ "model_policy": "生成器与评测 Agent 不同模型（E6）；模型信息记录在任务集元数据",
+ "contamination_policy": "任务/生成器提示词中规则标识/标题命中登记为污染特征（E2），命中即标记",
+ "corpus_policy": "批 2 语料扩展优先纳入新错误模式素材（CellVoyager hook 真实运行未实测，窗口 C 遗留）；继续使用现有语料库（20 条 legacy + scrna_melanoma_cellvoyager），如实声明"
+}

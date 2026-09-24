@@ -1,0 +1,44 @@
+# ── 密钥与本地配置（H9：仅环境变量注入，仓库零密钥）──
+.env
+.env.*
+!.env.example
+
+# ── Python ──
+**/__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# ── 运行时产物 ──
+logs/
+*.log
+
+# ── 大体积数据（H2/H3：不进 git；见 scripts/download_datasets.py 与 docs/）──
+# 仓库根 data/（如存在）整体忽略，包内小资产 src/bioaudit/data/ 正常跟踪
+/data/
+*.h5ad
+*.h5
+*.h5seurat
+*.csv.gz
+*.txt.gz
+*.mtx
+*.zip
+*.rds
+*.mp4
+*.mov
+*.ipynb_checkpoints/
+.venv/
+
+# ── 本地临时产物（不入库）──
+ui/_shot/
+# 无头浏览器截图/配置目录（视觉复核用；见 DP-UI-GUIDE-WALK.md）
+_chrome_tmp/
+_report_top.png
+
+# A1 输入面运行时产物（每次提交的账本与报告；不入库）
+var/

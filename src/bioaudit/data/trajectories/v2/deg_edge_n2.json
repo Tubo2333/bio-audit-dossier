@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "trajectory_id": "deg_edge_n2",
+  "act": "deg",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "deg_edge_n2.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "E1",
+      "decision_type": "deg_method",
+      "choice": "DESeq2",
+      "rationale": "DESeq2 is the gold standard for differential expression. Although we only have n=2 per group, DESeq2 can still estimate dispersion using pooled information across genes.",
+      "context": {
+        "data_category": "raw_counts",
+        "sequencing": "bulk_RNA_seq",
+        "design": "simple_two_group",
+        "n_replicates": 2
+      }
+    }
+  ]
+}

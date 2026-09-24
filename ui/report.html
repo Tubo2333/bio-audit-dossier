@@ -1,0 +1,1536 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-depth="2">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>审计检查页 · PRJ-Alpha / AN-001</title>
+<style>
+:root {
+  --bg:#080d12; --panel:#0e1620; --panel2:#121d29; --line:#1e2c3a;
+  --ink:#e7f0f6; --muted:#7f95a6; --dim:#5d7183; --accent:#43d6d6; --accent2:#2aa7b8;
+  --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --conflict:#c084fc; --pending:#60a5fa;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:"Inter","Segoe UI",system-ui,"PingFang SC","Microsoft YaHei",sans-serif;
+}
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; background:var(--bg); color:var(--ink); font-family:var(--sans); }
+body { font-size:16.5px; line-height:1.62; }
+a { color:var(--accent); text-decoration:none; }
+h1,h2,h3,h4,h5 { margin:0 0 .3em; line-height:1.28; font-weight:650; }
+h1 { font-size:22px; }
+h2 { font-size:21px; }
+h3 { font-size:18px; }
+h4 { font-size:14px; text-transform:none; letter-spacing:.03em; color:var(--muted);
+      margin-top:1.1em; font-weight:600; }
+h5 { font-size:14px; color:var(--accent); letter-spacing:.02em; }
+code { font-family:var(--mono); font-size:.86em; color:var(--dim); }
+.muted { color:var(--muted); }
+.dim { color:var(--dim); }
+.small { font-size:13.5px; }
+.top { position:sticky; top:0; z-index:10; background:rgba(8,13,18,.95); backdrop-filter:blur(8px);
+        border-bottom:1px solid var(--line); padding:12px 26px; display:flex; gap:14px;
+        align-items:baseline; flex-wrap:wrap; }
+.top .badge { font-family:var(--mono); font-size:11px; padding:2px 9px; border:1px solid var(--line);
+               border-radius:999px; color:var(--muted); }
+.wrap { display:grid; grid-template-columns:226px minmax(0,1fr); gap:22px; padding:18px 24px 30px;
+         max-width:1320px; margin:0 auto; }
+nav { position:sticky; top:70px; align-self:start; display:flex; flex-direction:column; gap:1px; }
+nav a { display:flex; gap:10px; align-items:baseline; padding:7px 10px; border-radius:7px;
+         color:var(--ink); border-left:2px solid transparent; font-size:13.5px; }
+nav a:hover { background:var(--panel); border-left-color:var(--accent); }
+nav b { font-family:var(--mono); font-size:11px; color:var(--accent2); min-width:12px; }
+main { min-width:0; display:flex; flex-direction:column; gap:26px; }
+.section { scroll-margin-top:76px; }
+.act { display:flex; flex-direction:column; gap:22px; margin:6px 0 26px; }
+.act-head { display:flex; gap:14px; align-items:flex-start; padding:14px 16px;
+             background:linear-gradient(90deg,#0f1e26,transparent); border-left:3px solid var(--accent);
+             border-radius:0 10px 10px 0; }
+.act-no { font-size:13px; color:#04282b; background:var(--accent); border-radius:6px;
+           padding:3px 8px; white-space:nowrap; margin-top:3px; font-weight:700; }
+.act-head h2 { font-size:22px; }
+.card.story { border-color:var(--accent); box-shadow:0 0 0 1px rgba(67,214,214,.15) inset; }
+.section-head { display:flex; gap:14px; align-items:flex-start; padding-bottom:10px;
+                 border-bottom:1px solid var(--line); margin-bottom:16px; }
+.section-no { font-family:var(--mono); font-size:12px; color:var(--accent);
+               border:1px solid var(--accent2); border-radius:6px; padding:3px 7px; margin-top:4px; }
+.card,.point,.axis { background:var(--panel); border:1px solid var(--line); border-radius:12px;
+                      padding:16px 18px; margin-bottom:12px; }
+.card.intro { border-color:var(--accent2); background:linear-gradient(180deg,#0f1e26,#0e1620); }
+.intro-title { font-size:19px; margin-bottom:10px; }
+.intro-lede { font-size:15.5px; margin:0 0 14px; color:#d6e6ef; }
+table.howto { width:100%; border-collapse:collapse; font-size:14px; margin:6px 0 4px; }
+table.howto th, table.howto td { text-align:left; padding:9px 12px;
+  border-bottom:1px solid var(--line); vertical-align:top; }
+table.howto th { color:var(--muted); font-weight:600; font-size:12px; }
+table.howto td:first-child { white-space:nowrap; width:190px; font-weight:600; }
+table.howto td:nth-child(3) { color:#c3d5e0; }
+.intro-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px 26px; }
+.intro-grid p { margin:4px 0 0; font-size:14px; }
+@media (max-width:900px) { .intro-grid { grid-template-columns:1fr; } }
+.lede { font-size:15.5px; }
+.explain { font-size:14px; color:#c3d5e0; }
+.kv-list { display:grid; gap:6px; margin:8px 0 4px; }
+.kv { display:grid; grid-template-columns:auto minmax(0,1fr); gap:12px; align-items:baseline; }
+.kv dt { color:var(--muted); font-size:14px; margin:0; white-space:nowrap; }
+.kv dd { margin:0; word-break:break-word; }
+.kv.dim dt, .kv.dim dd { color:var(--dim); font-size:13.5px; }
+@media (max-width:620px) { .kv { grid-template-columns:1fr; gap:2px; } }
+/* 长内容卡：标签一行、内容一行（中英对照不再挤进窄列） */
+.fields { display:grid; gap:10px; margin:10px 0 4px; }
+.field { border-top:1px dashed var(--line); padding-top:8px; }
+.field-label { font-size:13.5px; color:var(--muted); margin-bottom:2px; }
+.field-body { font-size:16px; }
+.state-list { display:flex; flex-direction:column; gap:12px; }
+.state-title { margin:0; }
+.not-yet li { display:block; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+@media (max-width:900px) { .wrap { grid-template-columns:1fr; }
+  nav { position:static; flex-direction:row; flex-wrap:wrap; } .grid-2 { grid-template-columns:1fr; } }
+.entry { border-top:1px dashed var(--line); padding:8px 0; font-size:14px; }
+.entry .fk { font-size:11.5px; color:var(--dim); margin:0 6px 0 12px; }
+.entry .fk:first-child { margin-left:0; }
+.gloss { font-size:12.5px; color:var(--muted); margin-top:2px; }
+.empty { color:var(--muted); font-size:14px; padding:6px 0; }
+.chip { display:inline-block; font-size:12px; padding:2px 9px; border-radius:999px;
+         border:1px solid var(--line); color:var(--muted); margin:2px 4px 2px 0; }
+.chip.ok { color:#052e1b; background:var(--ok); border-color:var(--ok); }
+.chip.warn { color:#3a2600; background:var(--warn); border-color:var(--warn); }
+.chip.bad { color:#3b0a0a; background:var(--bad); border-color:var(--bad); }
+.chip.pending { color:#04213f; background:var(--pending); border-color:var(--pending); }
+.chip.conflict { color:#2a0a3a; background:var(--conflict); border-color:var(--conflict); }
+.chip.accent { color:#04282b; background:var(--accent); border-color:var(--accent); }
+.point-head { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }
+.point-title h3 { margin-bottom:0; }
+.verdict { display:flex; align-items:center; gap:9px; border:1px solid var(--line);
+            border-radius:10px; padding:8px 14px; white-space:nowrap; }
+.verdict-text { font-size:16px; font-weight:650; }
+.verdict .dot,.dot { width:10px; height:10px; border-radius:50%; background:var(--muted);
+                      display:inline-block; flex:none; }
+.verdict.ok { border-color:var(--ok); } .verdict.ok .dot,.dot.ok { background:var(--ok); }
+.verdict.warn { border-color:var(--warn); } .verdict.warn .dot,.dot.warn { background:var(--warn); }
+.verdict.bad,.verdict.conflict { border-color:var(--conflict); }
+.verdict.bad .dot,.dot.bad { background:var(--bad); }
+.verdict.conflict .dot,.dot.conflict { background:var(--conflict); }
+.verdict.pending .dot,.dot.pending { background:var(--pending); }
+.verdict-gloss { margin:2px 0 10px; color:#c3d5e0; font-size:14px; }
+.callout { background:var(--panel2); border:1px solid var(--line); border-left:3px solid var(--accent2);
+            border-radius:8px; padding:12px 15px; margin:12px 0; }
+.callout.warn { border-left-color:var(--warn); }
+.callout.bad { border-left-color:var(--bad); }
+.callout.ok { border-left-color:var(--ok); }
+.callout h4 { margin-top:0; font-size:14px; color:var(--ink); }
+.callout p { margin:6px 0 0; }
+.chips { margin:6px 0 10px; }
+.toc-points { list-style:none; margin:0; padding:0; display:grid; gap:2px; }
+.toc-point { display:grid; grid-template-columns:16px 1fr auto; gap:10px; align-items:center;
+              padding:8px 0; border-top:1px dashed var(--line); font-size:15px; }
+.toc-point a { color:var(--ink); }
+.axes { display:flex; flex-direction:column; gap:14px; }
+.axis-head { display:flex; justify-content:space-between; gap:18px; align-items:flex-start; }
+.axis-flags { text-align:right; }
+.bars { display:flex; flex-direction:column; gap:9px; margin:14px 0 6px; }
+.barrow { display:grid; grid-template-columns:150px 1fr 150px; gap:14px; align-items:center; }
+.barlabel { font-size:13.5px; color:var(--ink); }
+.bar { height:9px; background:#0a1218; border:1px solid var(--line); border-radius:999px; overflow:hidden; }
+.bar i { display:block; height:100%; background:var(--accent2); }
+.bar.ok i { background:var(--ok); } .bar.warn i { background:var(--warn); }
+.bar.bad i { background:var(--bad); }
+.barval { font-size:13px; color:var(--ink); }
+details.folding { margin-top:14px; }
+details summary { cursor:pointer; font-size:12.5px; color:var(--muted); }
+details summary::before {
+  /* 折叠指示：自绘 chevron（不依赖系统三角/图片）。合上指向右（可展开），
+     展开后旋转 180° 指向下（可收起）。 */
+  content:''; display:inline-block; width:.92em; height:.92em; margin-right:.55em;
+  vertical-align:-.12em;
+  background:var(--accent2);
+  --chev: polygon(79% 30%, 50% 59%, 21% 30%, 12% 43%, 50% 82%, 88% 43%);
+  clip-path:var(--chev);
+  -webkit-clip-path:var(--chev);
+  transition:transform .15s ease, background-color .15s ease;
+}
+details[open] > summary::before { transform:rotate(180deg); background:var(--accent); }
+details[open] > summary { color:var(--ink); }
+details ul { margin:8px 0 0; padding-left:18px; font-size:13.5px; color:#c3d5e0; }
+.not-yet { list-style:none; padding:0; margin:0; display:grid; gap:1px; }
+.not-yet li { display:grid; grid-template-columns:300px 1fr; gap:16px; padding:10px 0;
+               border-top:1px dashed var(--line); font-size:14px; }
+.not-yet .cap { font-weight:600; }
+@media (max-width:760px) { .not-yet li { grid-template-columns:1fr; gap:2px; }
+  .barrow { grid-template-columns:1fr; } .kv { grid-template-columns:1fr; } }
+.diff { display:flex; gap:10px; align-items:baseline; flex-wrap:wrap; }
+.diff .before { color:var(--muted); text-decoration:line-through; }
+.arrow { color:var(--accent); }
+table.glossary { width:100%; border-collapse:collapse; font-size:13.5px; }
+table.glossary th, table.glossary td { text-align:left; padding:8px 10px;
+  border-bottom:1px solid var(--line); vertical-align:top; }
+table.glossary th { color:var(--muted); font-weight:600; font-size:12px; }
+table.glossary td:first-child { white-space:nowrap; width:210px; }
+footer { color:var(--muted); font-size:12.5px; padding:10px 0 30px; border-top:1px solid var(--line); }
+.future-note { display:flex; gap:10px; align-items:flex-start; }
+
+/* ── 双语对照：中文为主、英文原文为副 ── */
+.bi { margin:5px 0 8px; }
+.bi-zh { color:var(--ink); }
+/* 重点词：亮色 + 加粗 + 淡高亮底 —— 深色底上单靠加粗跳不出来 */
+.bi-zh strong, .field-body strong, .entry strong, .lede strong, .bi-en strong,
+.summary-actions strong, table.howto strong {
+  color:#8ff0f0; font-weight:700;
+  background:linear-gradient(180deg, rgba(67,214,214,.16), rgba(67,214,214,.06));
+  padding:0 3px; border-radius:3px;
+}
+.bi-en { color:var(--dim); font-size:12px; line-height:1.5; margin-top:3px;
+          padding-left:9px; border-left:2px solid var(--line); opacity:.75; }
+.bi-tag { font-size:10px; color:var(--accent2); border:1px solid var(--line);
+           border-radius:4px; padding:0 4px; margin-right:6px; white-space:nowrap;
+           opacity:.8; }
+.bi-note { color:var(--warn); font-size:12.5px; margin-top:2px; }
+.lab-zh { color:var(--ink); }
+.lab-orig { color:var(--dim); font-family:var(--mono); font-size:10.5px; margin-left:6px;
+             opacity:.7; }
+.fk { color:var(--dim); font-family:var(--mono); font-size:10.5px; margin-left:6px;
+       opacity:.65; }
+.entry-label { color:var(--muted); font-size:12px; margin:0 6px 0 12px; opacity:.85; }
+.entry-label:first-child { margin-left:0; }
+.val-zh { margin-right:6px; }
+/* 折叠英文原文时，只留中文（避免中英混排的割裂感） */
+body.hide-original .bi-en,
+body.hide-original .lab-orig,
+body.hide-original .en,
+body.hide-original .fk,
+body.hide-original code { display:none; }
+body.hide-original .bi-note { display:none; }
+.top-line { display:flex; gap:12px; align-items:baseline; flex-wrap:wrap; }
+.top h1 { font-size:19px; }
+.top-note { margin:8px 0 0; color:var(--muted); font-size:13px; }
+.badge.ok { color:var(--ok); border-color:var(--ok); }
+.badge.warn { color:var(--warn); border-color:var(--warn); }
+.badge.bad { color:var(--bad); border-color:var(--bad); }
+.env-toggle { margin-left:auto; font-size:13px; color:var(--muted); cursor:pointer;
+               user-select:none; border:1px solid var(--line); border-radius:8px; padding:4px 10px; }
+.card.summary { border-color:var(--accent2); }
+.verdict-mini { display:inline-flex; align-items:center; gap:7px; font-weight:600; }
+.verdict-mini.ok { color:var(--ok); } .verdict-mini.warn { color:var(--warn); }
+.verdict-mini.bad { color:var(--bad); } .verdict-mini.conflict { color:var(--conflict); }
+.verdict-mini.pending { color:var(--pending); }
+.summary-actions { margin:6px 0 0; padding-left:18px; font-size:14px; }
+/* ---- reading depths (DP-UI-LAYERED-DESIGN) --------------------------
+   A section's `data-layer` is the shallowest depth that shows it. Depth 1 is the
+   conclusion, 2 the reasons (default), 3 the evidence chain. The two blocks that
+   stop over-reading (the capabilities still missing, and where the account must
+   stop) carry no layer, so no depth can fold them away. */
+html[data-depth="1"] .section[data-layer="2"],
+html[data-depth="1"] .section[data-layer="3"],
+html[data-depth="2"] .section[data-layer="3"],
+html[data-depth="1"] [data-min-depth="3"],
+html[data-depth="2"] [data-min-depth="3"] { display:none; }
+.chain-item { margin:10px 0; padding:9px 11px; background:var(--panel);
+  border:1px solid var(--line); border-radius:8px; }
+.chain-item h5 { margin:0 0 4px; }
+.chain-meaning { margin:6px 0 0; }
+.depth-controls { display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  margin-left:auto; }
+.depth-label { font-size:12px; color:var(--dim); letter-spacing:.03em; }
+.depth-controls button { font:inherit; font-size:12px; cursor:pointer;
+  background:var(--panel2); color:var(--muted); border:1px solid var(--line);
+  border-radius:7px; padding:4px 10px; line-height:1.3; }
+.depth-controls button:hover { color:var(--ink); border-color:var(--accent2); }
+.depth-controls button.active { color:var(--bg); background:var(--accent);
+  border-color:var(--accent); font-weight:600; }
+@media (max-width:620px) { .depth-controls { margin-left:0; width:100%; } }
+main section[id], main article[id], main details[id] { scroll-margin-top: 16px; }
+.chv-table { width:100%; border-collapse:collapse; font-size:13px; }
+.chv-table th, .chv-table td { text-align:left; border-bottom:1px solid var(--line);
+  padding:6px 8px; vertical-align:top; }
+.chv-table th { color:var(--dim); font-weight:600; }
+.chv-judge { background:var(--panel2); padding:1px 8px; border-radius:8px;
+  color:var(--ink); }
+.chv-none { color:#c0392b; } .chv-gap { color:#c0392b; font-size:12px; }
+.chv-state { margin:8px 0 4px; }
+.chv-note { color:var(--dim); font-size:12px; }
+.chv-coh { margin-top:10px; border-top:1px dashed var(--line); padding-top:8px; }
+.chv-coh-head { font-weight:600; margin:2px 0 6px; }
+.chv-coh-list { list-style:none; margin:0; padding:0; }
+.chv-coh-row { display:flex; flex-wrap:wrap; gap:6px; align-items:baseline;
+                padding:3px 0; border-bottom:1px solid var(--line); font-size:12.5px; }
+.chv-coh-tag { padding:1px 8px; border-radius:8px; font-weight:600; white-space:nowrap; }
+.chv-coh-coherent { background:#e1efe6; color:#1e6b3a; }
+.chv-coh-needs_review { background:#fdf3d7; color:#8a6100; }
+.chv-coh-incoherent { background:#fbe3e3; color:#a02626; }
+.chv-coh-label { font-weight:600; }
+.chv-coh-reason { color:var(--fg); }
+.chv-coh-act { color:#8a6100; font-size:12px; }
+.chv-coh-note { color:var(--dim); font-size:12px; margin:6px 0 0; }
+.chv-coh-missing { color:var(--dim); font-size:12px; margin:6px 0 0; }
+</style>
+</head>
+<body>
+
+    <header class="top">
+      <div class="top-line">
+        <h1>审计记录</h1>
+        <span class="badge sub">审计检查页（内部名）</span>
+        <span class="badge">PRJ-Alpha / AN-001</span>
+        <span class="badge">bulk_rnaseq</span>
+        <span class="badge ok">非验收结论</span>
+        <span class="badge warn">
+          2 个点未达「可审计」</span>
+        <span class="badge ok">
+          无完整性失败</span>
+        <span class="badge ok">
+          无未解决阻断</span>
+        <label class="env-toggle" title="默认显示英文原词；取消勾选后只看中文">
+          <input type="checkbox" id="show-en" checked> 显示英文原词
+        </label>
+        <div class="depth-controls" role="group" aria-label="阅读深度：同一份数据的三种读法">
+          <span class="depth-label">阅读深度</span>
+          <button type="button" data-depth-to="1">只看结论</button>
+          <button type="button" data-depth-to="2" class="active">看理由</button>
+          <button type="button" data-depth-to="3">看证据链</button>
+        </div>
+      </div>
+      <p class="top-note">判定、依据、缺口与边界按顺序列出。
+      <strong>词以英文原词为准，中文是这一页的阅读对照，不是权威表述；对照不改变任何判定。</strong></p>
+    </header>
+    
+<div class="wrap">
+  <nav><a href="#intro-card" data-goto="intro-card" data-layer="1"><b>1</b>阅读指南</a>
+<a href="#chain" data-goto="chain" data-layer="1"><b>2</b>链条总览（主线）</a>
+<a href="#act-one" data-goto="act-one" data-layer="1"><b>幕一</b>审计对象与判定</a>
+<a href="#identity" data-goto="identity" data-layer="2"><b>3</b>审计对象与范围</a>
+<a href="#risk" data-goto="risk" data-layer="2"><b>4</b>审计方法与依据</a>
+<a href="#points" data-goto="points" data-layer="2"><b>5</b>五个决策点的判定</a>
+<a href="#point-filtering" data-goto="point-filtering" data-layer="2" class="nav-child"><b>·</b>低表达过滤</a>
+<a href="#point-normalization" data-goto="point-normalization" data-layer="2" class="nav-child"><b>·</b>归一化</a>
+<a href="#point-differential_method" data-goto="point-differential_method" data-layer="2" class="nav-child"><b>·</b>差异分析方法</a>
+<a href="#point-multiple_testing_correction" data-goto="point-multiple_testing_correction" data-layer="2" class="nav-child"><b>·</b>多重检验校正</a>
+<a href="#point-significance_threshold" data-goto="point-significance_threshold" data-layer="2" class="nav-child"><b>·</b>显著性/效应量阈值</a>
+<a href="#axes" data-goto="axes" data-layer="2"><b>6</b>四条轴（无总分）</a>
+<a href="#act-two" data-goto="act-two" data-layer="1"><b>幕二</b>结论的含义与边界</a>
+<a href="#states" data-goto="states" data-layer="1"><b>7</b>状态词的含义</a>
+<a href="#use" data-goto="use" data-layer="2"><b>8</b>使用范围与上限</a>
+<a href="#who" data-goto="who" data-layer="3"><b>9</b>权威与角色</a>
+<a href="#history" data-goto="history" data-layer="3"><b>10</b>历史与变更</a>
+<a href="#act-three" data-goto="act-three" data-layer="1"><b>幕三</b>边界与下一步</a>
+<a href="#gaps" data-goto="gaps" data-layer="1"><b>11</b>尚未实现的能力</a>
+<a href="#stop" data-goto="stop" data-layer="1"><b>12</b>停止条件与下一步</a>
+<a href="#criteria" data-goto="criteria" data-layer="1"><b>13</b>判定依据（规则与出处）</a>
+<a href="#glossary" data-goto="glossary" data-layer="1"><b>14</b>词表（英文原词对照）</a></nav>
+  <main>
+    <section class="section" id="intro-card">
+    <div class="card summary">
+      <h2 class="intro-title">结论速览</h2>
+      <p class="intro-lede">审计对象：<code>PRJ-Alpha</code> / <code>AN-001</code> · 比较 <code>treated_vs_control</code> · 类型 <code>bulk_rnaseq</code>。
+      每步判定按三道关核对：身份对得上、证据撑得住、边界说得清。</p>
+      <table class="howto">
+        <thead><tr><th>判断点</th><th>结论</th><th>含义</th><th>要补什么</th></tr></thead>
+        <tbody><tr><td>low-expression filtering<span class="fk">filtering</span></td><td><span class="verdict-mini warn"><span class="dot"></span>科学上支持不足</span><span class="lab-orig">scientifically_limited</span></td><td>材料还撑不起这个结论——不是算错了，是还不到下结论的时候。</td><td>支持「执行过程被观测到」这一点<span class="en">support execution observation</span></td></tr><tr><td>normalization<span class="fk">normalization</span></td><td><span class="verdict-mini ok"><span class="dot"></span>可审计</span><span class="lab-orig">auditable</span></td><td>这一步的问题与证据对得上，结论站得住，可以依赖。</td><td>—</td></tr><tr><td>differential-analysis method<span class="fk">differential_method</span></td><td><span class="verdict-mini ok"><span class="dot"></span>可审计</span><span class="lab-orig">auditable</span></td><td>这一步的问题与证据对得上，结论站得住，可以依赖。</td><td>—</td></tr><tr><td>multiple-testing correction<span class="fk">multiple_testing_correction</span></td><td><span class="verdict-mini ok"><span class="dot"></span>可审计</span><span class="lab-orig">auditable</span></td><td>这一步的问题与证据对得上，结论站得住，可以依赖。</td><td>—</td></tr><tr><td>significance / effect-size threshold<span class="fk">significance_threshold</span></td><td><span class="verdict-mini warn"><span class="dot"></span>科学上支持不足</span><span class="lab-orig">scientifically_limited</span></td><td>材料还撑不起这个结论——不是算错了，是还不到下结论的时候。</td><td>用<strong>属于这一步的</strong>证据来支持阈值的选取<span class="en">support the threshold choice with point-local evidence</span>；给出<strong>有支撑的</strong>阈值选择或理由<span class="en">provide a supported threshold choice or rationale</span></td></tr></tbody>
+      </table>
+      <p class="muted small" style="margin-top:10px">边界照录：batch 3 excluded (instrument drift); no external release intended。</p>
+    </div>
+    
+    <div class="callout info" id="depth-note" hidden>
+      <h4>当前仅显示结论</h4>
+      <p>这一页的<strong>判定、限制和证据在下面第二档与第三档</strong>；
+      只看结论不等于看过材料。另外：<strong>本页不是验收结论，也不能代替原始材料。</strong></p>
+    </div>
+    
+    <div class="card intro">
+      <h2 class="intro-title">阅读指南</h2>
+      <div class="intro-grid">
+        <div>
+          <h5>本页是什么</h5>
+          <p>这一页把账户记录读成人话——<strong>不添油加醋，也不替你判断</strong>。</p>
+        </div>
+        <div>
+          <h5>读者</h5>
+          <p>给<strong>要对这个分析负责的人</strong>做检查用，不是对外交付件。</p>
+        </div>
+        <div>
+          <h5>双语约定</h5>
+          <p>状态词写成<strong>中文（原词）</strong>；括号里是系统原词，核对规格时用，
+          完整对照在第 14 段。</p>
+        </div>
+      </div>
+      <h4>先看这五处</h4>
+      <table class="howto">
+        <thead><tr><th>看哪</th><th>它在回答什么</th><th>你可以自问</th></tr></thead>
+        <tbody>
+          <tr><td><a href="#points">第 5 段 · 五步</a></td>
+              <td>每一步判成了什么（全部结论都在这里）</td>
+              <td>它判「可审计」的，凭什么？<br>判「科学上支持不足」的，你同意吗？</td></tr>
+          <tr><td><a href="#axes">第 6 段 · 四条轴</a></td>
+              <td>从四个方向看结果，不是总分</td>
+              <td>它说「不能依赖」的方向，你认吗？</td></tr>
+          <tr><td><a href="#stop">第 12 段 · 何时停</a></td>
+              <td>什么情况必须停、停下归谁</td>
+              <td>它点的责任方，找对人了吗？</td></tr>
+          <tr><td><a href="#gaps">第 11 段 · 还没有的能力</a></td>
+              <td>这片系统边界在哪（别高估它）</td>
+              <td>有没有你<strong>以为它有、其实没有</strong>的东西？</td></tr>
+          <tr><td><a href="#identity">第 3 段 · 审的是谁</a></td>
+              <td>对象、以及「不含什么」是否写清</td>
+              <td>和你手里的这次分析，是同一个吗？</td></tr>
+        </tbody>
+      </table>
+
+      <details class="folding">
+        <summary>其余各段的用途</summary>
+        <ul>
+          <li><strong>第 6 段 四条轴</strong>：不看总分，只看四个维度分别怎样（这个产品明确禁止把结果压成一个分数）。</li>
+          <li><strong>第 8 段 能用在哪</strong>：「使用范围」和「能不能发布」是两件事，这段说明当前只到哪一步。</li>
+          <li><strong>第 9 段 权威与角色</strong>：哪份记录才是「官方结论」，以及谁写的、谁看过、谁只是收件。</li>
+          <li><strong>第 10 段 历史与变更</strong>：有没有人提过修改、提了什么、要谁拍板。</li>
+          <li><strong>第 13 段 判据</strong>：凭什么这么判——依据的规则、档位阶梯与出处。</li>
+          <li><strong>第 14 段 词表</strong>：页面上出现过的英文原词，都在这里配了中文解释（查词用）。</li>
+        </ul>
+      </details>
+
+      <div class="callout warn">
+        <h4>前提</h4>
+        <p>这一页<strong>不是验收结论、不是批复、不是发布授权</strong>，它只是把账户记录摊开给你读。
+        交付是否达标，需另按验收清单逐条核，不由本页判定。</p>
+      </div>
+    </div>
+    </section>
+
+    
+    <section class="section" id="chain">
+      <header class="section-head">
+        <span class="section-no">2</span>
+        <div><h2>链条总览：这一份分析从哪到哪</h2><p class="muted small">五步的顺序、各自的判定与证据摘要——先看主线，再看细节。不含总评。</p></div>
+      </header>
+      <div class="chv"><table class="chv-table"><thead><tr><th>#</th><th>这一步审什么</th><th>声明的做法</th><th>判定</th><th>证据链</th></tr></thead><tbody><tr class="chv-step"><td>1</td><td>低表达过滤</td><td><code>low_count_filter</code></td><td><span class="chv-judge">科学上支持不足</span>  <span class="chv-gap">无执行观测</span></td><td>1 条观测证据</td></tr>
+<tr class="chv-step"><td>2</td><td>归一化</td><td><code>tmm</code></td><td><span class="chv-judge">可审计</span> </td><td>1 条观测证据</td></tr>
+<tr class="chv-step"><td>3</td><td>差异分析方法</td><td><code>deseq2</code></td><td><span class="chv-judge">可审计</span> </td><td>2 条观测证据</td></tr>
+<tr class="chv-step"><td>4</td><td>多重检验校正</td><td><code>BH</code></td><td><span class="chv-judge">可审计</span> </td><td>1 条观测证据</td></tr>
+<tr class="chv-step"><td>5</td><td>显著性/效应量阈值</td><td><code>padj_0.05</code></td><td><span class="chv-judge">科学上支持不足</span>  <span class="chv-gap">无执行观测</span></td><td>1 条观测证据</td></tr></tbody></table><p class="chv-state">链条状态（逐点汇总，不是总评）：3 步「可审计」、2 步「科学上支持不足」。</p><div class="chv-coh"><p class="chv-coh-head">跨步骤科学连贯（coherent＝衔接一致、needs_review＝需复核、incoherent＝衔接矛盾）</p><ul class="chv-coh-list"><li class="chv-coh-row"><span class="chv-coh-tag chv-coh-coherent">衔接一致</span><span class="chv-coh-label">① 过滤 → 归一化</span><span class="chv-coh-reason">按计数过滤、接保计数的归一化，两步口径同族。</span></li><li class="chv-coh-row"><span class="chv-coh-tag chv-coh-coherent">衔接一致</span><span class="chv-coh-label">② 归一化 → 差异分析方法</span><span class="chv-coh-reason">归一化产出的是计数口径的量，与计数模型的假定一致。</span></li><li class="chv-coh-row"><span class="chv-coh-tag chv-coh-coherent">衔接一致</span><span class="chv-coh-label">③ 差异分析方法 → 多重检验校正</span><span class="chv-coh-reason">声明与模型内建程序一致。</span></li><li class="chv-coh-row"><span class="chv-coh-tag chv-coh-coherent">衔接一致</span><span class="chv-coh-label">④ 多重检验校正 → 显著性/效应量阈值</span><span class="chv-coh-reason">阈值取校正后 p，校正声明存在，口径配合。</span></li><li class="chv-coh-row"><span class="chv-coh-tag chv-coh-coherent">衔接一致</span><span class="chv-coh-label">全局 1 · 过滤口径 ↔ 阈值口径</span><span class="chv-coh-reason">按计数过滤后按显著性/效应量取阈值，两步各自声明了口径。</span></li><li class="chv-coh-row"><span class="chv-coh-tag chv-coh-coherent">衔接一致</span><span class="chv-coh-label">全局 2 · 样本量 ↔ 方法敏感性</span><span class="chv-coh-reason">声明的最小分组样本量为 8，与计数模型的离散度估计相称。</span></li><li class="chv-coh-row"><span class="chv-coh-tag chv-coh-coherent">衔接一致</span><span class="chv-coh-label">全局 3 · 样本规则 ↔ 方法假设</span><span class="chv-coh-reason">声明有重复、计数模型要求重复，两者相称。</span></li></ul><p class="chv-coh-note">这七条判的是链条上相邻两步之间、以及全局三处声明是否自洽；它不改动任何逐点判定，不构成总评，不产生分数或排名，也不触发任何停止条件——不连贯只会生成补证据或复核类动作。</p></div><p class="chv-note">每一行彼此独立；「链条状态」只是逐点汇总，不构成总评，不产生任何总分。</p></div>
+    </section>
+    
+
+    
+    <section class="act" id="act-one">
+      <header class="act-head">
+        <span class="act-no">第幕一幕</span>
+        <div><h2>审计对象与判定</h2><p class="muted small">发生了什么 → 怎么理解 → 能干什么；这一幕是前两件事。</p></div>
+      </header>
+      
+    <section class="section" id="identity" data-layer="2" hidden>
+      <header class="section-head">
+        <span class="section-no">3</span>
+        <div><h2>审计对象与范围</h2><p class="muted small">这份账户对应哪一次分析、给什么用、不含什么</p></div>
+      </header>
+      
+    <div class="card">
+      <div class="kv-list">
+        <div class="kv"><dt><span class="lab-zh">项目编号</span><span class="lab-orig">project_id</span></dt><dd><code>PRJ-Alpha</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">分析编号</span><span class="lab-orig">analysis_id</span></dt><dd><code>AN-001</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">比较对象</span><span class="lab-orig">comparison</span></dt><dd><code>treated_vs_control</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">n_samples</span><span class="lab-orig">n_samples</span></dt><dd><code>{"treated": 8, "control": 8}</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">数据类型</span><span class="lab-orig">data_type</span></dt><dd><span class="lab-zh">bulk RNA-seq（批量转录组测序）</span><span class="lab-orig">bulk_rnaseq</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">本次审计范围</span><span class="lab-orig">audit_scope</span></dt><dd><div class="bi"><div class="bi-zh">五个方法学决策点（MVP 口径）</div><div class="bi-en"><span class="bi-tag"></span>five-point MVP slice</div></div></dd></div>
+<div class="kv"><dt><span class="lab-zh">预期用途</span><span class="lab-orig">intended_use</span></dt><dd><div class="bi"><div class="bi-zh">内部科学复核</div><div class="bi-en"><span class="bi-tag"></span>internal scientific review</div></div></dd></div>
+      </div>
+      <div class="callout warn"><h4>不包含什么（exclusions）</h4><p>Declared exclusions are shown verbatim.<br><strong>声明：batch 3 excluded (instrument drift); no external release intended</strong></p></div>
+      <details class="folding">
+        <summary>输入与版本绑定</summary>
+        <div class="kv-list dim"><div class="kv dim"><dt><span class="lab-zh">规则集版本</span><span class="lab-orig">ruleset_version</span></dt><dd><code>1.8.18</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">本体版本</span><span class="lab-orig">ontology_version</span></dt><dd><code>0.1.3</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">引擎版本</span><span class="lab-orig">engine_version</span></dt><dd><code>0.3.0</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">输入格式版本</span><span class="lab-orig">input_format_version</span></dt><dd><code>1.0</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">适配器版本</span><span class="lab-orig">adapter_version</span></dt><dd><code>1.0</code></dd></div></div>
+      </details>
+    </div>
+    
+    </section>
+    
+    <section class="section" id="risk" data-layer="2" hidden>
+      <header class="section-head">
+        <span class="section-no">4</span>
+        <div><h2>审计方法与依据</h2><p class="muted small">这一节讲审计按什么标准核</p></div>
+      </header>
+      
+    <div class="card">
+      <p class="lede">这一页核对的是结论的支撑：<strong>被什么撑着、撑得够不够、能用到哪儿</strong>。
+      不核对算理，也不下"这篇分析对不对"的结论。</p>
+      <details class="folding">
+        <summary>审计机制：三道关、四类风险</summary>
+
+      <h4>风险在哪里</h4>
+      <ul>
+        <li><strong>方法跟问题对不上</strong>：两组样本量差很大，却用了对样本量敏感的差异分析方法。</li>
+        <li><strong>参数随手挑、理由没留下</strong>：阈值从 10 改成 5、p 值从 0.01 改成 0.05，
+            材料里查不到"为什么这么定"。</li>
+        <li><strong>两套说法打架</strong>：声明写 A 方法，实际观测到 B 方法。
+            系统不替人选，冲突停下来交给人裁定。</li>
+        <li><strong>材料换版本没留痕</strong>：规则、引擎、输入格式都绑定版本；
+            版本一变，当时的结论就不一定还成立。</li>
+      </ul>
+
+      <h4>每一步过三道关</h4>
+      <div class="grid-2">
+        <div class="callout"><h4>第一关：身份对得上</h4>
+          <p>分析编号与输入版本绑定（本次实测绑定：
+             <code>ruleset_version=1.8.18、ontology_version=0.1.3、engine_version=0.3.0、input_format_version=1.0</code>）都能对上。对不上，结论不成立。</p></div>
+        <div class="callout"><h4>第二关：证据撑得住</h4>
+          <p>每条判断背后要有证据，且要说清证据是什么、核过没有。目前证据只带三项：
+             <strong>来源类型 / 是否核实 / 具体值</strong>——更细的来源链、时效、逐项权限<strong>还没有</strong>，
+             这一点在下面如实列了出来，不假装有。</p></div>
+      </div>
+      <div class="callout"><h4>第三关：边界说得清</h4>
+        <p>结论只在声明的项目、范围、用途里成立；本页<strong>不产出"总分"或排名</strong>。</p></div>
+
+      <h4>为什么这三关够用</h4>
+      <p>因为这三关各自可复核：<strong>对得上号——能当场比对；有材料撑着——能点开看是哪条；说得清边界——能照着自己那份分析套一遍。</strong>
+         换句话说，读者不必相信这套系统，他只需要能自己核——这也是为什么本页处处标注"这页不是权威、不是结论"。</p>
+      <div class="callout info"><h4>三道关与五步的对应</h4><p>五步逐条见第 5 段。</p></div>
+      </details>
+    </div>
+    
+    </section>
+    
+    <section class="section" id="points" data-layer="2" hidden>
+      <header class="section-head">
+        <span class="section-no">5</span>
+        <div><h2>五个决策点的判定</h2><p class="muted small">每一步：要回答什么、怎么定的、证据够不够、卡在哪</p></div>
+      </header>
+      
+    <div class="card">
+      <p class="lede">这五个判断点<strong>各自独立</strong>：每个点有自己的问题、证据、限制和停止后果；
+      它们不能互相替代、也不能合并成一个结论。</p>
+      <ul class="toc-points"><li class="toc-point"><span class="dot warn"></span><a href="#point-filtering">low-expression filtering</a><span>科学上支持不足（scientifically_limited）</span></li>
+<li class="toc-point"><span class="dot ok"></span><a href="#point-normalization">normalization</a><span>可审计（auditable）</span></li>
+<li class="toc-point"><span class="dot ok"></span><a href="#point-differential_method">differential-analysis method</a><span>可审计（auditable）</span></li>
+<li class="toc-point"><span class="dot ok"></span><a href="#point-multiple_testing_correction">multiple-testing correction</a><span>可审计（auditable）</span></li>
+<li class="toc-point"><span class="dot warn"></span><a href="#point-significance_threshold">significance / effect-size threshold</a><span>科学上支持不足（scientifically_limited）</span></li></ul>
+    </div>
+    
+    <article class="point" id="point-filtering">
+      
+      <header class="point-head">
+        <div class="point-title">
+          <h3>low-expression filtering<span class="muted small">（filtering）</span></h3>
+        </div>
+        <div class="verdict warn">
+          <span class="dot"></span>
+          <span class="verdict-text">科学上支持不足（scientifically_limited）</span>
+        </div>
+      </header>
+      <p class="verdict-gloss">材料还撑不起这个结论——不是算错了，是还不到下结论的时候。</p>
+      <div class="kv-list">
+        <div class="kv"><dt><span class="lab-zh">声明用的方法</span><span class="lab-orig">declared_method</span></dt><dd><div class="bi"><div class="bi-zh">低计数过滤法</div><div class="bi-en"><span class="bi-tag"></span>low_count_filter</div></div></dd></div>
+      </div>
+      <p class="explain">无法评估：匹配规则未覆盖该声明的方法名。这不是说方法错了——规则库目前按方法名对档位，而这个名字不在对照表里，因此本点按「无法评估」处理：不产生质量性结论，也不改动任何判定。<span class="en">Unable to evaluate: the matching rules do not cover the declared method name. This does not mean the method is wrong — the rule library maps levels by method name, and this name is not in the mapping; the point is therefore treated as unevaluable, yielding no quality conclusion and altering no judgment.</span></p>
+      <div class="explain muted small" style="margin-top:4px">来源：规则库匹配说明。</div>
+      
+      <div class="grid-2">
+        <section>
+          <h4>依据</h4>
+          <div class="entry"><span class="entry-label">来源类型</span><span class="lab-zh">引用</span><span class="lab-orig">referenced</span><span class="entry-label">核实状态</span><span class="lab-zh">已核实</span><span class="lab-orig">confirmed</span><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">低计数过滤法</div><div class="bi-en"><span class="bi-tag"></span>low_count_filter</div></div><span class="entry-label">观测时点</span><code>2026-08-23T12:00:00+00:00</code><span class="entry-label">声明的有效期</span><code>15552000</code><span class="entry-label">时效（派生）</span><span class="lab-zh">当前有效</span><span class="lab-orig">current</span><span class="entry-label">时效含义</span><div class="bi"><div class="bi-zh">这条观测仍在提交方声明的有效期内，因此<strong>可以</strong>为它所支持的那条主张提供积极支撑。</div><div class="bi-en"><span class="bi-tag"></span>this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</div></div><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">本次运行的流程日志（规则匹配 + 实际执行的方法）</div><div class="bi-en"><span class="bi-tag"></span>the pipeline log for this run (rule match + executed method)</div></div><span class="entry-label">来源主体</span><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的过滤步骤（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 filtering step</div></div><span class="entry-label">为哪条主张作证</span><div class="bi"><div class="bi-zh">所声明的低计数过滤方法确实是被执行的那一个</div><div class="bi-en"><span class="bi-tag"></span>the declared low-count filtering method was the executed one</div></div><span class="entry-label">证据角色</span><span class="lab-zh">支持</span><span class="lab-orig">support</span></div>
+          <h4>证据缺口</h4>
+          <div class="entry"><span class="entry-label">种类</span><span class="lab-zh">absent_execution_observation</span><span class="lab-orig">absent_execution_observation</span><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">观测到</div><div class="bi-en"><span class="bi-tag"></span>observed</div></div><span class="entry-label">状态</span><div class="bi"><div class="bi-zh">未核实</div><div class="bi-en"><span class="bi-tag"></span>unverified</div></div><span class="entry-label">针对什么</span><code>evidence_observations</code></div>
+        </section>
+        <section>
+          <h4>系统声明的限制</h4>
+          <div class="entry"><span class="entry-label">种类</span><span class="lab-zh">filtering_support</span><span class="lab-orig">filtering_support</span><span class="entry-label">状态</span><div class="bi"><div class="bi-zh">未核实</div><div class="bi-en"><span class="bi-tag"></span>unverified</div></div><span class="entry-label">说明</span><div class="bi"><div class="bi-zh">无法评估：匹配规则未覆盖该声明的方法名。这不是说方法错了——规则库目前按方法名对档位，而这个名字不在对照表里，因此本点按「无法评估」处理：不产生质量性结论，也不改动任何判定。</div><div class="bi-en"><span class="bi-tag"></span>Unable to evaluate: the matching rules do not cover the declared method name. This does not mean the method is wrong — the rule library maps levels by method name, and this name is not in the mapping; the point is therefore treated as unevaluable, yielding no quality conclusion and altering no judgment.</div></div></div>
+          <h4>发现</h4>
+          <div class="empty">没有记录</div>
+        </section>
+      </div>
+      <section>
+        <h4>下一步</h4>
+        <div class="entry"><span class="entry-label">动作</span><span class="lab-zh">要求补证据</span><span class="lab-orig">request_evidence</span><span class="entry-label">理由</span><div class="bi"><div class="bi-zh">支持「执行过程被观测到」这一点</div><div class="bi-en"><span class="bi-tag"></span>support execution observation</div></div><span class="entry-label">针对什么</span><code>evidence_observations</code><span class="entry-label">之后的状态</span><span class="lab-zh">待补证据</span><span class="lab-orig">evidence_requested</span></div>
+      </section>
+      <details class="folding evidence-chain" data-min-depth="3"><summary>证据链（1 条）</summary>
+        <div class="chain-item">
+          <h5>证据 1：low_count_filter</h5>
+          <div class="kv-list dim">
+            <div class="kv dim"><dt><span class="lab-zh">来源类型</span><span class="lab-orig">source_type</span></dt><dd><span class="lab-zh">引用</span><span class="lab-orig">引用（referenced）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">核实状态</span><span class="lab-orig">verification</span></dt><dd><span class="lab-zh">已核实</span><span class="lab-orig">已核实（confirmed）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源</span><span class="lab-orig">provenance</span></dt><dd><div class="bi"><div class="bi-zh">本次运行的流程日志（规则匹配 + 实际执行的方法）</div><div class="bi-en"><span class="bi-tag"></span>the pipeline log for this run (rule match + executed method)</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源主体</span><span class="lab-orig">provenance_subject</span></dt><dd><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的过滤步骤（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 filtering step</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">为哪条主张作证</span><span class="lab-orig">supports</span></dt><dd><div class="bi"><div class="bi-zh">所声明的低计数过滤方法确实是被执行的那一个</div><div class="bi-en"><span class="bi-tag"></span>the declared low-count filtering method was the executed one</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">证据角色</span><span class="lab-orig">evidence_role</span></dt><dd><span class="lab-zh">支持</span><span class="lab-orig">支持（support）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">观测时点</span><span class="lab-orig">observed_at</span></dt><dd><code>2026-08-23T12:00:00+00:00</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">声明的有效期</span><span class="lab-orig">valid_for_seconds</span></dt><dd><code>15552000 秒（约 180 天）</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">时效（派生）</span><span class="lab-orig">freshness</span></dt><dd><span class="lab-zh">当前有效</span><span class="lab-orig">当前有效（current）</span></dd></div>
+            <p class="chain-meaning muted small">this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</p>
+          </div>
+        </div></details>
+      
+      <details class="folding">
+        <summary>技术信息（scope）</summary>
+        <div class="kv-list dim"><div class="kv dim"><dt><span class="lab-zh">所属位置</span><span class="lab-orig">scope</span></dt><dd><code>DP-01/filtering</code></dd></div></div>
+      </details>
+    </article>
+    
+    <article class="point" id="point-normalization">
+      
+      <header class="point-head">
+        <div class="point-title">
+          <h3>normalization<span class="muted small">（normalization）</span></h3>
+        </div>
+        <div class="verdict ok">
+          <span class="dot"></span>
+          <span class="verdict-text">可审计（auditable）</span>
+        </div>
+      </header>
+      <p class="verdict-gloss">这一步的问题与证据对得上，结论站得住，可以依赖。</p>
+      <div class="kv-list">
+        <div class="kv"><dt><span class="lab-zh">声明用的方法</span><span class="lab-orig">declared_method</span></dt><dd><div class="bi"><div class="bi-zh">TMM（标准化方法）</div><div class="bi-en"><span class="bi-tag"></span>tmm</div></div></dd></div>
+      </div>
+      <details class="folding" data-min-depth="2">
+        <summary>这一步的依据、限制与下一步</summary>
+        
+      <div class="grid-2">
+        <section>
+          <h4>依据</h4>
+          <div class="entry"><span class="entry-label">来源类型</span><span class="lab-zh">引用</span><span class="lab-orig">referenced</span><span class="entry-label">核实状态</span><span class="lab-zh">已核实</span><span class="lab-orig">confirmed</span><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">TMM（标准化方法）</div><div class="bi-en"><span class="bi-tag"></span>tmm</div></div><span class="entry-label">观测时点</span><code>2026-08-23T12:00:00+00:00</code><span class="entry-label">声明的有效期</span><code>15552000</code><span class="entry-label">时效（派生）</span><span class="lab-zh">当前有效</span><span class="lab-orig">current</span><span class="entry-label">时效含义</span><div class="bi"><div class="bi-zh">这条观测仍在提交方声明的有效期内，因此<strong>可以</strong>为它所支持的那条主张提供积极支撑。</div><div class="bi-en"><span class="bi-tag"></span>this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</div></div><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">本次运行的<strong>分析脚本参数记录</strong></div><div class="bi-en"><span class="bi-tag"></span>the analysis script parameters recorded for this run</div></div><span class="entry-label">来源主体</span><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的标准化步骤（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 normalization step</div></div><span class="entry-label">为哪条主张作证</span><div class="bi"><div class="bi-zh">所声明的 TMM 标准化确实被执行了</div><div class="bi-en"><span class="bi-tag"></span>the declared TMM normalization was what ran</div></div><span class="entry-label">证据角色</span><span class="lab-zh">支持</span><span class="lab-orig">support</span></div>
+          <h4>证据缺口</h4>
+          <div class="empty">没有记录</div>
+        </section>
+        <section>
+          <h4>系统声明的限制</h4>
+          <div class="empty">没有记录</div>
+          <h4>发现</h4>
+          <div class="entry"><span class="entry-label">种类</span><span class="lab-zh">method</span><span class="lab-orig">method</span><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">由提交方声明</div><div class="bi-en"><span class="bi-tag"></span>declared</div></div><span class="entry-label">状态</span><div class="bi"><div class="bi-zh">已核实</div><div class="bi-en"><span class="bi-tag"></span>confirmed</div></div><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">TMM（标准化方法）</div><div class="bi-en"><span class="bi-tag"></span>tmm</div></div></div>
+        </section>
+      </div>
+      <section>
+        <h4>下一步</h4>
+        <div class="empty">没有记录</div>
+      </section>
+      </details>
+      <details class="folding evidence-chain" data-min-depth="3"><summary>证据链（1 条）</summary>
+        <div class="chain-item">
+          <h5>证据 1：tmm</h5>
+          <div class="kv-list dim">
+            <div class="kv dim"><dt><span class="lab-zh">来源类型</span><span class="lab-orig">source_type</span></dt><dd><span class="lab-zh">引用</span><span class="lab-orig">引用（referenced）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">核实状态</span><span class="lab-orig">verification</span></dt><dd><span class="lab-zh">已核实</span><span class="lab-orig">已核实（confirmed）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源</span><span class="lab-orig">provenance</span></dt><dd><div class="bi"><div class="bi-zh">本次运行的<strong>分析脚本参数记录</strong></div><div class="bi-en"><span class="bi-tag"></span>the analysis script parameters recorded for this run</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源主体</span><span class="lab-orig">provenance_subject</span></dt><dd><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的标准化步骤（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 normalization step</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">为哪条主张作证</span><span class="lab-orig">supports</span></dt><dd><div class="bi"><div class="bi-zh">所声明的 TMM 标准化确实被执行了</div><div class="bi-en"><span class="bi-tag"></span>the declared TMM normalization was what ran</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">证据角色</span><span class="lab-orig">evidence_role</span></dt><dd><span class="lab-zh">支持</span><span class="lab-orig">支持（support）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">观测时点</span><span class="lab-orig">observed_at</span></dt><dd><code>2026-08-23T12:00:00+00:00</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">声明的有效期</span><span class="lab-orig">valid_for_seconds</span></dt><dd><code>15552000 秒（约 180 天）</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">时效（派生）</span><span class="lab-orig">freshness</span></dt><dd><span class="lab-zh">当前有效</span><span class="lab-orig">当前有效（current）</span></dd></div>
+            <p class="chain-meaning muted small">this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</p>
+          </div>
+        </div></details>
+      
+      <details class="folding">
+        <summary>技术信息（scope）</summary>
+        <div class="kv-list dim"><div class="kv dim"><dt><span class="lab-zh">所属位置</span><span class="lab-orig">scope</span></dt><dd><code>DP-02/normalization</code></dd></div></div>
+      </details>
+    </article>
+    
+    <article class="point" id="point-differential_method">
+      
+      <header class="point-head">
+        <div class="point-title">
+          <h3>differential-analysis method<span class="muted small">（differential_method）</span></h3>
+        </div>
+        <div class="verdict ok">
+          <span class="dot"></span>
+          <span class="verdict-text">可审计（auditable）</span>
+        </div>
+      </header>
+      <p class="verdict-gloss">这一步的问题与证据对得上，结论站得住，可以依赖。</p>
+      <div class="kv-list">
+        <div class="kv"><dt><span class="lab-zh">声明用的方法</span><span class="lab-orig">declared_method</span></dt><dd><div class="bi"><div class="bi-zh">DESeq2（差异分析软件）</div><div class="bi-en"><span class="bi-tag"></span>deseq2</div></div></dd></div>
+      </div>
+      <details class="folding" data-min-depth="2">
+        <summary>这一步的依据、限制与下一步</summary>
+        
+      <div class="grid-2">
+        <section>
+          <h4>依据</h4>
+          <div class="entry"><span class="entry-label">来源类型</span><span class="lab-zh">引用</span><span class="lab-orig">referenced</span><span class="entry-label">核实状态</span><span class="lab-zh">已核实</span><span class="lab-orig">confirmed</span><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">DESeq2（差异分析软件）</div><div class="bi-en"><span class="bi-tag"></span>deseq2</div></div><span class="entry-label">观测时点</span><code>2026-08-23T12:00:00+00:00</code><span class="entry-label">声明的有效期</span><code>15552000</code><span class="entry-label">时效（派生）</span><span class="lab-zh">当前有效</span><span class="lab-orig">current</span><span class="entry-label">时效含义</span><div class="bi"><div class="bi-zh">这条观测仍在提交方声明的有效期内，因此<strong>可以</strong>为它所支持的那条主张提供积极支撑。</div><div class="bi-en"><span class="bi-tag"></span>this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</div></div><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">提交报告里的方法一节</div><div class="bi-en"><span class="bi-tag"></span>the methods section of the submitted write-up</div></div><span class="entry-label">来源主体</span><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的差异分析（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 differential analysis</div></div><span class="entry-label">为哪条主张作证</span><div class="bi"><div class="bi-zh">所声明的 DESeq2 方法</div><div class="bi-en"><span class="bi-tag"></span>the declared DESeq2 method</div></div><span class="entry-label">证据角色</span><span class="lab-zh">支持</span><span class="lab-orig">support</span></div>
+<div class="entry"><span class="entry-label">来源类型</span><span class="lab-zh">引用</span><span class="lab-orig">referenced</span><span class="entry-label">核实状态</span><span class="lab-zh">已核实</span><span class="lab-orig">confirmed</span><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">edgeR（差异分析软件）</div><div class="bi-en"><span class="bi-tag"></span>edgeR</div></div><span class="entry-label">观测时点</span><code>2026-08-23T12:00:00+00:00</code><span class="entry-label">声明的有效期</span><code>15552000</code><span class="entry-label">时效（派生）</span><span class="lab-zh">当前有效</span><span class="lab-orig">current</span><span class="entry-label">时效含义</span><div class="bi"><div class="bi-zh">这条观测仍在提交方声明的有效期内，因此<strong>可以</strong>为它所支持的那条主张提供积极支撑。</div><div class="bi-en"><span class="bi-tag"></span>this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</div></div><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">实际执行的工作流日志</div><div class="bi-en"><span class="bi-tag"></span>the executed workflow log</div></div><span class="entry-label">来源主体</span><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的差异分析（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 differential analysis</div></div><span class="entry-label">为哪条主张作证</span><div class="bi"><div class="bi-zh">实际执行的差异分析方法</div><div class="bi-en"><span class="bi-tag"></span>the executed differential method</div></div><span class="entry-label">证据角色</span><span class="lab-zh">冲突</span><span class="lab-orig">conflict</span></div>
+          <h4>证据缺口</h4>
+          <div class="empty">没有记录</div>
+        </section>
+        <section>
+          <h4>系统声明的限制</h4>
+          <div class="empty">没有记录</div>
+          <h4>发现</h4>
+          <div class="entry"><span class="entry-label">种类</span><span class="lab-zh">method</span><span class="lab-orig">method</span><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">由提交方声明</div><div class="bi-en"><span class="bi-tag"></span>declared</div></div><span class="entry-label">状态</span><div class="bi"><div class="bi-zh">已核实</div><div class="bi-en"><span class="bi-tag"></span>confirmed</div></div><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">DESeq2（差异分析软件）</div><div class="bi-en"><span class="bi-tag"></span>deseq2</div></div></div>
+        </section>
+      </div>
+      <section>
+        <h4>下一步</h4>
+        <div class="empty">没有记录</div>
+      </section>
+      </details>
+      <details class="folding evidence-chain" data-min-depth="3"><summary>证据链（2 条）</summary>
+        <div class="chain-item">
+          <h5>证据 1：deseq2</h5>
+          <div class="kv-list dim">
+            <div class="kv dim"><dt><span class="lab-zh">来源类型</span><span class="lab-orig">source_type</span></dt><dd><span class="lab-zh">引用</span><span class="lab-orig">引用（referenced）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">核实状态</span><span class="lab-orig">verification</span></dt><dd><span class="lab-zh">已核实</span><span class="lab-orig">已核实（confirmed）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源</span><span class="lab-orig">provenance</span></dt><dd><div class="bi"><div class="bi-zh">提交报告里的方法一节</div><div class="bi-en"><span class="bi-tag"></span>the methods section of the submitted write-up</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源主体</span><span class="lab-orig">provenance_subject</span></dt><dd><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的差异分析（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 differential analysis</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">为哪条主张作证</span><span class="lab-orig">supports</span></dt><dd><div class="bi"><div class="bi-zh">所声明的 DESeq2 方法</div><div class="bi-en"><span class="bi-tag"></span>the declared DESeq2 method</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">证据角色</span><span class="lab-orig">evidence_role</span></dt><dd><span class="lab-zh">支持</span><span class="lab-orig">支持（support）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">观测时点</span><span class="lab-orig">observed_at</span></dt><dd><code>2026-08-23T12:00:00+00:00</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">声明的有效期</span><span class="lab-orig">valid_for_seconds</span></dt><dd><code>15552000 秒（约 180 天）</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">时效（派生）</span><span class="lab-orig">freshness</span></dt><dd><span class="lab-zh">当前有效</span><span class="lab-orig">当前有效（current）</span></dd></div>
+            <p class="chain-meaning muted small">this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</p>
+          </div>
+        </div>
+        <div class="chain-item">
+          <h5>证据 2：edgeR</h5>
+          <div class="kv-list dim">
+            <div class="kv dim"><dt><span class="lab-zh">来源类型</span><span class="lab-orig">source_type</span></dt><dd><span class="lab-zh">引用</span><span class="lab-orig">引用（referenced）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">核实状态</span><span class="lab-orig">verification</span></dt><dd><span class="lab-zh">已核实</span><span class="lab-orig">已核实（confirmed）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源</span><span class="lab-orig">provenance</span></dt><dd><div class="bi"><div class="bi-zh">实际执行的工作流日志</div><div class="bi-en"><span class="bi-tag"></span>the executed workflow log</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源主体</span><span class="lab-orig">provenance_subject</span></dt><dd><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的差异分析（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 differential analysis</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">为哪条主张作证</span><span class="lab-orig">supports</span></dt><dd><div class="bi"><div class="bi-zh">实际执行的差异分析方法</div><div class="bi-en"><span class="bi-tag"></span>the executed differential method</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">证据角色</span><span class="lab-orig">evidence_role</span></dt><dd><span class="lab-zh">冲突</span><span class="lab-orig">冲突（conflict）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">观测时点</span><span class="lab-orig">observed_at</span></dt><dd><code>2026-08-23T12:00:00+00:00</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">声明的有效期</span><span class="lab-orig">valid_for_seconds</span></dt><dd><code>15552000 秒（约 180 天）</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">时效（派生）</span><span class="lab-orig">freshness</span></dt><dd><span class="lab-zh">当前有效</span><span class="lab-orig">当前有效（current）</span></dd></div>
+            <p class="chain-meaning muted small">this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</p>
+          </div>
+        </div></details>
+      
+      <details class="folding">
+        <summary>技术信息（scope）</summary>
+        <div class="kv-list dim"><div class="kv dim"><dt><span class="lab-zh">所属位置</span><span class="lab-orig">scope</span></dt><dd><code>DP-03/differential_method</code></dd></div></div>
+      </details>
+    </article>
+    
+    <article class="point" id="point-multiple_testing_correction">
+      
+      <header class="point-head">
+        <div class="point-title">
+          <h3>multiple-testing correction<span class="muted small">（multiple_testing_correction）</span></h3>
+        </div>
+        <div class="verdict ok">
+          <span class="dot"></span>
+          <span class="verdict-text">可审计（auditable）</span>
+        </div>
+      </header>
+      <p class="verdict-gloss">这一步的问题与证据对得上，结论站得住，可以依赖。</p>
+      <div class="kv-list">
+        <div class="kv"><dt><span class="lab-zh">声明用的方法</span><span class="lab-orig">declared_method</span></dt><dd><div class="bi"><div class="bi-zh">Benjamini–Hochberg（多重检验校正法）</div><div class="bi-en"><span class="bi-tag"></span>BH</div></div></dd></div>
+      </div>
+      <details class="folding" data-min-depth="2">
+        <summary>这一步的依据、限制与下一步</summary>
+        
+      <div class="grid-2">
+        <section>
+          <h4>依据</h4>
+          <div class="entry"><span class="entry-label">来源类型</span><span class="lab-zh">引用</span><span class="lab-orig">referenced</span><span class="entry-label">核实状态</span><span class="lab-zh">已核实</span><span class="lab-orig">confirmed</span><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">Benjamini–Hochberg（多重检验校正法）</div><div class="bi-en"><span class="bi-tag"></span>BH</div></div><span class="entry-label">观测时点</span><code>2026-08-23T12:00:00+00:00</code><span class="entry-label">声明的有效期</span><code>15552000</code><span class="entry-label">时效（派生）</span><span class="lab-zh">当前有效</span><span class="lab-orig">current</span><span class="entry-label">时效含义</span><div class="bi"><div class="bi-zh">这条观测仍在提交方声明的有效期内，因此<strong>可以</strong>为它所支持的那条主张提供积极支撑。</div><div class="bi-en"><span class="bi-tag"></span>this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</div></div><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">本次运行的<strong>分析脚本参数记录</strong></div><div class="bi-en"><span class="bi-tag"></span>the analysis script parameters recorded for this run</div></div><span class="entry-label">来源主体</span><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的校正步骤（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 correction step</div></div><span class="entry-label">为哪条主张作证</span><div class="bi"><div class="bi-zh">所声明的 BH 校正确实被应用了</div><div class="bi-en"><span class="bi-tag"></span>the declared BH correction was applied</div></div><span class="entry-label">证据角色</span><span class="lab-zh">支持</span><span class="lab-orig">support</span></div>
+          <h4>证据缺口</h4>
+          <div class="empty">没有记录</div>
+        </section>
+        <section>
+          <h4>系统声明的限制</h4>
+          <div class="empty">没有记录</div>
+          <h4>发现</h4>
+          <div class="entry"><span class="entry-label">种类</span><span class="lab-zh">method</span><span class="lab-orig">method</span><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">由提交方声明</div><div class="bi-en"><span class="bi-tag"></span>declared</div></div><span class="entry-label">状态</span><div class="bi"><div class="bi-zh">已核实</div><div class="bi-en"><span class="bi-tag"></span>confirmed</div></div><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">Benjamini–Hochberg（多重检验校正法）</div><div class="bi-en"><span class="bi-tag"></span>BH</div></div></div>
+        </section>
+      </div>
+      <section>
+        <h4>下一步</h4>
+        <div class="empty">没有记录</div>
+      </section>
+      </details>
+      <details class="folding evidence-chain" data-min-depth="3"><summary>证据链（1 条）</summary>
+        <div class="chain-item">
+          <h5>证据 1：BH</h5>
+          <div class="kv-list dim">
+            <div class="kv dim"><dt><span class="lab-zh">来源类型</span><span class="lab-orig">source_type</span></dt><dd><span class="lab-zh">引用</span><span class="lab-orig">引用（referenced）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">核实状态</span><span class="lab-orig">verification</span></dt><dd><span class="lab-zh">已核实</span><span class="lab-orig">已核实（confirmed）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源</span><span class="lab-orig">provenance</span></dt><dd><div class="bi"><div class="bi-zh">本次运行的<strong>分析脚本参数记录</strong></div><div class="bi-en"><span class="bi-tag"></span>the analysis script parameters recorded for this run</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源主体</span><span class="lab-orig">provenance_subject</span></dt><dd><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的校正步骤（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 correction step</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">为哪条主张作证</span><span class="lab-orig">supports</span></dt><dd><div class="bi"><div class="bi-zh">所声明的 BH 校正确实被应用了</div><div class="bi-en"><span class="bi-tag"></span>the declared BH correction was applied</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">证据角色</span><span class="lab-orig">evidence_role</span></dt><dd><span class="lab-zh">支持</span><span class="lab-orig">支持（support）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">观测时点</span><span class="lab-orig">observed_at</span></dt><dd><code>2026-08-23T12:00:00+00:00</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">声明的有效期</span><span class="lab-orig">valid_for_seconds</span></dt><dd><code>15552000 秒（约 180 天）</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">时效（派生）</span><span class="lab-orig">freshness</span></dt><dd><span class="lab-zh">当前有效</span><span class="lab-orig">当前有效（current）</span></dd></div>
+            <p class="chain-meaning muted small">this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</p>
+          </div>
+        </div></details>
+      
+      <details class="folding">
+        <summary>技术信息（scope）</summary>
+        <div class="kv-list dim"><div class="kv dim"><dt><span class="lab-zh">所属位置</span><span class="lab-orig">scope</span></dt><dd><code>DP-04/multiple_testing_correction</code></dd></div></div>
+      </details>
+    </article>
+    
+    <article class="point" id="point-significance_threshold">
+      
+      <header class="point-head">
+        <div class="point-title">
+          <h3>significance / effect-size threshold<span class="muted small">（significance_threshold）</span></h3>
+        </div>
+        <div class="verdict warn">
+          <span class="dot"></span>
+          <span class="verdict-text">科学上支持不足（scientifically_limited）</span>
+        </div>
+      </header>
+      <p class="verdict-gloss">材料还撑不起这个结论——不是算错了，是还不到下结论的时候。</p>
+      <div class="kv-list">
+        <div class="kv"><dt><span class="lab-zh">声明用的方法</span><span class="lab-orig">declared_method</span></dt><dd><div class="bi"><div class="bi-zh">校正后 p 值 &lt; 0.05 的阈值</div><div class="bi-en"><span class="bi-tag"></span>padj_0.05</div></div></dd></div>
+      </div>
+      <p class="explain"><strong>只写一个阈值名称</strong>并不构成证据，无法支持所声明的主张与预期用途<span class="en">threshold label alone is not evidence for the declared claim and intended use</span></p>
+      <div class="explain muted small" style="margin-top:4px">来源：规则库匹配说明。</div>
+      
+      <div class="grid-2">
+        <section>
+          <h4>依据</h4>
+          <div class="entry"><span class="entry-label">来源类型</span><span class="lab-zh">引用</span><span class="lab-orig">referenced</span><span class="entry-label">核实状态</span><span class="lab-zh">未核实</span><span class="lab-orig">unverified</span><span class="entry-label">内容</span><div class="bi"><div class="bi-zh">校正后 p 值 &lt; 0.05 的阈值</div><div class="bi-en"><span class="bi-tag"></span>padj_0.05</div></div><span class="entry-label">观测时点</span><code>2026-08-23T12:00:00+00:00</code><span class="entry-label">声明的有效期</span><code>15552000</code><span class="entry-label">时效（派生）</span><span class="lab-zh">当前有效</span><span class="lab-orig">current</span><span class="entry-label">时效含义</span><div class="bi"><div class="bi-zh">这条观测仍在提交方声明的有效期内，因此<strong>可以</strong>为它所支持的那条主张提供积极支撑。</div><div class="bi-en"><span class="bi-tag"></span>this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</div></div><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">阈值只在分析报告里写过，<strong>没有留下执行记录</strong></div><div class="bi-en"><span class="bi-tag"></span>a threshold stated in the write-up, with no execution record</div></div><span class="entry-label">来源主体</span><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的阈值（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 threshold</div></div><span class="entry-label">为哪条主张作证</span><div class="bi"><div class="bi-zh">所声明的阈值选择</div><div class="bi-en"><span class="bi-tag"></span>the declared threshold choice</div></div><span class="entry-label">证据角色</span><span class="lab-zh">限制</span><span class="lab-orig">limitation</span></div>
+          <h4>证据缺口</h4>
+          <div class="entry"><span class="entry-label">种类</span><span class="lab-zh">absent_execution_observation</span><span class="lab-orig">absent_execution_observation</span><span class="entry-label">来源</span><div class="bi"><div class="bi-zh">观测到</div><div class="bi-en"><span class="bi-tag"></span>observed</div></div><span class="entry-label">状态</span><div class="bi"><div class="bi-zh">未核实</div><div class="bi-en"><span class="bi-tag"></span>unverified</div></div><span class="entry-label">针对什么</span><code>evidence_observations</code></div>
+        </section>
+        <section>
+          <h4>系统声明的限制</h4>
+          <div class="entry"><span class="entry-label">种类</span><span class="lab-zh">filtering_support</span><span class="lab-orig">filtering_support</span><span class="entry-label">状态</span><div class="bi"><div class="bi-zh">未核实</div><div class="bi-en"><span class="bi-tag"></span>unverified</div></div><span class="entry-label">说明</span><div class="bi"><div class="bi-zh"><strong>只写一个阈值名称</strong>并不构成证据，无法支持所声明的主张与预期用途</div><div class="bi-en"><span class="bi-tag"></span>threshold label alone is not evidence for the declared claim and intended use</div></div></div>
+          <h4>发现</h4>
+          <div class="empty">没有记录</div>
+        </section>
+      </div>
+      <section>
+        <h4>下一步</h4>
+        <div class="entry"><span class="entry-label">动作</span><span class="lab-zh">要求补证据</span><span class="lab-orig">request_evidence</span><span class="entry-label">理由</span><div class="bi"><div class="bi-zh">用<strong>属于这一步的</strong>证据来支持阈值的选取</div><div class="bi-en"><span class="bi-tag"></span>support the threshold choice with point-local evidence</div></div><span class="entry-label">针对什么</span><code>evidence_observations</code><span class="entry-label">之后的状态</span><span class="lab-zh">待补证据</span><span class="lab-orig">evidence_requested</span></div>
+<div class="entry"><span class="entry-label">动作</span><span class="lab-zh">提交修正</span><span class="lab-orig">submit_correction</span><span class="entry-label">理由</span><div class="bi"><div class="bi-zh">给出<strong>有支撑的</strong>阈值选择或理由</div><div class="bi-en"><span class="bi-tag"></span>provide a supported threshold choice or rationale</div></div><span class="entry-label">针对什么</span><code>decision_declaration</code><span class="entry-label">之后的状态</span><span class="lab-zh">已提交修正</span><span class="lab-orig">correction_submitted</span></div>
+      </section>
+      <details class="folding evidence-chain" data-min-depth="3"><summary>证据链（1 条）</summary>
+        <div class="chain-item">
+          <h5>证据 1：padj_0.05</h5>
+          <div class="kv-list dim">
+            <div class="kv dim"><dt><span class="lab-zh">来源类型</span><span class="lab-orig">source_type</span></dt><dd><span class="lab-zh">引用</span><span class="lab-orig">引用（referenced）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">核实状态</span><span class="lab-orig">verification</span></dt><dd><span class="lab-zh">未核实</span><span class="lab-orig">未核实（unverified）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源</span><span class="lab-orig">provenance</span></dt><dd><div class="bi"><div class="bi-zh">阈值只在分析报告里写过，<strong>没有留下执行记录</strong></div><div class="bi-en"><span class="bi-tag"></span>a threshold stated in the write-up, with no execution record</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">来源主体</span><span class="lab-orig">provenance_subject</span></dt><dd><div class="bi"><div class="bi-zh">PRJ-Alpha / AN-001 的阈值（标识照录）</div><div class="bi-en"><span class="bi-tag"></span>PRJ-Alpha / AN-001 threshold</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">为哪条主张作证</span><span class="lab-orig">supports</span></dt><dd><div class="bi"><div class="bi-zh">所声明的阈值选择</div><div class="bi-en"><span class="bi-tag"></span>the declared threshold choice</div></div></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">证据角色</span><span class="lab-orig">evidence_role</span></dt><dd><span class="lab-zh">限制</span><span class="lab-orig">限制（limitation）</span></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">观测时点</span><span class="lab-orig">observed_at</span></dt><dd><code>2026-08-23T12:00:00+00:00</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">声明的有效期</span><span class="lab-orig">valid_for_seconds</span></dt><dd><code>15552000 秒（约 180 天）</code></dd></div>
+<div class="kv dim"><dt><span class="lab-zh">时效（派生）</span><span class="lab-orig">freshness</span></dt><dd><span class="lab-zh">当前有效</span><span class="lab-orig">当前有效（current）</span></dd></div>
+            <p class="chain-meaning muted small">this observation is within the validity window the submitter declared, so it can actively support the claim it was offered for</p>
+          </div>
+        </div></details>
+      
+      <details class="folding">
+        <summary>技术信息（scope）</summary>
+        <div class="kv-list dim"><div class="kv dim"><dt><span class="lab-zh">所属位置</span><span class="lab-orig">scope</span></dt><dd><code>DP-05/significance_threshold</code></dd></div></div>
+      </details>
+    </article>
+    
+    
+    </section>
+    
+    <section class="section" id="axes" data-layer="2" hidden>
+      <header class="section-head">
+        <span class="section-no">6</span>
+        <div><h2>四条轴（无总分）</h2><p class="muted small">同一个结果从四个方向分别看：能不能验证、解释到哪层、适用多宽、科学上够不够</p></div>
+      </header>
+      <div class="callout warn"><h4>这不是评分表</h4><p>下面四条是四个彼此独立的结果，不是一个总分的四个部分：它们不相加、不加权、不比较大小、不产生排名，也不能合成一句话结论。这是本产品的既成规则：结果不得被读成一个分数。</p></div><div class="axes">
+    <article class="axis" id="axis-inference_type">
+      <header class="axis-head">
+        <div>
+          <h3>推理类型<span class="muted small">（Inference type）</span></h3>
+          <p class="muted small">这一步的结论是怎么推出来的、能推到哪。</p>
+        </div>
+        <div class="axis-flags">
+          <span class="chip ok">可评估（auditable）</span>
+          
+        </div>
+      </header>
+      <div class="bars"><div class="barrow"><span class="barlabel">完整度<span class="dim small">（completeness）</span></span><span class="bar warn"><i style="width:{'complete': 100, 'partial': 55, 'missing': 12}%"></i></span><span class="barval">部分（partial）</span></div>
+<div class="barrow"><span class="barlabel">科学证据<span class="dim small">（scientific_evidence）</span></span><span class="bar warn"><i style="width:{'sufficient': 100, 'insufficient': 45, 'missing': 12, 'unverified': 45}%"></i></span><span class="barval">不足（insufficient）</span></div>
+<div class="barrow"><span class="barlabel">可评估性<span class="dim small">（auditability）</span></span><span class="bar ok"><i style="width:100%"></i></span><span class="barval">可评估（auditable）</span></div></div>
+      <p class="explain">Inference is supported where a point is auditable; conflicting points preserve residual/unordered meaning with no arbitrary winner; points listed in conditions either lack sufficient evidence or support no inference.</p>
+      <div class="kv-list"><div class="kv"><dt><span class="lab-zh">要留意的点</span><span class="lab-orig">conditions</span></dt><dd><code>filtering、significance_threshold</code></dd></div></div>
+      <details class="folding">
+        <summary>这一轴明令禁止的解释（6 条）</summary>
+        <ul><li><div class="bi"><div class="bi-zh">不存在总分。</div><div class="bi-en"><span class="bi-tag"></span>No total scientific score.</div></div></li><li><div class="bi"><div class="bi-zh">不存在替代结果向量的置信分。</div><div class="bi-en"><span class="bi-tag"></span>No confidence score standing in for the result vector.</div></div></li><li><div class="bi"><div class="bi-zh">不存在通用排名。</div><div class="bi-en"><span class="bi-tag"></span>No universal ranking.</div></div></li><li><div class="bi"><div class="bi-zh">不存在单一质量数。</div><div class="bi-en"><span class="bi-tag"></span>No single quality number.</div></div></li><li><div class="bi"><div class="bi-zh">不存在把使用档位当作科学结论的解释。</div><div class="bi-en"><span class="bi-tag"></span>No lane-as-science interpretation.</div></div></li><li><div class="bi"><div class="bi-zh">不存在代替内嵌结果的局部摘要。</div><div class="bi-en"><span class="bi-tag"></span>No local summary that substitutes for the embedded result authority.</div></div></li></ul>
+      </details>
+    </article>
+    
+
+    <article class="axis" id="axis-explanation_depth">
+      <header class="axis-head">
+        <div>
+          <h3>解释深度<span class="muted small">（Explanation depth）</span></h3>
+          <p class="muted small">解释到哪一层：只看现象，还是说到了机制。</p>
+        </div>
+        <div class="axis-flags">
+          <span class="chip ok">可评估（auditable）</span>
+          
+        </div>
+      </header>
+      <div class="bars"><div class="barrow"><span class="barlabel">完整度<span class="dim small">（completeness）</span></span><span class="bar warn"><i style="width:{'complete': 100, 'partial': 55, 'missing': 12}%"></i></span><span class="barval">部分（partial）</span></div>
+<div class="barrow"><span class="barlabel">科学证据<span class="dim small">（scientific_evidence）</span></span><span class="bar warn"><i style="width:{'sufficient': 100, 'insufficient': 45, 'missing': 12, 'unverified': 45}%"></i></span><span class="barval">不足（insufficient）</span></div>
+<div class="barrow"><span class="barlabel">可评估性<span class="dim small">（auditability）</span></span><span class="bar ok"><i style="width:100%"></i></span><span class="barval">可评估（auditable）</span></div></div>
+      <p class="explain">Explanation depth reflects per-point diagnostic explanations, evidence gaps, and limitations.</p>
+      <div class="kv-list"><div class="kv"><dt><span class="lab-zh">要留意的点</span><span class="lab-orig">conditions</span></dt><dd><code>filtering: evidence gaps、significance_threshold: evidence gaps、filtering: limitations、significance_threshold: limitations</code></dd></div></div>
+      <details class="folding">
+        <summary>这一轴明令禁止的解释（6 条）</summary>
+        <ul><li><div class="bi"><div class="bi-zh">不存在总分。</div><div class="bi-en"><span class="bi-tag"></span>No total scientific score.</div></div></li><li><div class="bi"><div class="bi-zh">不存在替代结果向量的置信分。</div><div class="bi-en"><span class="bi-tag"></span>No confidence score standing in for the result vector.</div></div></li><li><div class="bi"><div class="bi-zh">不存在通用排名。</div><div class="bi-en"><span class="bi-tag"></span>No universal ranking.</div></div></li><li><div class="bi"><div class="bi-zh">不存在单一质量数。</div><div class="bi-en"><span class="bi-tag"></span>No single quality number.</div></div></li><li><div class="bi"><div class="bi-zh">不存在把使用档位当作科学结论的解释。</div><div class="bi-en"><span class="bi-tag"></span>No lane-as-science interpretation.</div></div></li><li><div class="bi"><div class="bi-zh">不存在代替内嵌结果的局部摘要。</div><div class="bi-en"><span class="bi-tag"></span>No local summary that substitutes for the embedded result authority.</div></div></li></ul>
+      </details>
+    </article>
+    
+
+    <article class="axis" id="axis-scope">
+      <header class="axis-head">
+        <div>
+          <h3>适用范围<span class="muted small">（Scope）</span></h3>
+          <p class="muted small">结论在哪个项目/分析/比较范围内成立。</p>
+        </div>
+        <div class="axis-flags">
+          <span class="chip ok">可评估（auditable）</span>
+          
+        </div>
+      </header>
+      <div class="bars"><div class="barrow"><span class="barlabel">完整度<span class="dim small">（completeness）</span></span><span class="bar ok"><i style="width:{'complete': 100, 'partial': 55, 'missing': 12}%"></i></span><span class="barval">完整（complete）</span></div>
+<div class="barrow"><span class="barlabel">科学证据<span class="dim small">（scientific_evidence）</span></span><span class="bar ok"><i style="width:{'sufficient': 100, 'insufficient': 45, 'missing': 12, 'unverified': 45}%"></i></span><span class="barval">充分（sufficient）</span></div>
+<div class="barrow"><span class="barlabel">可评估性<span class="dim small">（auditability）</span></span><span class="bar ok"><i style="width:100%"></i></span><span class="barval">可评估（auditable）</span></div></div>
+      <p class="explain">The scope names the project, analysis, comparison, and audit scope for this combined account.</p>
+      <div class="kv-list"><div class="kv"><dt><span class="lab-zh">要留意的点</span><span class="lab-orig">conditions</span></dt><dd><code>project_id=PRJ-Alpha、analysis_id=AN-001、comparison=treated_vs_control、audit_scope=five-point MVP slice</code></dd></div></div>
+      <details class="folding">
+        <summary>这一轴明令禁止的解释（6 条）</summary>
+        <ul><li><div class="bi"><div class="bi-zh">不存在总分。</div><div class="bi-en"><span class="bi-tag"></span>No total scientific score.</div></div></li><li><div class="bi"><div class="bi-zh">不存在替代结果向量的置信分。</div><div class="bi-en"><span class="bi-tag"></span>No confidence score standing in for the result vector.</div></div></li><li><div class="bi"><div class="bi-zh">不存在通用排名。</div><div class="bi-en"><span class="bi-tag"></span>No universal ranking.</div></div></li><li><div class="bi"><div class="bi-zh">不存在单一质量数。</div><div class="bi-en"><span class="bi-tag"></span>No single quality number.</div></div></li><li><div class="bi"><div class="bi-zh">不存在把使用档位当作科学结论的解释。</div><div class="bi-en"><span class="bi-tag"></span>No lane-as-science interpretation.</div></div></li><li><div class="bi"><div class="bi-zh">不存在代替内嵌结果的局部摘要。</div><div class="bi-en"><span class="bi-tag"></span>No local summary that substitutes for the embedded result authority.</div></div></li></ul>
+      </details>
+    </article>
+    
+
+    <article class="axis" id="axis-validation">
+      <header class="axis-head">
+        <div>
+          <h3>有效性<span class="muted small">（Validation）</span></h3>
+          <p class="muted small">这个账户本身是否可被检验（不等于每一步都被支持）。</p>
+        </div>
+        <div class="axis-flags">
+          <span class="chip ok">可评估（auditable）</span>
+          
+        </div>
+      </header>
+      <div class="bars"><div class="barrow"><span class="barlabel">完整度<span class="dim small">（completeness）</span></span><span class="bar warn"><i style="width:{'complete': 100, 'partial': 55, 'missing': 12}%"></i></span><span class="barval">部分（partial）</span></div>
+<div class="barrow"><span class="barlabel">科学证据<span class="dim small">（scientific_evidence）</span></span><span class="bar warn"><i style="width:{'sufficient': 100, 'insufficient': 45, 'missing': 12, 'unverified': 45}%"></i></span><span class="barval">不足（insufficient）</span></div>
+<div class="barrow"><span class="barlabel">可评估性<span class="dim small">（auditability）</span></span><span class="bar ok"><i style="width:100%"></i></span><span class="barval">可评估（auditable）</span></div></div>
+      <p class="explain">Auditability here means the account can be evaluated; it does NOT mean every decision point is fully supported. Points with insufficient evidence or unresolved conflict are listed in conditions and flagged by scientific_evidence (insufficiency is never relabeled as not-auditable, P-02 §5.2).</p>
+      <div class="kv-list"><div class="kv"><dt><span class="lab-zh">要留意的点</span><span class="lab-orig">conditions</span></dt><dd><code>filtering、significance_threshold</code></dd></div></div>
+      <details class="folding">
+        <summary>这一轴明令禁止的解释（6 条）</summary>
+        <ul><li><div class="bi"><div class="bi-zh">不存在总分。</div><div class="bi-en"><span class="bi-tag"></span>No total scientific score.</div></div></li><li><div class="bi"><div class="bi-zh">不存在替代结果向量的置信分。</div><div class="bi-en"><span class="bi-tag"></span>No confidence score standing in for the result vector.</div></div></li><li><div class="bi"><div class="bi-zh">不存在通用排名。</div><div class="bi-en"><span class="bi-tag"></span>No universal ranking.</div></div></li><li><div class="bi"><div class="bi-zh">不存在单一质量数。</div><div class="bi-en"><span class="bi-tag"></span>No single quality number.</div></div></li><li><div class="bi"><div class="bi-zh">不存在把使用档位当作科学结论的解释。</div><div class="bi-en"><span class="bi-tag"></span>No lane-as-science interpretation.</div></div></li><li><div class="bi"><div class="bi-zh">不存在代替内嵌结果的局部摘要。</div><div class="bi-en"><span class="bi-tag"></span>No local summary that substitutes for the embedded result authority.</div></div></li></ul>
+      </details>
+    </article>
+    </div>
+    </section>
+    
+    </section>
+    
+
+    
+    <section class="act" id="act-two">
+      <header class="act-head">
+        <span class="act-no">第幕二幕</span>
+        <div><h2>结论的含义与边界</h2><p class="muted small">这一幕讲每个结论是什么意思、能信到什么程度。</p></div>
+      </header>
+      
+    <section class="section" id="states">
+      <header class="section-head">
+        <span class="section-no">7</span>
+        <div><h2>状态词的含义</h2><p class="muted small">每词说明：何意 / 能依赖 / 别推断 / 要什么</p></div>
+      </header>
+      
+    <div class="callout">
+      <h4>每个词按本页手里的记录判断</h4>
+      <p>每一条写明四件事：<strong>何意 / 能依赖 / 别推断 / 要什么</strong>。</p>
+    </div>
+    <details class="folding">
+      <summary>6 个状态词的含义</summary>
+      <div class="state-list">
+        <article class="card state-card">
+          <header class="point-head">
+            <h3 class="state-title">已复核
+              <span class="lab-orig">reviewed</span></h3>
+            <div class="verdict accent"><span class="dot"></span>
+              <span class="verdict-text">未触发</span></div>
+          </header>
+          <div class="bi"><div class="bi-zh">本报告<strong>没有收到任何复核人记录</strong></div><div class="bi-en"><span class="bi-tag">何意</span>NO reviewer record was supplied to this report</div></div>
+          <div class="fields"><div class="field"><div class="field-label"><span class="lab-zh">能依赖</span><span class="lab-orig">may_be_relied_on</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>什么都不能</strong>——这里没有任何复核</div><div class="bi-en"><span class="bi-tag"></span>nothing on this basis: nothing was reviewed here</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">别推断</span><span class="lab-orig">must_not_be_inferred</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>不能</strong>推断「在本报告视野之外发生过复核」</div><div class="bi-en"><span class="bi-tag"></span>that a review happened outside this report's view</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">要什么</span><span class="lab-orig">next_requirement</span></div><div class="field-body"><div class="bi"><div class="bi-zh">提供一条具名复核人记录，写清<strong>目标与范围</strong></div><div class="bi-en"><span class="bi-tag"></span>supply a named reviewer record for a named target/scope</div></div></div></div></div>
+          
+        </article>
+        <article class="card state-card">
+          <header class="point-head">
+            <h3 class="state-title">已阻断
+              <span class="lab-orig">blocked</span></h3>
+            <div class="verdict warn"><span class="dot"></span>
+              <span class="verdict-text">未触发</span></div>
+          </header>
+          <div class="bi"><div class="bi-zh">当前<strong>没有</strong>待决的决定、复核或事实</div><div class="bi-en"><span class="bi-tag">何意</span>no required decision, review or fact is currently pending</div></div>
+          <div class="fields"><div class="field"><div class="field-label"><span class="lab-zh">能依赖</span><span class="lab-orig">may_be_relied_on</span></div><div class="field-body"><div class="bi"><div class="bi-zh">本账户在其声明范围内给出的结论</div><div class="bi-en"><span class="bi-tag"></span>this account's stated conclusions within their scope</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">别推断</span><span class="lab-orig">must_not_be_inferred</span></div><div class="field-body"><div class="bi"><div class="bi-zh">不能推断「将来不会出现阻断」</div><div class="bi-en"><span class="bi-tag"></span>that a future block cannot arise</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">要什么</span><span class="lab-orig">next_requirement</span></div><div class="field-body"><div class="bi"><div class="bi-zh">没有观察到需要跟进的未决事项</div><div class="bi-en"><span class="bi-tag"></span>nothing outstanding was observed</div></div></div></div></div>
+          
+        </article>
+        <article class="card state-card">
+          <header class="point-head">
+            <h3 class="state-title">限定使用
+              <span class="lab-orig">limited-use</span></h3>
+            <div class="verdict warn"><span class="dot"></span>
+              <span class="verdict-text">未触发</span></div>
+          </header>
+          <div class="bi"><div class="bi-zh">这里<strong>没有记录</strong>任何单独的使用／发布上限决定</div><div class="bi-en"><span class="bi-tag">何意</span>no separate governed use/release ceiling is recorded here</div></div>
+          <div class="fields"><div class="field"><div class="field-label"><span class="lab-zh">能依赖</span><span class="lab-orig">may_be_relied_on</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>只</strong>能依赖这个账户<strong>声明的范围</strong></div><div class="bi-en"><span class="bi-tag"></span>the account's stated scope only</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">别推断</span><span class="lab-orig">must_not_be_inferred</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>不能</strong>推断存在某项发布或 lane 决定——本系统<strong>不授予</strong>任何这类决定</div><div class="bi-en"><span class="bi-tag"></span>that a release or lane decision exists — this system grants none</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">要什么</span><span class="lab-orig">next_requirement</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>需要一项治理决定</strong>，而这不是本报告能做的</div><div class="bi-en"><span class="bi-tag"></span>a governance decision, which this report cannot make</div></div></div></div></div>
+          
+        </article>
+        <article class="card state-card">
+          <header class="point-head">
+            <h3 class="state-title">版本核对：未过时
+              <span class="lab-orig">stale</span></h3>
+            <div class="verdict muted"><span class="dot"></span>
+              <span class="verdict-text">成立</span></div>
+          </header>
+          <div class="bi"><div class="bi-zh">每一个点的<strong>版本绑定都与当前运行版本一致</strong></div><div class="bi-en"><span class="bi-tag">何意</span>every point's version binding matches the current runtime</div></div>
+          <div class="fields"><div class="field"><div class="field-label"><span class="lab-zh">能依赖</span><span class="lab-orig">may_be_relied_on</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>在它声明的范围内</strong>依赖这个账户</div><div class="bi-en"><span class="bi-tag"></span>the account within its stated scope</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">别推断</span><span class="lab-orig">must_not_be_inferred</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>不能</strong>推断「以后运行版本变了它也不会过时」</div><div class="bi-en"><span class="bi-tag"></span>that a future runtime change cannot make it stale</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">要什么</span><span class="lab-orig">next_requirement</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>无需动作</strong>：已与当前运行版本重新核对过</div><div class="bi-en"><span class="bi-tag"></span>nothing: re-checked against the current runtime</div></div></div></div></div>
+          
+        </article>
+        <article class="card state-card">
+          <header class="point-head">
+            <h3 class="state-title">范围受限
+              <span class="lab-orig">scoped</span></h3>
+            <div class="verdict muted"><span class="dot"></span>
+              <span class="verdict-text">成立</span></div>
+          </header>
+          <div class="bi"><div class="bi-zh">这个账户被限定在一个<strong>具名的 项目／分析／比较／范围／用途 边界</strong>内</div><div class="bi-en"><span class="bi-tag">何意</span>this account is bounded to a named project/analysis/comparison/scope/use boundary</div></div>
+          <div class="fields"><div class="field"><div class="field-label"><span class="lab-zh">能依赖</span><span class="lab-orig">may_be_relied_on</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>恰好在这个边界内</strong>的结论</div><div class="bi-en"><span class="bi-tag"></span>the conclusion within exactly that boundary</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">别推断</span><span class="lab-orig">must_not_be_inferred</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>不能</strong>推断成全局产品／阶段／包级别的清关，也<strong>不能</strong>推断同样的结论对别的对象成立</div><div class="bi-en"><span class="bi-tag"></span>global product, phase or package clearance; or that the same conclusion holds for another object</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">要什么</span><span class="lab-orig">next_requirement</span></div><div class="field-body"><div class="bi"><div class="bi-zh">具名的是<strong>哪个边界</strong>，以及扩张是否<strong>另行授权</strong>过</div><div class="bi-en"><span class="bi-tag"></span>what boundary is named, and whether expansion is separately authorized</div></div></div></div></div>
+          <div class="field"><div class="field-label"><span class="lab-zh">具名边界</span><span class="lab-orig">named_boundary</span></div><div class="field-body"><code>project_id=PRJ-Alpha、analysis_id=AN-001、comparison=treated_vs_control、audit_scope=five-point MVP slice、intended_use=internal scientific review</code></div></div>
+        </article>
+        <article class="card state-card">
+          <header class="point-head">
+            <h3 class="state-title">计划中
+              <span class="lab-orig">planned</span></h3>
+            <div class="verdict muted"><span class="dot"></span>
+              <span class="verdict-text">成立</span></div>
+          </header>
+          <div class="bi"><div class="bi-zh">报告列出了「描述了但<strong>没建成</strong>」的未来能力——这是<strong>报告级</strong>的意图，<strong>不是</strong>这个账户的状态</div><div class="bi-en"><span class="bi-tag">何意</span>the report lists future capabilities that are described but not built — REPORT-LEVEL intent, not a state of this account</div></div>
+          <div class="fields"><div class="field"><div class="field-label"><span class="lab-zh">能依赖</span><span class="lab-orig">may_be_relied_on</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>只</strong>能知道有这些未来意图或需要</div><div class="bi-en"><span class="bi-tag"></span>awareness of future intent or need</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">别推断</span><span class="lab-orig">must_not_be_inferred</span></div><div class="field-body"><div class="bi"><div class="bi-zh"><strong>不能</strong>推断已实现／已有证据／已证明／可部署／已收尾；<strong>更不能</strong>把它当作本账户的结果</div><div class="bi-en"><span class="bi-tag"></span>implementation, evidence, proof, deployment or closure; and never as this account's outcome</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">要什么</span><span class="lab-orig">next_requirement</span></div><div class="field-body"><div class="bi"><div class="bi-zh">这<strong>只是计划</strong>，还是另有证据？</div><div class="bi-en"><span class="bi-tag"></span>is this only a plan, or is separate evidence present?</div></div></div></div></div>
+          <div class="field"><div class="field-label"><span class="lab-zh">计划中的能力</span><span class="lab-orig">planned_capabilities</span></div><div class="field-body"><code>no release machinery / no lane grant — partially implemented: no lane is granted and no release authority exists, but a use/release ceiling can be recorded and rendered with its evidence, restrictions and required next evidence (see lane_and_release). This is not release machinery: no automatic promotion, transition, rollback or deployment; the decision caps use and never authorises it by itself；deployment and Package A closure — not implemented and not claimed；runtime proof / execution evidence — not implemented and not claimed；independent reviewer approval — not performed: the system records roles, it does not conduct review；additional decision points beyond the five — not implemented: five RNA-seq points only；other analysis types beyond bulk RNA-seq — not implemented；evidence provenance / freshness fields — partially implemented: every evidence item now carries its observation time, the validity window its submitter declared, an optional provenance and subject, the claim it is offered for, and its role; the report derives and shows whether each item is still current. NOT implemented: per-item authority permission (who may rely on it), and any judgement of whether the declared provenance is genuine — the system records the declaration and does not adjudicate it；the full state vocabulary — partially implemented: P-02 §5 lists 13 state and consequence meanings; auditable, scientifically_limited, conflicted, not_auditable and integrity_failed are expressible as point judgements, historical_only on the history side, and reviewed, blocked, limited-use, stale, scoped and planned are attested from facts this report holds — 12 of 13 in total, and external is not expressible, because no input carries an outside-the-artifact physical observation; see <code>state_meanings.unexpressed_states</code> for its reason and what would have to change for it.；a formal report for showing to others — not available: an inspector page for the accountable owner exists (ui/report.html) and renders this report for reading, but a user-facing product surface and any external-facing presentation remain undecided product decisions (P-03 §14)</code></div></div>
+        </article></div>
+    </details>
+    <details class="folding" open>
+      <summary>本系统<strong>无法表达</strong>的状态含义
+      （1 个）</summary>
+      <ul class="not-yet"><li><span class="cap">external</span><div class="muted"><div class="bi"><div class="bi-zh">当前数据模型里<strong>没有</strong>「工件之外的物理观测」可以描述：一次审计里<strong>没有任何东西</strong>承载「在工件之外做出的、字节或编码层面的观测」</div><div class="bi-en"><span class="bi-tag">何意</span>the current data model has no outside-the-artifact physical observation to describe: nothing in an audit carries a byte- or encoding-level observation made outside the artifact</div></div><div class="field-label" style="margin-top:6px">要什么</div><div class="bi"><div class="bi-zh">需要<strong>另行授权</strong>一个「外部物理观测」的输入（那是新的输入契约，因此是<strong>治理决定</strong>）</div><div class="bi-en"><span class="bi-tag">要什么</span>an authorized input for external physical observations (a new input contract, hence a governance decision)</div></div></div></li></ul>
+    </details>
+    
+    </section>
+    
+    <section class="section" id="use" data-layer="2" hidden>
+      <header class="section-head">
+        <span class="section-no">8</span>
+        <div><h2>使用范围与上限</h2><p class="muted small">使用边界与能用到的档位——与能不能发布是两回事</p></div>
+      </header>
+      
+    <div class="card">
+      <p class="lede"><div class="bi"><div class="bi-zh">本报告只解释<strong>具名项目与分析范围内</strong>的那个权威账户。它<strong>不是</strong>发布决定、<strong>不是</strong> lane 权威、<strong>也不是</strong>部署决定。</div><div class="bi-en"><span class="bi-tag"></span>This report explains the authoritative account within the named project and analysis only. It is not a release decision, not a lane authority, and not a deployment decision.</div></div></p>
+      <div class="callout warn"><h4>它不等于「已批准发布」</h4><p>系统能记录使用上限决定，并把「能用在哪」与「能不能发布」分开呈现——但<strong>没有任何发布机制</strong>：不会自动晋升、不回滚、不部署，记录本身也不授予发布权。</p></div>
+      
+      <div class="callout info"><h4>使用上限的含义</h4><p><div class="bi"><div class="bi-zh">使用上限是对具名范围的一条受治理的使用/发布天花板；它不是科学结论、不是分数、不是排名，也不授权任何超出所声明范围与限制的用途。</div><div class="bi-en"><span class="bi-tag"></span>A lane is a governed use/release ceiling for the named scope. It is not a scientific result, not a score, not a ranking, and not authority for any use beyond the stated scope and restrictions.</div></div></p></div>
+      <details class="fold" open><summary>按范围分组：2 个范围 / 4 条决定</summary><div class="entry"><div class="entry-label">DP-01..DP-05 filtering slice / research use within this project</div><div class="entry">共 3 条决定；实给档位：候选（受限）（candidate）、研究草稿（非授权返回态）（research-draft）；最近一条：2026-09-12T12:00:00+00:00</div></div><div class="entry"><div class="entry-label">normalization only / teaching use</div><div class="entry">共 1 条决定；实给档位：研究草稿（非授权返回态）（research-draft）；最近一条：2026-09-12T12:00:00+00:00</div></div></details>
+      <details class="fold" open>
+        <summary>使用上限决定记录：共 4 条</summary>
+        <div class="card"><dl class="kv-list"><div class="kv"><dt><span class="lab-zh">实际给到的使用上限</span><span class="lab-orig">decided_lane</span></dt><dd><span class="lab-zh">候选</span><span class="lab-orig">candidate</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">申请的使用上限</span><span class="lab-orig">requested_lane</span></dt><dd><span class="lab-zh">已验证</span><span class="lab-orig">validated</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">结论</span><span class="lab-orig">decision_outcome</span></dt><dd><span class="lab-zh">接受</span><span class="lab-orig">accepted</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">事实支持的最高上限</span><span class="lab-orig">lane_ceiling</span></dt><dd><span class="lab-zh">候选</span><span class="lab-orig">candidate</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">谓词是否仍对应当前版本</span><span class="lab-orig">version_currency</span></dt><dd><span class="lab-zh">对应现版本</span><span class="lab-orig">current</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">这一条写进账本的时间（UTC）</span><span class="lab-orig">recorded_at</span></dt><dd><code>2026-09-09T12:00:00+00:00</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">acceptance_snapshot_ref</span><span class="lab-orig">acceptance_snapshot_ref</span></dt><dd><code>snapshot:ui-demo-1</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">record_id</span><span class="lab-orig">record_id</span></dt><dd><code>ceiling-ui-demo-1</code></dd></div></dl><div class="field"><div class="field-label"><span class="lab-zh">声明的范围（档位只在范围内有意义）</span><span class="lab-orig">scope</span></div><div class="field-body"><div class="bi"><div class="bi-zh">DP-01…DP-05 过滤切片 ／ 本项目内的研究用途</div><div class="bi-en"><span class="bi-tag"></span>DP-01..DP-05 filtering slice / research use within this project</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">为什么不能再高</span><span class="lab-orig">ceiling_reason</span></div><div class="field-body"><div class="bi"><div class="bi-zh">可审计的结构化结果带有明示限制或禁用用途，因此最多支持一个<strong>受限的</strong>「候选」档（C-04 §6 第 4 行）。</div><div class="bi-en"><span class="bi-tag"></span>the auditable structured result carries explicit limitations or prohibited uses, so at most a restricted <code>candidate</code> is supported (C-04 §6 row 4)</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">明令禁止的用途</span><span class="lab-orig">prohibited_uses</span></div><div class="field-body"><code>clinical or diagnostic use；any use outside the named project</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">谓词引用的证据</span><span class="lab-orig">lane_predicate_evidence_refs</span></div><div class="field-body"><code>ev-filtering-observed；ev-normalization-declared</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">这条记录是否构成授权</span><span class="lab-orig">authorising</span></div><div class="field-body">是<span class="lab-orig">（本页从记录读出的结论，不是记录自称）</span></div></div></div><div class="card"><dl class="kv-list"><div class="kv"><dt><span class="lab-zh">实际给到的使用上限</span><span class="lab-orig">decided_lane</span></dt><dd><span class="lab-zh">研究草稿</span><span class="lab-orig">research-draft</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">申请的使用上限</span><span class="lab-orig">requested_lane</span></dt><dd><span class="lab-zh">候选</span><span class="lab-orig">candidate</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">结论</span><span class="lab-orig">decision_outcome</span></dt><dd><span class="lab-zh">退回补证据</span><span class="lab-orig">return_for_evidence</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">事实支持的最高上限</span><span class="lab-orig">lane_ceiling</span></dt><dd><span class="lab-zh">候选</span><span class="lab-orig">candidate</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">谓词是否仍对应当前版本</span><span class="lab-orig">version_currency</span></dt><dd><span class="lab-zh">对应现版本</span><span class="lab-orig">current</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">这一条写进账本的时间（UTC）</span><span class="lab-orig">recorded_at</span></dt><dd><code>2026-09-11T12:00:00+00:00</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">acceptance_snapshot_ref</span><span class="lab-orig">acceptance_snapshot_ref</span></dt><dd><code>snapshot:ui-demo-1</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">record_id</span><span class="lab-orig">record_id</span></dt><dd><code>ceiling-ui-demo-2</code></dd></div></dl><div class="field"><div class="field-label"><span class="lab-zh">声明的范围（档位只在范围内有意义）</span><span class="lab-orig">scope</span></div><div class="field-body"><div class="bi"><div class="bi-zh">DP-01…DP-05 过滤切片 ／ 本项目内的研究用途</div><div class="bi-en"><span class="bi-tag"></span>DP-01..DP-05 filtering slice / research use within this project</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">为什么不能再高</span><span class="lab-orig">ceiling_reason</span></div><div class="field-body"><div class="bi"><div class="bi-zh">可审计的结构化结果带有明示限制或禁用用途，因此最多支持一个<strong>受限的</strong>「候选」档（C-04 §6 第 4 行）。</div><div class="bi-en"><span class="bi-tag"></span>the auditable structured result carries explicit limitations or prohibited uses, so at most a restricted <code>candidate</code> is supported (C-04 §6 row 4)</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">明令禁止的用途</span><span class="lab-orig">prohibited_uses</span></div><div class="field-body"><code>clinical or diagnostic use</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">还需要什么证据</span><span class="lab-orig">required_next_evidence_refs</span></div><div class="field-body"><code>ev-significance-observed</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">谓词引用的证据</span><span class="lab-orig">lane_predicate_evidence_refs</span></div><div class="field-body"><code>ev-significance-declared</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">这条记录是否构成授权</span><span class="lab-orig">authorising</span></div><div class="field-body">否<span class="lab-orig">（本页从记录读出的结论，不是记录自称）</span></div></div></div><div class="card"><dl class="kv-list"><div class="kv"><dt><span class="lab-zh">实际给到的使用上限</span><span class="lab-orig">decided_lane</span></dt><dd><span class="lab-zh">研究草稿</span><span class="lab-orig">research-draft</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">申请的使用上限</span><span class="lab-orig">requested_lane</span></dt><dd><span class="lab-zh">已验证</span><span class="lab-orig">validated</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">结论</span><span class="lab-orig">decision_outcome</span></dt><dd><span class="lab-zh">拒绝</span><span class="lab-orig">rejected</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">事实支持的最高上限</span><span class="lab-orig">lane_ceiling</span></dt><dd><span class="lab-zh">候选</span><span class="lab-orig">candidate</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">谓词是否仍对应当前版本</span><span class="lab-orig">version_currency</span></dt><dd><span class="lab-zh">对应现版本</span><span class="lab-orig">current</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">这一条写进账本的时间（UTC）</span><span class="lab-orig">recorded_at</span></dt><dd><code>2026-09-12T12:00:00+00:00</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">acceptance_snapshot_ref</span><span class="lab-orig">acceptance_snapshot_ref</span></dt><dd><code>snapshot:ui-demo-1</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">record_id</span><span class="lab-orig">record_id</span></dt><dd><code>ceiling-ui-demo-3</code></dd></div></dl><div class="field"><div class="field-label"><span class="lab-zh">声明的范围（档位只在范围内有意义）</span><span class="lab-orig">scope</span></div><div class="field-body"><div class="bi"><div class="bi-zh">仅限标准化步骤 ／ 教学用途</div><div class="bi-en"><span class="bi-tag"></span>normalization only / teaching use</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">为什么不能再高</span><span class="lab-orig">ceiling_reason</span></div><div class="field-body"><div class="bi"><div class="bi-zh">可审计的结构化结果是一个跨轴向量，且没有任何经授权的跨轴定序，因此最多支持「候选」档（C-04 §6 第 3 行）。</div><div class="bi-en"><span class="bi-tag"></span>the auditable structured result is a cross-axis vector with no authorised cross-axis ordering, so at most <code>candidate</code> is supported (C-04 §6 row 3)</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">谓词引用的证据</span><span class="lab-orig">lane_predicate_evidence_refs</span></div><div class="field-body"><code>ev-normalization-declared</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">这条记录是否构成授权</span><span class="lab-orig">authorising</span></div><div class="field-body">否<span class="lab-orig">（本页从记录读出的结论，不是记录自称）</span></div></div></div><div class="card"><dl class="kv-list"><div class="kv"><dt><span class="lab-zh">实际给到的使用上限</span><span class="lab-orig">decided_lane</span></dt><dd><span class="lab-zh">研究草稿</span><span class="lab-orig">research-draft</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">申请的使用上限</span><span class="lab-orig">requested_lane</span></dt><dd><span class="lab-zh">候选</span><span class="lab-orig">candidate</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">结论</span><span class="lab-orig">decision_outcome</span></dt><dd><span class="lab-zh">退回补证据</span><span class="lab-orig">return_for_evidence</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">事实支持的最高上限</span><span class="lab-orig">lane_ceiling</span></dt><dd><span class="lab-zh">研究草稿</span><span class="lab-orig">research-draft</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">谓词是否仍对应当前版本</span><span class="lab-orig">version_currency</span></dt><dd><span class="lab-zh">对应现版本</span><span class="lab-orig">current</span></dd></div>
+<div class="kv"><dt><span class="lab-zh">这一条写进账本的时间（UTC）</span><span class="lab-orig">recorded_at</span></dt><dd><code>2026-09-12T12:00:00+00:00</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">acceptance_snapshot_ref</span><span class="lab-orig">acceptance_snapshot_ref</span></dt><dd><code>snapshot:ui-demo-1</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">record_id</span><span class="lab-orig">record_id</span></dt><dd><code>ceiling-ui-demo-4</code></dd></div></dl><div class="field"><div class="field-label"><span class="lab-zh">声明的范围（档位只在范围内有意义）</span><span class="lab-orig">scope</span></div><div class="field-body"><div class="bi"><div class="bi-zh">DP-01…DP-05 过滤切片 ／ 本项目内的研究用途</div><div class="bi-en"><span class="bi-tag"></span>DP-01..DP-05 filtering slice / research use within this project</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">为什么不能再高</span><span class="lab-orig">ceiling_reason</span></div><div class="field-body"><div class="bi"><div class="bi-zh">为这条决定提供<strong>支撑</strong>的证据已超出提交方声明的有效期，因此这里没有任何材料能积极支持上调；要么补一份当前的支撑证据，要么如实记录结论（C-04 §6 第 5 项：时效事实是必须覆盖的依赖）。</div><div class="bi-en"><span class="bi-tag"></span>the evidence offered to support this decision is past the validity window its submitter declared, so nothing here actively supports a promotion; supply current supporting evidence, or record the honest outcome (C-04 §6 item 5: freshness facts are required dependencies)</div></div></div></div><div class="field"><div class="field-label"><span class="lab-zh">还需要什么证据</span><span class="lab-orig">required_next_evidence_refs</span></div><div class="field-body"><code>ev-filtering-current-run</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">谓词引用的证据</span><span class="lab-orig">lane_predicate_evidence_refs</span></div><div class="field-body"><code>ev-filtering-observed</code></div></div><div class="field"><div class="field-label"><span class="lab-zh">这条记录是否构成授权</span><span class="lab-orig">authorising</span></div><div class="field-body">否<span class="lab-orig">（本页从记录读出的结论，不是记录自称）</span></div></div></div>
+      </details>
+      <div class="callout info"><h4>各档上限的含义</h4><p><div class="bi"><div class="bi-zh">本账户<strong>够不着</strong>「已验证」与「生产」两档：它们要求<strong>经授权的跨轴定序</strong>，而本工作线不授权任何跨轴定序（P-02 §5.2、C-04 §6）。<strong>这两档不存在，不等于结果弱。</strong></div><div class="bi-en"><span class="bi-tag"></span><code>validated</code> and <code>production</code> are not reachable for this account: they require an authorised cross-axis ordering, and this workline authorises no cross-axis ordering (P-02 §5.2, C-04 §6). Absence of those lanes is NOT a statement that the account is weak.</div></div></p></div>
+      <div class="callout warn"><h4>记录时间的含义</h4><p><div class="bi"><div class="bi-zh">决定上显示的时间，是<strong>这一行写进账本文件的时间</strong>。它<strong>不是</strong>决定自身的字段：账本被复制或恢复后，显示的就是复制时间；记录本身并不声明决定时间。</div><div class="bi-en"><span class="bi-tag"></span>The time shown against a decision is when its line was written to the ledger file. It is NOT a decision field: a copied or restored ledger carries the copy time, and the record itself states no decision time.</div></div></p></div>
+      <div class="callout warn"><h4>记录不等于发布</h4><p><div class="bi"><div class="bi-zh">记录一条使用上限决定<strong>不是</strong>发布、<strong>不是</strong>部署、<strong>不是</strong>晋升、也<strong>不是</strong> Package A 收尾。</div><div class="bi-en"><span class="bi-tag"></span>Recording a lane decision is not a release, not a deployment, not a promotion, and not a Package A closure.</div></div></p></div>
+    
+    </div>
+    
+    </section>
+    
+    <section class="section" id="who" data-layer="3" hidden>
+      <header class="section-head">
+        <span class="section-no">9</span>
+        <div><h2>权威与角色</h2><p class="muted small">唯一权威容器与角色记录：哪个结果是权威、谁写的、谁看过</p></div>
+      </header>
+      
+    <div class="card">
+      <h4>权威容器</h4>
+      <div class="kv-list">
+        <div class="kv"><dt><span class="lab-zh">权威容器类型</span><span class="lab-orig">container_kind</span></dt><dd><code>acceptance_snapshot</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">容器编号</span><span class="lab-orig">snapshot_id</span></dt><dd><code>snapshot:ui-demo-1</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">内嵌结果个数</span><span class="lab-orig">embedded_result_count</span></dt><dd><code>1</code></dd></div>
+<div class="kv"><dt><span class="lab-zh">权威依据（各项检查是否确认）</span><span class="lab-orig">authority_basis</span></dt><dd><div class="bi"><div class="bi-zh">完整性各域<strong>已确认</strong></div><div class="bi-en"><span class="bi-tag"></span>integrity domains confirmed</div></div></dd></div>
+      </div>
+      <p class="explain"><div class="bi"><div class="bi-zh">权威容器是唯一的结果权威；stage_package 是它生成前的输入；容器内恰好内嵌一个结构化结果。本页解释这份账户——本页不是那个容器，也不是第二份结果。</div><div class="bi-en"><span class="bi-tag"></span>acceptance_snapshot is the sole result-authority container; stage_package is its pre-snapshot input; the container holds exactly one embedded structured_strength_result. This report explains that account; it is not the container and not a second result.</div></div></p>
+      <div class="chips">
+        <span class="chip ok">本报告不是那个容器</span><span class="chip ok">本报告不是第二份结果</span>
+        <span class="chip ok">权威依据已确认</span>
+      </div>
+      <h4>角色记录</h4>
+      <p class="muted small"><div class="bi"><div class="bi-zh">本报告<strong>本身没有做过独立复核</strong>，也<strong>不构成</strong>收件、批准或裁定。</div><div class="bi-en"><span class="bi-tag"></span>This report has not itself performed independent review and does not constitute a receipt, approval, or adjudication.</div></div></p>
+      <div class="chips"><span class="chip ok">已有记录：无</span><span class="chip pending">尚无记录：撰写、复核、行政收件、裁定</span></div>
+      <div class="empty"><div class="bi"><div class="bi-zh">本报告<strong>没有收到角色记录</strong>，所以它<strong>无法说明</strong>：谁撰写、谁独立复核、谁裁定、谁只是行政收件。</div><div class="bi-en"><span class="bi-tag"></span>No role records were provided to this report, so it cannot say who authored, independently reviewed, adjudicated, or administratively receipted this account.</div></div></div>
+    </div>
+    
+    </section>
+    
+    <section class="section" id="history" data-layer="3" hidden>
+      <header class="section-head">
+        <span class="section-no">10</span>
+        <div><h2>历史与变更</h2><p class="muted small">新判断是新的有界判断，不是悄悄改写旧结论</p></div>
+      </header>
+      <div class="card"><div class="empty"><div class="bi"><div class="bi-zh">本报告<strong>没有收到变更上下文</strong>，所以它<strong>无法说明</strong>相对于更早的账户发生了什么变化。</div><div class="bi-en"><span class="bi-tag"></span>No change context was provided to this report, so it cannot say what changed relative to any earlier account.</div></div></div></div>
+    </section>
+    
+    </section>
+    
+
+    
+    <section class="act" id="act-three">
+      <header class="act-head">
+        <span class="act-no">第幕三幕</span>
+        <div><h2>边界与下一步</h2><p class="muted small">这一幕是行动：还没有什么、何时必须停、下一步谁做什么。</p></div>
+      </header>
+      
+    <section class="section" id="gaps">
+      <header class="section-head">
+        <span class="section-no">11</span>
+        <div><h2>尚未实现的能力</h2><p class="muted small">边界声明：以下能力没有</p></div>
+      </header>
+      <div class="callout warn"><h4>边界声明</h4><p><div class="bi"><div class="bi-zh">下面这些产品能力<strong>这里没有实现</strong>，也<strong>没有被主张</strong>；对其中每一项，当前账户都是<strong>不可用</strong>的。这份清单是<strong>边界陈述</strong>，不是计划、不是路线图、<strong>也不是</strong>发布／lane 权威。</div><div class="bi-en"><span class="bi-tag"></span>These product capabilities are not implemented here and are NOT being claimed; against each one the current account is unavailable. This list is a boundary statement, not a plan, a roadmap, or a release/lane authority.</div></div></p></div><ul class="not-yet"><li><span class="cap"><div class="bi"><div class="bi-zh">发布机制与档位授予</div><div class="bi-en"><span class="bi-tag"></span>no release machinery / no lane grant</div></div></span><span class="muted">partially implemented: no lane is granted and no release authority exists, but a use/release ceiling can be recorded and rendered with its evidence, restrictions and required next evidence (see lane_and_release). This is not release machinery: no automatic promotion, transition, rollback or deployment; the decision caps use and never authorises it by itself</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">部署与包级收尾</div><div class="bi-en"><span class="bi-tag"></span>deployment and Package A closure</div></div></span><span class="muted">not implemented and not claimed</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">运行期证明 / 执行证据</div><div class="bi-en"><span class="bi-tag"></span>runtime proof / execution evidence</div></div></span><span class="muted">not implemented and not claimed</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">独立复核人批注</div><div class="bi-en"><span class="bi-tag"></span>independent reviewer approval</div></div></span><span class="muted">not performed: the system records roles, it does not conduct review</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">五个决策点之外的扩展点</div><div class="bi-en"><span class="bi-tag"></span>additional decision points beyond the five</div></div></span><span class="muted">not implemented: five RNA-seq points only</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">bulk RNA-seq 之外的分析类型</div><div class="bi-en"><span class="bi-tag"></span>other analysis types beyond bulk RNA-seq</div></div></span><span class="muted">not implemented</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">证据来源 / 时效字段</div><div class="bi-en"><span class="bi-tag"></span>evidence provenance / freshness fields</div></div></span><span class="muted">partially implemented: every evidence item now carries its observation time, the validity window its submitter declared, an optional provenance and subject, the claim it is offered for, and its role; the report derives and shows whether each item is still current. NOT implemented: per-item authority permission (who may rely on it), and any judgement of whether the declared provenance is genuine — the system records the declaration and does not adjudicate it</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">完整状态词表</div><div class="bi-en"><span class="bi-tag"></span>the full state vocabulary</div></div></span><span class="muted">partially implemented: P-02 §5 lists 13 state and consequence meanings; auditable, scientifically_limited, conflicted, not_auditable and integrity_failed are expressible as point judgements, historical_only on the history side, and reviewed, blocked, limited-use, stale, scoped and planned are attested from facts this report holds — 12 of 13 in total, and external is not expressible, because no input carries an outside-the-artifact physical observation; see <code>state_meanings.unexpressed_states</code> for its reason and what would have to change for it.</span></li>
+<li><span class="cap"><div class="bi"><div class="bi-zh">对外展示的正式报告</div><div class="bi-en"><span class="bi-tag"></span>a formal report for showing to others</div></div></span><span class="muted">not available: an inspector page for the accountable owner exists (ui/report.html) and renders this report for reading, but a user-facing product surface and any external-facing presentation remain undecided product decisions (P-03 §14)</span></li></ul>
+    </section>
+    
+    <section class="section" id="stop">
+      <header class="section-head">
+        <span class="section-no">12</span>
+        <div><h2>停止条件与下一步</h2><p class="muted small">停止条件与责任归属</p></div>
+      </header>
+      
+    <div class="card">
+      <h4>最终指令</h4>
+      <div class="bi"><div class="bi-zh">能依赖什么：各点由<strong>权威账户</strong>确立的判断（不是这份解释性报告）。不能主张什么：本报告不是第二个结果权威，也不能从它推出任何总分、排名、lane 或置信度。什么必须停下：凡必需的 身份／证据／完整性／权威 事实未核实，受影响主张的依赖必须停止，受影响材料已被隔离。下一步需要什么证据或复核：逐点证据缺口与下一步动作标明了还需要什么。是否需要人类升级：凡冲突、完整性失败或无法评估的状态持续存在，受影响的决定交给具名人类权威裁定；停下时的责任方类别在下面点名，而不是留空。</div><div class="bi-en"><span class="bi-tag">报告 §7.9 最终指令</span>What can be relied on: each point's judgment as established by the authoritative account (not this explanatory report). What cannot be claimed: this report is not a second result authority, and no total score, ranking, lane, or confidence can be inferred from it. What must stop: where any required identity, evidence, integrity, or authority fact is unverified, reliance on the affected claim must stop and the affected material is isolated. What evidence or review is required next: the per-point evidence gaps and next actions above identify what supporting evidence or review is required before the account can be depended on. Whether human escalation is required: where a conflict, integrity failure, or not-auditable condition persists, the affected decision routes to the named human authority for adjudication. Where the affected decision must stop, it routes to the scientific review authority for adjudication; the accountable role category is named here rather than left unspecified.</div></div>
+      <h4>停止条件</h4>
+      <div class="callout warn"><h4>科学上支持不足<span class="lab-orig">scientific_insufficiency</span></h4><div class="bi"><div class="bi-zh">这个点<strong>只能作为「科学上支持不足」或「冲突」</strong>成立；手头的证据<strong>不足以支持</strong>所声明的主张。（这<strong>不是</strong>「必要事实无法核实」那种情况——那是 完整性／权威失败。）</div><div class="bi-en"><span class="bi-tag">后果</span>Point is supportable only as scientifically limited or conflicting; the evidence available does not support the named claim. (This is NOT the same as a fact that could not be verified — see integrity_failure.)</div></div></div>
+      <h4>下一步</h4>
+      <div class="entry"><span class="entry-label">属于哪一步</span><span class="lab-zh">属于哪一步</span><span class="lab-orig">filtering</span><span class="entry-label">动作</span><span class="lab-zh">要求补证据</span><span class="lab-orig">request_evidence</span><span class="entry-label">针对什么</span>evidence_observations<span class="entry-label">理由</span>支持「执行过程被观测到」这一点<span class="en">support execution observation</span></div>
+<div class="entry"><span class="entry-label">属于哪一步</span><span class="lab-zh">属于哪一步</span><span class="lab-orig">significance_threshold</span><span class="entry-label">动作</span><span class="lab-zh">要求补证据</span><span class="lab-orig">request_evidence</span><span class="entry-label">针对什么</span>evidence_observations<span class="entry-label">理由</span>用<strong>属于这一步的</strong>证据来支持阈值的选取<span class="en">support the threshold choice with point-local evidence</span></div>
+<div class="entry"><span class="entry-label">属于哪一步</span><span class="lab-zh">属于哪一步</span><span class="lab-orig">significance_threshold</span><span class="entry-label">动作</span><span class="lab-zh">提交修正</span><span class="lab-orig">submit_correction</span><span class="entry-label">针对什么</span>decision_declaration<span class="entry-label">理由</span>给出<strong>有支撑的</strong>阈值选择或理由<span class="en">provide a supported threshold choice or rationale</span></div>
+    </div>
+    
+    </section>
+    
+    </section>
+    
+
+    
+    <section class="section" id="criteria">
+      <header class="section-head">
+        <span class="section-no">13</span>
+        <div><h2>判定依据（规则与出处）</h2><p class="muted small">判定依据：规则、档位阶梯与出处；不给分数、不做总评</p></div>
+      </header>
+      <details class="folding"><summary>判据面板：按哪条规则 / 档位阶梯 / 出处 / 接入状态</summary>
+      <p class="lede">这一节列每个判断点的判定依据：<strong>规则、档位阶梯与出处</strong>。
+      不给分数，不对档位加总；档位只告知，不参与判定。</p>
+      <div class="kv">
+        <dt>本次分析家族</dt>
+        <dd>bulk_rnaseq → 规则家族 <code>DEG</code></dd>
+      </div>
+      <div class="callout warn">
+        <h4>档位归属尚未推导</h4>
+        <p>规则档位按方法名列（例如 <code>filterByExpr</code>），提交里写的是
+        声明的方法（例如 <code>low_count_filter</code>）。两套词还没有映射，
+        本页不判断声明落在哪一档；建立映射属新增语义，需另行裁定。</p>
+      </div><div class="card">
+      <h4>low-expression filtering<span class="muted small">（filtering）</span></h4>
+      <div class="kv" style="margin:6px 0">
+        <dt>按哪条规则</dt>
+        <dd><code>D1.2-DEG-001</code>　低表达基因过滤策略选择
+          <div class="small" style="margin-top:4px"><span class="chip ok">已接入</span> 实际命中：<code>D1.2-DEG-001</code></div></dd>
+      </div>
+      <div class="kv">
+        <dt>声明的方法</dt>
+        <dd><code>low_count_filter</code><div class="small" style="margin-top:4px">按名<strong>无法归属</strong>：声明的是策略（"按低计数过滤"），而规则档位列的是方法/工具名 （filterByExpr、CPM_filter_min_samples…）。规则区分的是"自适应阈值 vs 固定阈值"， 声明名本身并不表达这一点，因此按名无法归属。 若要做归属，需要声明方补一项"阈值是否自适应"，或在提交里直接给方法名—— 两者都属产品输入语义，需另行裁定。
+</div><div class="muted small">这不是档位高低问题，只是按声明名对不上；可在下方档位阶梯里逐档核对。</div></dd>
+      </div>
+      <h5>这一条规则的档位阶梯（高 → 低）</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt>level_4</dt>
+          <dd><span class="chip warn">计划中</span> v0.2 — 由模型给出理由的评估
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_3</dt>
+          <dd><span class="chip accent">已实现</span> filterByExpr() (edgeR) 或 independentFiltering (DESeq2) — 方法自适应阈值　方法：<code>filterByExpr</code>、<code>independent_filtering</code>、<code>DESeq2_independentFiltering</code>、<code>CPM_filter_with_replicate_awareness</code>
+            <div class="muted small">理由：领域金标准是 filterByExpr / independent filtering，而非固定阈值 CPM&gt;1</div></dd>
+        </div>
+        <div class="kv">
+          <dt>level_2</dt>
+          <dd><span class="chip accent">已实现</span> 固定阈值方法 — 在极端文库大小下不够精确　方法：<code>CPM_filter_min_samples</code>、<code>counts_per_million_min</code>、<code>mean_expression_filter</code>、<code>median_expression_filter</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_1</dt>
+          <dd><span class="chip accent">已实现</span> 不过滤 → 低表达基因噪声大 + 多重检验负担增加　方法：<code>no_filtering</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_0</dt>
+          <dd><span class="chip accent">已实现</span> 仅在归一化数据上做过滤可能保留噪声基因或移除有生物学意义的低表达基因　方法：<code>filter_by_variance_only</code>、<code>percentile_cutoff_on_normalized_data</code>
+            </dd>
+        </div></div>
+      <h5>档位出处</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>edgeR User's Guide §2.7 Filtering (filterByExpr) <span class="muted small"><span class="muted">（此条无可核标识）</span></span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Bourgon et al. (2010) PNAS — Independent filtering increases detection power <span class="muted small">DOI 10.1073/pnas.0914005107 PMID 20460310</span></dd>
+        </div></div>
+      <p class="muted small">库自述状态：最近复核：2026-09-13（复核窗口 24 个月）</p>
+    </div><div class="card">
+      <h4>normalization<span class="muted small">（normalization）</span></h4>
+      <div class="kv" style="margin:6px 0">
+        <dt>按哪条规则</dt>
+        <dd><code>D1.3-DEG-001</code>　Bulk RNA-seq 归一化方法选择
+          <div class="small" style="margin-top:4px"><span class="chip warn">未接入</span> 规则库里存在 <code>D1.3-DEG-001</code>，但实施未调用；本点没有档位参与判定。<span class="muted small">接入=判据参与判定；未接入=只陈列不生效。</span></div></dd>
+      </div>
+      <div class="kv">
+        <dt>声明的方法</dt>
+        <dd><code>tmm</code><div class="small" style="margin-top:4px">档位归属：<span class="chip accent">level_3</span> 　依据：名字相同（含大小写/连字符差异）（对应规则里的 <code>TMM</code>）</div><div class="muted small">只对应声明名，<strong>不改变任何判定，也不构成好坏评价</strong>。</div></dd>
+      </div>
+      <h5>这一条规则的档位阶梯（高 → 低）</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt>level_4</dt>
+          <dd><span class="chip warn">计划中</span> v0.2 — 由模型给出理由的评估
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_3</dt>
+          <dd><span class="chip accent">已实现</span> 方法内置归一化 (edgeR TMM / DESeq2 median-of-ratios)　方法：<code>TMM</code>、<code>RLE</code>、<code>DESeq2_median_of_ratios</code>、<code>upper_quartile</code>
+            <div class="muted small">理由：与下游方法原生集成，假设验证自动处理</div></dd>
+        </div>
+        <div class="kv">
+          <dt>level_2</dt>
+          <dd><span class="chip accent">已实现</span> TPM 在 limma-trend + log-TPM 场景下可接受，但不匹配 DESeq2/edgeR 的输入要求　方法：<code>TPM</code>、<code>CPM_no_log</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_1</dt>
+          <dd><span class="chip accent">已实现</span> 存在已知的组成偏差 (composition bias) — Dillies et al. 2013 证实 FPKM/RPKM 在样本间比较时有偏　方法：<code>FPKM</code>、<code>RPKM</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_0</dt>
+          <dd><span class="chip accent">已实现</span> 完全不做归一化 → 测序深度差异会主导结果　方法：<code>raw_counts_no_normalization</code>
+            </dd>
+        </div></div>
+      <h5>档位出处</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Conesa et al. (2016) Genome Biology — RNA-seq best practices survey <span class="muted small">DOI 10.1186/s13059-016-0881-8 PMID 26813401</span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Dillies et al. (2013) Briefings in Bioinformatics — Normalization method comparison <span class="muted small">DOI 10.1093/bib/bbs046 PMID 22988256</span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Robinson & Oshlack (2010) — TMM normalization <span class="muted small">DOI 10.1186/gb-2010-11-3-r25 PMID 20196867</span></dd>
+        </div></div>
+      <p class="muted small">库自述状态：最近复核：2026-09-13（复核窗口 24 个月）</p>
+    </div><div class="card">
+      <h4>differential-analysis method<span class="muted small">（differential_method）</span></h4>
+      <div class="kv" style="margin:6px 0">
+        <dt>按哪条规则</dt>
+        <dd><code>M1.1-DEG-001</code>　Bulk RNA-seq 差异分析方法选择
+          <div class="small" style="margin-top:4px"><span class="chip warn">未接入</span> 规则库里存在 <code>M1.1-DEG-001</code>，但实施未调用；本点没有档位参与判定。<span class="muted small">接入=判据参与判定；未接入=只陈列不生效。</span></div></dd>
+      </div>
+      <div class="kv">
+        <dt>声明的方法</dt>
+        <dd><code>deseq2</code><div class="small" style="margin-top:4px">档位归属：<span class="chip accent">level_3</span> 　依据：名字相同（含大小写/连字符差异）（对应规则里的 <code>DESeq2</code>）</div><div class="muted small">只对应声明名，<strong>不改变任何判定，也不构成好坏评价</strong>。</div></dd>
+      </div>
+      <h5>这一条规则的档位阶梯（高 → 低）</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt>level_4</dt>
+          <dd><span class="chip warn">计划中</span> v0.2 — 由模型给出理由的评估（演示级论证）
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_3</dt>
+          <dd><span class="chip accent">已实现</span> DESeq2 / edgeR / limma-voom — 负二项分布或经验贝叶斯框架　方法：<code>DESeq2</code>、<code>edgeR</code>、<code>limma-voom</code>、<code>limma_voom</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_2</dt>
+          <dd><span class="chip accent">已实现</span> 边缘适用场景 — 在特定条件下可接受　方法：<code>limma-trend</code>、<code>voom-with-quality-weights</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_1</dt>
+          <dd><span class="chip accent">已实现</span> 对低表达基因效力不足。pseudobulk + Wilcoxon 在单细胞场景是标准做法，但本规则仅覆盖 bulk RNA-seq。　方法：<code>Wilcoxon_rank_sum</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_0</dt>
+          <dd><span class="chip accent">已实现</span> t-test 违反正态性假设。DESeq2 要求 raw counts 输入。　方法：<code>ttest_equal_variance</code>、<code>ttest_unequal_variance</code>、<code>DESeq2_on_normalized_data</code>
+            </dd>
+        </div></div>
+      <h5>档位出处</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Conesa et al. (2016) Genome Biology — RNA-seq best practices survey <span class="muted small">DOI 10.1186/s13059-016-0881-8 PMID 26813401</span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Schurch et al. (2016) RNA — n=48 yeast benchmark <span class="muted small">DOI 10.1261/rna.053959.115 PMID 27022035</span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Evidenced</span></dt>
+          <dd>Soneson & Delorenzi (2013) BMC Bioinformatics — HISTORICAL REFERENCE <span class="muted small">DOI 10.1186/1471-2105-14-91 PMID 24115176</span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Confirmed</span></dt>
+          <dd>Love et al. (2014) DESeq2, Genome Biology <span class="muted small">DOI 10.1186/s13059-014-0550-8 PMID 25516281</span></dd>
+        </div></div>
+      <p class="muted small">库自述状态：最近复核：2026-09-13（复核窗口 24 个月）</p>
+    </div><div class="card">
+      <h4>multiple-testing correction<span class="muted small">（multiple_testing_correction）</span></h4>
+      <div class="kv" style="margin:6px 0">
+        <dt>按哪条规则</dt>
+        <dd><code>M1.2-DEG-001</code>　多重检验校正方法选择
+          <div class="small" style="margin-top:4px"><span class="chip warn">未接入</span> 规则库里存在 <code>M1.2-DEG-001</code>，但实施未调用；本点没有档位参与判定。<span class="muted small">接入=判据参与判定；未接入=只陈列不生效。</span></div></dd>
+      </div>
+      <div class="kv">
+        <dt>声明的方法</dt>
+        <dd><code>BH</code><div class="small" style="margin-top:4px">档位归属：<span class="chip accent">level_3</span> 　依据：名字相同（含大小写/连字符差异）（对应规则里的 <code>BH</code>）</div><div class="muted small">只对应声明名，<strong>不改变任何判定，也不构成好坏评价</strong>。</div></dd>
+      </div>
+      <h5>这一条规则的档位阶梯（高 → 低）</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt>level_4</dt>
+          <dd><span class="chip warn">计划中</span> v0.2 — 由模型给出理由的评估
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_3</dt>
+          <dd><span class="chip accent">已实现</span> Benjamini-Hochberg FDR 校正 — DEG 探索性分析的标准做法　方法：<code>BH</code>、<code>Benjamini-Hochberg</code>、<code>FDR</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_2</dt>
+          <dd><span class="chip accent">已实现</span> BY 比 BH 更保守；q-value 考虑了 pi0 估计　方法：<code>BY</code>、<code>Benjamini-Yekutieli</code>、<code>q_value_storey</code>、<code>Storey_q_value</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_1</dt>
+          <dd><span class="chip accent">已实现</span> FWER 控制 — 对全基因组探索性分析过保守，但在验证性场景（少量预定义基因）下是正确选择　方法：<code>Bonferroni</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_0</dt>
+          <dd><span class="chip accent">已实现</span> 不做多重检验校正 → 在 20000 个检验中，α=0.05 下期望 ~1000 个假阳性　方法：<code>no_correction</code>、<code>raw_p_value</code>、<code>uncorrected</code>
+            </dd>
+        </div></div>
+      <h5>档位出处</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt><span class="chip">L-Confirmed</span></dt>
+          <dd>Bonferroni inequality — mathematical fact (not a publication) <span class="muted small"><span class="muted">（此条无可核标识）</span></span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Benjamini & Hochberg (1995) — Controlling the FDR <span class="muted small">DOI 10.1111/j.2517-6161.1995.tb02031.x</span></dd>
+        </div></div>
+      <p class="muted small">库自述状态：最近复核：2026-09-13（复核窗口 24 个月）</p>
+    </div><div class="card">
+      <h4>significance / effect-size threshold<span class="muted small">（significance_threshold）</span></h4>
+      <div class="kv" style="margin:6px 0">
+        <dt>按哪条规则</dt>
+        <dd><code>M1.3-DEG-001</code>　显著性阈值选择
+          <div class="small" style="margin-top:4px"><span class="chip warn">未接入</span> 规则库里存在 <code>M1.3-DEG-001</code>，但实施未调用；本点没有档位参与判定。<span class="muted small">接入=判据参与判定；未接入=只陈列不生效。</span></div></dd>
+      </div>
+      <div class="kv">
+        <dt>声明的方法</dt>
+        <dd><code>padj_0.05</code><div class="small" style="margin-top:4px">按名<strong>无法归属</strong>：声明的是单个数（校正后 p &lt; 0.05），而规则档位列的是成对阈值表达式 （<code>padj &lt;= 0.05, |logFC| &gt;= 1.0</code> 这一类）。规则要求同时给出统计显著性与 效应量边界，声明里只有一半，因此按名无法归属。 这与 P-01 §4.5「阈值决策是成对的解释性选择」一致：缺一半时， 应如实注明“缺”，而非代补默认效应量。
+</div><div class="muted small">这不是档位高低问题，只是按声明名对不上；可在下方档位阶梯里逐档核对。</div></dd>
+      </div>
+      <h5>这一条规则的档位阶梯（高 → 低）</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt>level_4</dt>
+          <dd><span class="chip warn">计划中</span> v0.2 — 由模型给出理由的评估（结合生物学背景）
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_3</dt>
+          <dd><span class="chip accent">已实现</span> 双阈值 (统计 + 生物学) — 标准做法。logFC 阈值可根据领域惯例在 0.5-2.0 之间调整。　方法：<code>padj &lt;= 0.05, |logFC| &gt;= 1.0</code>、<code>FDR &lt; 0.05, |logFC| &gt;= 1.0</code>、<code>padj &lt;= 0.05, |logFC| &gt;= 0.5</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_2</dt>
+          <dd><span class="chip accent">已实现</span> 宽松的统计阈值 → 需明确标注为探索性分析　方法：<code>padj &lt;= 0.1, |logFC| &gt;= 0.5</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_1</dt>
+          <dd><span class="chip accent">已实现</span> 仅用 raw p 值 + 无效应量阈值 → 大量假阳性报告　方法：<code>p_raw &lt;= 0.05</code>
+            </dd>
+        </div>
+        <div class="kv">
+          <dt>level_0</dt>
+          <dd><span class="chip accent">已实现</span> 完全无约束 → 不可接受的假阳性率　方法：<code>no_threshold</code>、<code>unfiltered</code>
+            </dd>
+        </div></div>
+      <h5>档位出处</h5>
+      <div class="kv-list">
+        <div class="kv">
+          <dt><span class="chip">L-Consensus</span></dt>
+          <dd>Schurch et al. (2016) RNA — n=48 yeast benchmark <span class="muted small">DOI 10.1261/rna.053959.115 PMID 27022035</span></dd>
+        </div>
+        <div class="kv">
+          <dt><span class="chip">L-Evidenced</span></dt>
+          <dd>Wang & Gao (2026) Human Genomics 20:63 — pipeline DE reporting recommendations <span class="muted small">DOI 10.1186/s40246-026-00930-1</span></dd>
+        </div></div>
+      <p class="muted small">库自述状态：最近复核：2026-09-14（复核窗口 24 个月）</p>
+    </div></details>
+    </section>
+    
+
+    
+    <section class="section" id="glossary">
+      <header class="section-head">
+        <span class="section-no">14</span>
+        <div><h2>词表（英文原词对照）</h2><p class="muted small">页面上出现的英文原词，都在这里配了中文对照</p></div>
+      </header>
+      <details class="folding"><summary>英文原词对照表</summary><table class="glossary"><thead><tr><th>词</th><th>什么意思</th></tr></thead><tbody><tr><td><strong>可审计</strong><br><code>auditable</code></td><td>这一步的问题与证据对得上，结论站得住，可以依赖。</td></tr><tr><td><strong>科学上支持不足</strong><br><code>scientifically_limited</code></td><td>材料还撑不起这个结论——不是算错了，是还不到下结论的时候。</td></tr><tr><td><strong>冲突未解</strong><br><code>conflicted</code></td><td>观察到两套互相打架的说法或做法；系统不挑赢家，交给人裁定。</td></tr><tr><td><strong>无法评估</strong><br><code>not_auditable</code></td><td>本次无法对这个点做出判断（缺必要事实或权限）。</td></tr><tr><td><strong>完整性／权威失败</strong><br><code>integrity_failed</code></td><td>必备的身份、来源、版本、权限等事实无法核实，受影响材料已被隔离。</td></tr><tr><td><strong>待验证的提交</strong><br><code>pending_attempt</code></td><td>收到了一次尝试或提交，还没验证完，不能当结论用。</td></tr><tr><td><strong>仅历史</strong><br><code>historical_only</code></td><td>这是旧账户，只作历史记录保留，永远不当作当前结论。</td></tr><tr><td><strong>已核实</strong><br><code>confirmed</code></td><td>这条材料的来源与内容都核对过。</td></tr><tr><td><strong>未核实</strong><br><code>unverified</code></td><td>材料在那儿，但没人核实过，因此不算证据。</td></tr><tr><td><strong>核实失败</strong><br><code>failed</code></td><td>核对没通过。</td></tr><tr><td><strong>互相冲突</strong><br><code>conflicted</code></td><td>两条材料对同一件事说法不一致。</td></tr><tr><td><strong>完整</strong><br><code>complete</code></td><td>该说的都说了。</td></tr><tr><td><strong>部分</strong><br><code>partial</code></td><td>只覆盖了一部分。</td></tr><tr><td><strong>缺失</strong><br><code>missing</code></td><td>没有。</td></tr><tr><td><strong>充分</strong><br><code>sufficient</code></td><td>够支持当前结论。</td></tr><tr><td><strong>不足</strong><br><code>insufficient</code></td><td>不够支持当前结论。</td></tr><tr><td><strong>等待人来裁定</strong><br><code>awaiting_human_decision</code></td><td>这项变更要人或升级机制拍板，裁定前不得当作已定。</td></tr><tr><td><strong>已实现</strong><br><code>realized</code></td><td>变更的后出侧就是当前账户，也就是这项变更已经落地。</td></tr><tr><td><strong>仅提出</strong><br><code>proposed</code></td><td>只是有人提出，当前账户仍是先前那一侧。</td></tr><tr><td><strong>撰写</strong><br><code>authored</code></td><td>谁写的这份东西。</td></tr><tr><td><strong>复核</strong><br><code>reviewed</code></td><td>谁独立看过。只是「有人看过」的记录，不等于批准。</td></tr><tr><td><strong>行政收件</strong><br><code>receipted</code></td><td>谁只是收下或登记了。不等于实质审查。</td></tr><tr><td><strong>裁定</strong><br><code>adjudicated</code></td><td>谁做的决定。</td></tr><tr><td><strong>要求补证据</strong><br><code>request_evidence</code></td><td>当前证据不足，需要补材料。</td></tr><tr><td><strong>要求复核</strong><br><code>request_review</code></td><td>需要人来复核。</td></tr><tr><td><strong>提交修正</strong><br><code>submit_correction</code></td><td>需要提交一次修正。</td></tr><tr><td><strong>停下</strong><br><code>stop</code></td><td>受影响的主张必须停下。</td></tr></tbody></table></details>
+    </section>
+    
+    <footer>
+      这一页只是把 <code>render_dp_report</code> 的真实输出渲染成人能读的样子：
+      它不创造状态、不产生分数、不构成验收／发布／权威。
+      <br><strong>它是观察工具，不是对外交付件。</strong>
+      谁能用、在什么场景用、以什么形态交付，仍属未决的产品决定（P-03 §15）；
+      这一页不承担对外报告的职责。
+      报告自带的自述标记：explanatory= ·
+      not_authority= · not_acceptance=。
+      <br>以后若要给外部展示的正式报告，属另行授权的产品决定，本页不承担该职责。
+    </footer>
+  </main>
+</div>
+<script>
+(function () {
+  // 英文原文默认显示；取消勾选只留中文（选择记在本地，刷新后保持）。
+  var box = document.getElementById('show-en');
+  if (!box) return;
+  var KEY = 'dp-report-show-original';
+  try {
+    var saved = window.localStorage.getItem(KEY);
+    if (saved === '0') { box.checked = false; }
+  } catch (e) { /* localStorage 不可用时就按默认显示 */ }
+  function apply() {
+    document.body.classList.toggle('hide-original', !box.checked);
+    try { window.localStorage.setItem(KEY, box.checked ? '1' : '0'); } catch (e) {}
+  }
+  box.addEventListener('change', apply);
+  apply();
+})();
+
+(function () {
+  // 阅读深度 × 导航：一套模型。切换深度只改 <html data-depth>，段落节点一个不动；
+  // 导航点击则「先按需提升深度，再平滑滚动」——否则跳向 display:none 的目标会
+  // 停在上一可见处（系统性错位的旧病根）。
+  var KEY = 'dp-report-depth';
+  var buttons = [].slice.call(document.querySelectorAll('[data-depth-to]'));
+  function setDepth(depth, focusButton) {
+    var value = String(depth);
+    document.documentElement.setAttribute('data-depth', value);
+    buttons.forEach(function (b) {
+      var on = b.getAttribute('data-depth-to') === value;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+    var note = document.getElementById('depth-note');
+    if (note) { note.hidden = value !== '1'; }
+    if (focusButton) { focusButton.focus(); }
+    try { window.localStorage.setItem(KEY, value); } catch (e) {}
+  }
+  var saved = null;
+  try { saved = window.localStorage.getItem(KEY); } catch (e) { saved = null; }
+  setDepth(saved === '1' || saved === '2' || saved === '3' ? saved : '2', null);
+  buttons.forEach(function (b) {
+    b.addEventListener('click', function () {
+      setDepth(b.getAttribute('data-depth-to'), b);
+    });
+  });
+
+  // 目标可见层 = 自身与所有祖先中最大的 data-layer；跳到它之前先把深度提到这一层。
+  function layerNeeded(el) {
+    var need = 1, node = el;
+    while (node && node !== document) {
+      var L = node.getAttribute && node.getAttribute('data-layer');
+      if (L) { var n = +L; if (n > need) need = n; }
+      node = node.parentElement;
+    }
+    return need;
+  }
+  window.__dpGoTo = function (id) {
+    var el = document.getElementById(id);
+    if (!el) return false;
+    var cur = +(document.documentElement.getAttribute('data-depth') || '2');
+    var need = layerNeeded(el);
+    if (need > cur) setDepth(need, null);
+    // 用 auto（非 smooth）：smooth 动画会被下一次跳转打断（连续点击时后一个目标
+    // 停在原地——实测踩过）。可靠性优先：每击必达。
+    el.scrollIntoView({ behavior: 'auto', block: 'start' });
+    return true;
+  };
+  var links = [].slice.call(document.querySelectorAll('a[data-goto]'));
+  links.forEach(function (a) {
+    a.addEventListener('click', function (ev) {
+      if (window.__dpGoTo(a.getAttribute('data-goto'))) ev.preventDefault();
+    });
+  });
+})();
+</script>
+</body>
+</html>

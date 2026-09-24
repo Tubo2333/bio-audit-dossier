@@ -1,0 +1,97 @@
+rule_id: G1.3-DEG-003_method
+domain: DEG
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2015, 2026]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "单细胞差异表达方法选择 / scRNA DEG method selection"
+description: "除了pseudobulk vs cell-level的选择外, DEG方法本身的统计学特性也很重要。DESeq2 (pseudobulk) 基于负二项分布对count数据建模最佳。MAST_with_replicate_correction 使用hurdle模型处理zero-inflation并控制重复。NEBULA 使用负二项混合模型。方法的统计假设需要与数据特征匹配。B5 裁决（2026-08-14）：裸 MAST（细胞级、无 replicate correction）与 G1.1 对齐评为 L1——伪重复问题未解决；仅 MAST_with_replicate_correction 评 L2。"
+condition:
+  decision_type: deg_method
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+  forbidden_context: {}
+  context_constraints: []
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - DESeq2_pseudobulk
+      - pseudobulk_DESeq2
+      - edgeR_pseudobulk
+      - pseudobulk_edgeR
+      - limma_voom_pseudobulk
+      - pseudobulk_limma
+    description: "Pseudobulk + 负二项/线性模型 — 统计特性最佳"
+    rationale: "负二项分布自然适合UMI count数据的过度离散特征"
+  level_2:
+    methods:
+      - MAST_with_replicate_correction
+      - NEBULA
+      - scVI_LDEE
+    description: "混合模型/深度学习(含重复校正) — 考虑细胞间变异但需要合理使用"
+    conditions_when_acceptable: "当pseudobulk不可行(稀有细胞类型)时, 带 replicate correction 的混合模型是合理选择"
+  level_1:
+    methods:
+      - MAST
+      - wilcoxon_rank_sum
+      - wilcoxon_sc
+      - Seurat_FindMarkers
+      - Seurat_wilcoxon_default
+      - ttest_on_normalized
+      - ttest_equal_variance
+      - ttest_on_cells
+      - Kruskal_Wallis_cell_level
+    description: "MAST(细胞级,无重复校正)/Wilcoxon/t-test — 经典但未针对单细胞优化"
+    note: "裸 MAST 与 Seurat FindMarkers 默认 Wilcoxon 均以细胞为独立重复(伪重复未解决, 与 G1.1 L1 语义对齐（既往裁定）); 适用于探索性分析但需注意伪重复。wilcoxon 家族词表对齐（既往裁定）：wilcoxon_rank_sum/wilcoxon_sc/Seurat_FindMarkers/Seurat_wilcoxon_default 统一评 L1（以 G1.1 语义为准，与 D2 MAST 裁决同原则——细胞级 wilcoxon = 有风险 L1，L0 保留给 raw-counts t-test）；修复 B 版黄金对照 L0 兜底机制（I1 报告 §8.2 发现①）。t-test 家族对齐（窗口 K3 裁决 2026-08-16，审计中枢确认）：ttest_equal_variance/ttest_on_cells 评 L1（与 wilcoxon 族同等待遇——细胞级 = L1 有风险，Squair 2021；无独立于伪重复的额外风险论证，Svensson 2020 弱化零膨胀论证）；Kruskal_Wallis_cell_level 同原则补 L1；raw-counts 直用（ttest_on_raw_counts/anova_on_cells）保留 L0（独立分布违背）"
+  level_0:
+    methods:
+      - ttest_on_raw_counts
+      - anova_on_cells
+    description: "t-test/ANOVA直接用于原始counts — 不满足任何假设（独立于伪重复）"
+    note: "既往裁定：raw counts 直用保留 L0——离散 count 的均值-方差关系在任何单位下都违背 t-test 连续正态假设"
+  override_n2:
+    condition: "n_patients <= 2"
+    all_methods: "level_0"
+    note: "n<=2 时无法可靠估计生物学变异。降级为仅报告 fold change，不做统计推断。（2026-09-14 处置：沿用 M1.1-DEG-001 整句；触发键按 scRNA 观察单位取 n_patients；出处同 Schurch et al. 2016, PMID 27022035，即 M1.1 支持 override_n2 的那条依据）"
+
+evidence:
+  - source_type: benchmark_paper
+    pmid: "34584091"
+    doi: "10.1038/s41467-021-25960-2"
+    title: "Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications"
+    confidence: L-Confirmed
+    excerpt: "Pseudobulk methods achieved the highest fidelity to the experimental ground truth; edgeR, DESeq2 and limma are the statistical tools applied to pseudobulk data."
+    supports_levels: ["level_3"]
+    # 2026-09-16 收尾核对（窗口自查原文）：该文无「best FDR control」主张（工具被点名但优势被证明来自聚合/重复信息而非工具本身）→ 工具级结论收紧为方法类级（Discussion「pseudobulk methods achieve the highest fidelity to the experimental ground truth」逐字）
+  - source_type: method_paper
+    pmid: "26653891"
+    doi: "10.1186/s13059-015-0844-5"
+    title: "MAST: a flexible statistical framework for assessing transcriptional changes — Finak et al. 2015, Genome Biology"
+    confidence: L-Evidenced
+    excerpt: "MAST's hurdle model accounts for the bimodal expression pattern in scRNA-seq."
+    supports_levels: ["level_2"]
+conflicts_with: []

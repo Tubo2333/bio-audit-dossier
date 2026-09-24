@@ -1,0 +1,68 @@
+rule_id: E5.1-ENRI-001
+domain: ENRICHMENT
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：本条依据全部有结论（人类 2026-09-15 裁定「仍成立」）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: [2005, 2009]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "泛癌分析链路（含 DEG / 富集 / 生存 / 免疫浸润等）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "ORA多重检验校正 / ORA multiple testing correction"
+description: "过表达分析(ORA)同时测试数百条通路/GO term,必须多重检验校正。不校正时,以p<0.05为阈值预期5%的假阳性率,数百条测试=数十条假阳性通路。FBH FDR或Bonferroni校正为必需步骤。"
+condition:
+  decision_type: enrichment_correction
+  required_context:
+    analysis_type: pathway_enrichment
+
+scoring:
+  level_3:
+    methods:
+      - BH_FDR
+      - Benjamini_Hochberg
+      - FDR_correction
+      - Bonferroni
+    description: "BH FDR或Bonferroni校正 — 必需"
+    rationale: "ORA/GO分析同时测试数百条通路,FDR校正控制假阳性率 (Huang et al. 2009)"
+  level_2:
+    methods:
+      - BY_FDR
+      - q_value
+    description: "其他FDR变体 — 可接受"
+  level_0:
+    methods:
+      - no_correction
+      - raw_p_value
+      - uncorrected_p
+    description: "不做多重检验校正 — 富集结果不可信"
+    rationale: "测试500条通路,p<0.05不做校正=预期25条假阳性通路"
+
+evidence:
+  - source_type: method_paper
+    pmid: "19033363"
+    title: "Bioinformatics enrichment tools: paths toward the comprehensive functional analysis of large gene lists — Huang et al. 2009, Nucleic Acids Research"
+    confidence: L-Confirmed
+    excerpt: "Multiple testing correction (BH FDR) is essential for pathway enrichment analysis."
+    supports_levels: ["level_3", "level_0"]
+  - source_type: method_paper
+    pmid: "16199517"
+    title: "Gene set enrichment analysis: a knowledge-based approach for interpreting genome-wide expression profiles — Subramanian et al. 2005, PNAS"
+    confidence: L-Confirmed
+    excerpt: "FDR correction is applied to account for multiple hypothesis testing across gene sets."
+    supports_levels: ["level_3"]

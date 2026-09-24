@@ -1,0 +1,65 @@
+rule_id: G3.1-GENE-001
+domain: GENETIC
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：本条依据全部有结论（人类 2026-09-15 裁定「仍成立」）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"
+  basis_year_span: null   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "泛癌分析链路（含 DEG / 富集 / 生存 / 免疫浸润等）"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "cBioPortal API投影模式 / cBioPortal API projection mode"
+description: "cBioPortal API的SUMMARY模式将hugoGeneSymbol返回为'?',所有基因名称信息丢失。突变和拷贝数数据必须使用DETAILED投影模式获取完整的基因符号。"
+condition:
+  decision_type: cbioportal_projection
+  required_context:
+    data_source: cBioPortal
+
+scoring:
+  level_3:
+    methods:
+      - DETAILED
+      - projection_DETAILED
+      - detailed_projection
+    description: "DETAILED投影 — 返回完整基因符号"
+    rationale: "DETAILED模式返回完整的hugoGeneSymbol,entrezGeneId等字段 (cBioPortal API文档)"
+  level_1:
+    methods:
+      - SUMMARY_with_client_side_remap
+    description: "SUMMARY模式但做了基因名重映射 — 可能出错"
+    note: "手动将entrezGeneId映射回基因符号可能引入错误(一对多映射)"
+  level_0:
+    methods:
+      - SUMMARY
+      - projection_SUMMARY
+      - default_summary
+    description: "SUMMARY投影 — 基因符号为'?'"
+    rationale: "SUMMARY模式下hugoGeneSymbol对所有基因返回'?',导致下游分析无法识别基因"
+
+evidence:
+  - source_type: reference   # 软件文档，不是共识指南（2026-09-15 复核）
+    url: "https://docs.cbioportal.org/web-api-and-clients/"
+    title: "cBioPortal Web API Documentation — projection parameter"
+    confidence: L-Confirmed
+    excerpt: "Projection=DETAILED returns full gene metadata including hugoGeneSymbol. SUMMARY mode abbreviates fields and may return '?' for gene symbols."
+    supports_levels: ["level_3", "level_0"]
+  # 2026-09-14 处置（人类裁定）：原证据条目「rule-api-001: cBioPortal —
+  # always use projection=DETAILED」是项目内部规则名、不是外部出处——已从
+  # evidence 移除。该口径由上面 cBioPortal 官方文档依据覆盖，并继续作为
+  # 项目约定（评级语义不变）。

@@ -1,0 +1,96 @@
+rule_id: G1.1-DEG-001_pseudobulk
+domain: DEG
+status: active
+version: 1
+# ---------------------------------------------------------------------------
+# 生命周期（DP-RULE-LIBRARY-LIFECYCLE）：这条规则的依据属于什么时候、由谁看过、
+# 自称覆盖什么、多久该重看。**填的是事实，不是判断。**
+# reviewed_at: null 表示"尚未人工/领域复核"——这不是缺陷，是如实陈述；
+# 一旦有人复核，填上日期，库就会把它算作已覆盖，并在超过窗口后提示重看。
+# ---------------------------------------------------------------------------
+provenance:
+  reviewed_at: "2026-09-15"   # 领域复核已定：2026-09-15 人类裁定「仍成立」（43 条依据标识符已先行更正，见 DP-scRNA-REVIEW-WORKSHEET.md / -FEEDBACK.md）
+  reviewed_by: "人类（领域判断；窗口代记）"
+  review_kind: "domain_review"          # none / authoring / domain_review / literature_check / correction
+  basis_year_span: [2019, 2026]   # 所依据文献的年份跨度（由代码内的 DOI/年份自动导出）
+
+scope_of_validity:
+  applies_to: null             # 待领域复核填写：这条规则自称适用于什么
+  not_applicable_to: null      # 待领域复核填写：它明确不管什么
+  family_hint: "单细胞 RNA-seq 分析链路"
+
+update_policy:
+  review_window_months: 24     # 超过这个时间未复核 → 库标注"待重看"（是提示，不是作废）
+  supersedes: null             # 它替换了谁
+  superseded_by: null          # 它被谁替换（替换时由更新流程写入）
+
+title: "单细胞差异表达: pseudobulk vs 单细胞级别 / scRNA DEG: pseudobulk vs cell-level"
+description: "单细胞级别DEG (Wilcoxon/MAST) 将每个细胞视为独立重复, 这违反了统计推断的独立性假设 — 同一患者的多个细胞是伪重复(pseudoreplication)。Pseudobulk方法将每个患者的细胞聚合为一个'pseudo-sample', 以患者为生物学重复。Squair et al. (2021) 证明细胞级别检验在缺乏生物学重复信息时可识别出数百个假阳性基因（该文无 100% 的量化表述，2026-09-16 收尾核查核验）。"
+condition:
+  decision_type: deg_method
+  required_context:
+    sequencing: [10X_scRNA_seq, smartseq2]
+  forbidden_context: {}
+  context_constraints:
+    - "n_patients >= 3"
+
+scoring:
+  level_4:
+    status: "planned"            # 尚未实现：LLM 评估档位只留了位置
+    methods: []
+  level_3:
+    methods:
+      - pseudobulk_DESeq2
+      - pseudobulk_edgeR
+      - pseudobulk_limma
+    description: "Pseudobulk + 负二项/线性模型 — 以患者为生物学重复"
+    rationale: "正确处理伪重复问题, FDR控制在名义水平"
+  level_2:
+    methods:
+      - MAST_with_replicate_correction
+      - NEBULA
+      - scVI_LDEE
+    description: "混合模型/深度学习方法 — 在模型层面控制重复"
+    conditions_when_acceptable: "当用户明确需要对稀有细胞类型(每患者<10细胞)做DEG时"
+  level_1:
+    methods:
+      - MAST
+      - wilcoxon_rank_sum
+      - wilcoxon_sc
+      - Seurat_FindMarkers
+      - Seurat_wilcoxon_default
+      - Kruskal_Wallis_cell_level
+      - ttest_on_normalized
+      - ttest_equal_variance
+      - ttest_on_cells
+    description: "细胞级别 DEG — 伪重复问题未解决, FPR膨胀"
+    note: "Seurat FindMarkers 默认将细胞视为独立重复, n=细胞数会导致虚假的小p值。wilcoxon 家族词表对齐（既往裁定）：补 Seurat_wilcoxon_default（G1.3 既有命名）评 L1，与 G1.3 词表对称（I1 报告 §8.2 发现①）。t-test 家族对齐（既往裁定）：t-test 族与 wilcoxon 族同等待遇——细胞级 = L1 有风险（Squair 2021；伪重复对两族同等成立，无独立于伪重复的额外风险论证；Svensson 2020 弱化零膨胀论证）；Kruskal_Wallis_cell_level 同原则（秩检验细胞级 = 伪重复 L1）"
+  level_0:
+    methods:
+      - ttest_on_raw_counts
+      - anova_on_cells
+    description: "t-test/ANOVA 直接用于原始 counts — 分布假设完全违背（独立于伪重复）"
+    rationale: "原始 counts 为离散、非负、均值-方差相关数据，t-test 的连续正态假设在任何单位（含样本级）下都不成立；标准做法为 log/CPM 变换或负二项模型（既往裁定：raw-counts 直用保留 L0）"
+  override_n2:
+    condition: "n_patients <= 2"
+    all_methods: "level_0"
+    note: "n<=2 时无法可靠估计生物学变异。降级为仅报告 fold change，不做统计推断。（2026-09-14 处置：与 M1.1-DEG-001 对齐补齐后果与说明；触发键保持 n_patients）"
+
+evidence:
+  - source_type: benchmark_paper
+    pmid: "34584091"
+    doi: "10.1038/s41467-021-25960-2"
+    title: "Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications"
+    confidence: L-Confirmed
+    excerpt: "All six of the top-performing methods aggregated cells within a biological replicate to form pseudobulks, and pseudobulk methods abolished the false detection of DE genes; single-cell methods identified hundreds of DE genes in the absence of any perturbation."
+    supports_levels: ["level_3", "level_1", "level_0"]
+    # 2026-09-16 收尾核对（窗口自查原文）：该文 Results 逐字组合；「该文无 'nominal'/'100%'」（「100」24 处均为资助号/试剂量/'100 top-ranked'）→ 移除 nominal-FDR 与 FPR-100% 表述
+  - source_type: benchmark_paper
+    pmid: "34584091"
+    doi: "10.1038/s41467-021-25960-2"
+    title: "Confronting false discoveries in single-cell differential expression — Squair et al. 2021, Nature Communications"
+    confidence: L-Evidenced
+    excerpt: "Statistical methods for differential expression must account for the intrinsic variability of biological replicates to generate biologically accurate results in single-cell data."
+    supports_levels: ["level_3"]
+    # 2026-09-16 收尾核对（窗口自查原文）：原依据 Hafemeister & Satija 2019 无「生物重复为分析单位」主张（replicate 仅 1 次且为 technical replicate；该文反而推荐细胞级 Wilcoxon 检验）→ 槽位依据改挂 Squair 2021（Results「DE analysis of single-cell data must account for biological replicates」节逐字）；confidence 档位未重评
+conflicts_with: []

@@ -1,0 +1,178 @@
+{
+  "phase": "Phase 2 — Edge Case Construction & Validation",
+  "date": "2026-08-13 (A4 同步: D5 修复后重跑, E9 3→2)",
+  "summary": "9/9 edge cases pass format validation. All choices match rule methods lists. Act distribution: DEG=2 (n2, nofilter), PanCancer=4 (claim, epv, consistency, purity), scRNA=3 (nodoublet, default, singleanno). 3 design-vs-actual discrepancies noted (rule definitions are canonical). E2 moved from DEG→PanCancer per user review (purity_confounding ∉ DEG domain). E9 actual_level corrected 3→2 after D5 fix (2026-08-13).",
+  "cases": [
+    {
+      "id": "E1",
+      "file": "deg_edge_n2.json",
+      "act": "DEG",
+      "decision_type": "deg_method",
+      "choice": "DESeq2",
+      "context": {"n_replicates": 2},
+      "mechanism": "override_n2: n_replicates <= 2 forces all methods to Level 0",
+      "expected_level": 0,
+      "actual_level": 0,
+      "matched_rules": ["M1.1-DEG-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E2",
+      "file": "pan_edge_purity.json",
+      "act": "PanCancer",
+      "decision_type": "purity_confounding",
+      "choice": "purity_ignored",
+      "context": {"analysis_type": "immune_expression_correlation"},
+      "mechanism": "purity_ignored is explicitly listed at Level 0 in I4.2-IMMU-001 (PanCancer immune rules, NOT DEG rules)",
+      "expected_level": 0,
+      "actual_level": 0,
+      "matched_rules": ["I4.2-IMMU-001"],
+      "match_ok": true,
+      "fix_note": "Moved from Act 1 (DEG) to Act 2 (PanCancer) — purity_confounding is an immune-expression correlation concept, not a DEG concept. DEG Act has only 5 decision_types: filtering/normalization/deg_method/correction/threshold."
+    },
+    {
+      "id": "E3a",
+      "file": "deg_edge_nofilter.json",
+      "act": "DEG",
+      "decision_type": "filtering",
+      "choice": "no_filtering",
+      "context": {"n_replicates": 4},
+      "mechanism": "no_filtering = Level 1 (retains all genes, increases multiple testing burden)",
+      "expected_level": 1,
+      "actual_level": 1,
+      "matched_rules": ["D1.2-DEG-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E3b",
+      "file": "deg_edge_nofilter.json",
+      "act": "DEG",
+      "decision_type": "multiple_testing_correction",
+      "choice": "no_correction",
+      "context": {"analysis_type": "differential_expression"},
+      "mechanism": "no_correction = Level 0 (no FDR control on ~20K parallel tests)",
+      "expected_level": 0,
+      "actual_level": 0,
+      "matched_rules": ["M1.2-DEG-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E3c",
+      "file": "deg_edge_nofilter.json",
+      "act": "DEG",
+      "decision_type": "significance_threshold",
+      "choice": "p_raw <= 0.05",
+      "context": {"analysis_type": "differential_expression"},
+      "mechanism": "raw p-value without fold-change threshold = Level 1",
+      "expected_level": 1,
+      "actual_level": 1,
+      "matched_rules": ["M1.3-DEG-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E4",
+      "file": "pan_edge_claim.json",
+      "act": "PanCancer",
+      "decision_type": "independent_prognostic_claim",
+      "choice": "univariate_Cox_claiming_independent",
+      "context": {"analysis_type": "survival_analysis"},
+      "mechanism": "univariate_Cox_claiming_independent = Level 0 (scientific error)",
+      "expected_level": 0,
+      "actual_level": 0,
+      "matched_rules": ["P2.2-PROG-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E5",
+      "file": "pan_edge_epv.json",
+      "act": "PanCancer",
+      "decision_type": "events_per_variable",
+      "choice": "EPV_less_than_5",
+      "context": {"analysis_type": "survival_analysis"},
+      "mechanism": "EPV<5 = Level 0 (unreliable model estimates)",
+      "expected_level": 0,
+      "actual_level": 0,
+      "matched_rules": ["P2.3-PROG-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E6",
+      "file": "pan_edge_consistency.json",
+      "act": "PanCancer",
+      "decision_type": "expression_survival_consistency",
+      "choice": "direction_inconsistent_not_discussed",
+      "context": {"integration_type": "cross_module"},
+      "mechanism": "direction contradiction not discussed = Level 1 (broken conclusion chain)",
+      "expected_level": 1,
+      "actual_level": 1,
+      "matched_rules": ["N7.1-INTE-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E7",
+      "file": "scrna_edge_nodoublet.json",
+      "act": "scRNA",
+      "decision_type": "doublet_detection",
+      "choice": "no_doublet_detection",
+      "context": {"n_cells": 8500},
+      "mechanism": "no_doublet_detection = Level 0 (contaminates downstream clustering/annotation/DEG)",
+      "expected_level": 0,
+      "actual_level": 0,
+      "note": "Design doc says Level 1, but rule D1.1-DOUB-001 defines no_doublet_detection at Level 0. Rule is canonical.",
+      "matched_rules": ["D1.1-DOUB-001"],
+      "match_ok": true
+    },
+    {
+      "id": "E8",
+      "file": "scrna_edge_default.json",
+      "act": "scRNA",
+      "decision_type": "clustering_resolution",
+      "choice": "default_0_8",
+      "context": {},
+      "mechanism": "default_0_8 = Level 1 (no data-driven justification)",
+      "expected_level": 1,
+      "actual_level": 1,
+      "note": "Design doc says Level 2, but rule C1.2-CLUS-002 defines default_0_8 at Level 1. Rule is canonical.",
+      "matched_rules": ["C1.2-CLUS-002_resolution"],
+      "match_ok": true
+    },
+    {
+      "id": "E9",
+      "file": "scrna_edge_singleanno.json",
+      "act": "scRNA",
+      "decision_type": "annotation_method",
+      "choice": "SingleR",
+      "context": {"reference_based": true},
+      "mechanism": "SingleR = Level 2 (reference-based, single-method annotation without cross-validation)",
+      "expected_level": 2,
+      "actual_level": 2,
+      "note": "D5 FIX（2026-08-13）后：原记录 actual=3 是无条件条件提升 bug 的产物；修复后不再虚增，SingleR 稳定为 Level 2。设计文档 Level 2 与引擎一致。",
+      "matched_rules": ["A1.1-ANNO-001_method"],
+      "match_ok": true
+    }
+  ],
+  "design_vs_actual_discrepancies": [
+    {
+      "case": "E7",
+      "design_expectation": "Level 1",
+      "rule_definition": "Level 0",
+      "resolution": "Rule definition is canonical. no_doublet_detection is correctly scored as Level 0. Design doc expectation was approximate."
+    },
+    {
+      "case": "E8",
+      "design_expectation": "Level 2 (可接受但缺理由)",
+      "rule_definition": "Level 1",
+      "resolution": "Rule definition is canonical. default_0_8 is correctly scored as Level 1. Using default resolution without justification is a genuine risk."
+    },
+    {
+      "case": "E9",
+      "design_expectation": "Level 2",
+      "engine_output": "Level 2",
+      "resolution": "D5 FIX（2026-08-13）后与设计一致。原 engine_output=3 是 D5 无条件条件提升 bug 的产物（SingleR L2→L3 虚增），修复后不再提升，SingleR 稳定为 Level 2。"
+    }
+  ],
+  "all_rules_matched": true,
+  "all_choices_valid": true,
+  "format_validation": "9/9 PASS",
+  "note": "2026-08-13 A4 同步：E9 actual_level 3→2（D5 修复后重跑引擎实测）；validation_dataset.jsonl 与 full_audit_results.json 已用修复后引擎重生成，口径统一（trajectory_score = 最低维度分）。"
+}

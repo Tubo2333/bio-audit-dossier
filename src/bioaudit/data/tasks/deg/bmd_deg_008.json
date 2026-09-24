@@ -1,0 +1,125 @@
+{
+ "version": 2,
+ "trajectory_id": "bmd_deg_008",
+ "act": "deg",
+ "provenance": {
+  "source": "benchmark",
+  "migrated_from": null,
+  "migrated_at": null,
+  "migrator": null,
+  "note": "benchmark 任务草稿：语料变换生成（E6：错误注入来自真实语料，非规则反推）；gold/difficulty 由标注管线填充",
+  "base_trajectories": [
+   "deg_correct"
+  ],
+  "error_pattern_sources": [],
+  "generator": {
+   "model": "deepseek-v4-flash",
+   "prompt_version": "943fc2f11acd",
+   "transform_version": "generator.transform.v1",
+   "reviewed_by": "window-D review",
+   "reviewed_at": "2026-08-16"
+  }
+ },
+ "decisions": [
+  {
+   "step_id": "s1",
+   "decision_type": "filtering",
+   "choice": "CPM_filter_min_samples",
+   "rationale": "CPM filter requiring expression in a minimum number of samples.",
+   "context": {
+    "sequencing": "bulk_RNA_seq",
+    "n_replicates": 6
+   }
+  },
+  {
+   "step_id": "s2",
+   "decision_type": "normalization",
+   "choice": "RLE",
+   "rationale": "RLE normalization (DESeq2-style size factors).",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  {
+   "step_id": "s3",
+   "decision_type": "deg_method",
+   "choice": "DESeq2",
+   "rationale": "DESeq2 Wald test — best FDR control for bulk RNA-seq with n>=3. Verified negative binomial assumption via dispersion-mean plot.",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq",
+    "design": "simple_two_group",
+    "n_replicates": 6
+   }
+  },
+  {
+   "step_id": "s4",
+   "decision_type": "multiple_testing_correction",
+   "choice": "BY",
+   "rationale": "Benjamini-Yekutieli — more conservative FDR control.",
+   "context": {
+    "analysis_type": "differential_expression"
+   }
+  },
+  {
+   "step_id": "s5",
+   "decision_type": "significance_threshold",
+   "choice": "padj <= 0.1, |logFC| >= 0.5",
+   "rationale": "Relaxed threshold to capture more candidates for validation.",
+   "context": {
+    "analysis_type": "differential_expression",
+    "n_replicates": 6
+   }
+  }
+ ],
+ "gold": {
+  "version": "annotation.v1",
+  "annotated_at": "2026-08-15T11:28:11.608214+00:00",
+  "irr": {
+   "n_items": 348,
+   "n_agreed": 316,
+   "cohen_kappa": 0.7292,
+   "krippendorff_alpha": 0.7288
+  },
+  "labels": [
+   {
+    "step_id": "s1",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s2",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s3",
+    "label": "correct",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s4",
+    "label": "edge",
+    "consensus": "strong"
+   },
+   {
+    "step_id": "s5",
+    "label": "correct",
+    "consensus": "medium"
+   }
+  ]
+ },
+ "difficulty": {
+  "label": 1,
+  "rubric_version": "difficulty.v1",
+  "features": {
+   "n_decisions": 5,
+   "n_errors": 0,
+   "n_edge": 1,
+   "n_subtle_errors": 0,
+   "n_consistency_family": 0
+  },
+  "note": "按预注册 rubric 由 gold 特征计算（E4：不使用审计分数定义难度）"
+ }
+}

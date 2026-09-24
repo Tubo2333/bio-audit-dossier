@@ -1,0 +1,138 @@
+{
+  "version": 2,
+  "trajectory_id": "scrna_crc_correct",
+  "act": "scrna",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "scrna_crc_correct.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "S1",
+      "decision_type": "api_data_integrity",
+      "choice": "DETAILED_with_validation",
+      "rationale": "GSE132465 CRC 10X raw UMI matrix validated: 63,689 cells × 25,655 genes, no duplicate barcodes, tumor/normal labels intact across 10 patients (SMC01-SMC10).",
+      "context": {
+        "data_source": "GEO",
+        "data_format": "h5ad",
+        "n_cells": 63689,
+        "n_genes": 25655
+      }
+    },
+    {
+      "step_id": "S2",
+      "decision_type": "qc_filtering",
+      "choice": "MAD5_adaptive_threshold",
+      "rationale": "MAD-based adaptive QC with 5 MAD threshold — retains immune and stromal cells while removing debris. CRC TME has diverse cell sizes requiring adaptive rather than fixed thresholds (Luecken & Theis 2019, PMID 31841116).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 63689
+      }
+    },
+    {
+      "step_id": "S3",
+      "decision_type": "doublet_detection",
+      "choice": "scDblFinder",
+      "rationale": "scDblFinder random-forest doublet detection — CRC tumors have high cell density, estimated doublet rate ~5% at 63K cells (Xi & Li 2021, PMID 33541407).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_cells": 63689
+      }
+    },
+    {
+      "step_id": "S4",
+      "decision_type": "scRNA_normalization",
+      "choice": "SCTransform",
+      "rationale": "SCTransform regularized negative-binomial regression — best variance stabilization for scRNA UMI counts. CRC TME has diverse cell types (epithelial, immune, stromal) with different library sizes, making variance stabilization critical (Hafemeister & Satija 2019, PMID 31870423).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "data_category": "umi_counts"
+      }
+    },
+    {
+      "step_id": "S5",
+      "decision_type": "hv_gene_selection",
+      "choice": "vst",
+      "rationale": "Seurat v3 VST selected 3,000 HVGs — standard for scRNA clustering. Sufficient to capture immune and tumor expression programs in CRC TME.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_genes": 25655
+      }
+    },
+    {
+      "step_id": "S6",
+      "decision_type": "batch_correction",
+      "choice": "Harmony",
+      "rationale": "Harmony iterative soft-clustering for 10-patient batch integration. CRC samples from multiple patients require batch correction to avoid patient-specific clustering (Korsunsky et al. 2019, PMID 31740819).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "has_batch": true,
+        "n_patients": 10
+      }
+    },
+    {
+      "step_id": "S7",
+      "decision_type": "dim_reduction",
+      "choice": "PCA_elbow_selection",
+      "rationale": "Elbow plot selected 30 PCs — immune-infiltrated CRC TME has high biological complexity requiring more PCs than simpler tissues.",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "method": "PCA",
+        "n_comps": 30
+      }
+    },
+    {
+      "step_id": "S8",
+      "decision_type": "clustering_method",
+      "choice": "Leiden",
+      "rationale": "Leiden algorithm with resolution 1.2, selected via clustree stability analysis — CRC TME requires slightly higher resolution to separate CD4+/CD8+ T cell subsets and monocyte/macrophage populations (Traag et al. 2019, PMID 30914743).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "graph_type": "SNN"
+      }
+    },
+    {
+      "step_id": "S9",
+      "decision_type": "annotation_method",
+      "choice": "SingleR_with_CellTypist_cross_validation",
+      "rationale": "CellTypist (immune-focused model) + SingleR (Blueprint/ENCODE reference) cross-validation. CRC TME is immune-infiltrated — dual immune annotation methods provide robust cell type identification. Marker dotplot verification for all major lineages (Aran et al. 2019 PMID 31209304; Dominguez Conde et al. 2022 PMID 35649401).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "reference_based": true
+      }
+    },
+    {
+      "step_id": "S10",
+      "decision_type": "deg_method",
+      "choice": "pseudobulk_DESeq2",
+      "rationale": "Pseudobulk aggregation at patient level + DESeq2 Wald test — patients are biological replicates. CRC tumor vs normal DEG requires proper pseudoreplication handling (Squair et al. 2021, PMID 34433851).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "n_patients": 10,
+        "pseudobulk": true
+      }
+    },
+    {
+      "step_id": "S11",
+      "decision_type": "trajectory_inference",
+      "choice": "monocle3",
+      "rationale": "monocle3 on T cell subset for exhaustion trajectory inference — CRC tumors show T cell exhaustion gradient from activated to terminally exhausted states (Saelens et al. 2019, PMID 30643263).",
+      "context": {
+        "sequencing": "10X_scRNA_seq",
+        "cell_type": "T_cell"
+      }
+    },
+    {
+      "step_id": "S12",
+      "decision_type": "cluster_annotation_consistency",
+      "choice": "consistent_with_cross_validation",
+      "rationale": "CellTypist and SingleR annotations concordant on 92% of cells. 38 clusters map to 8 major cell types. Marker dotplot confirms T cell (CD3D/CD8A/CD4), B cell (CD19/MS4A1), myeloid (CD14/CD68), and epithelial (EPCAM) lineages with clear separation.",
+      "context": {
+        "integration_type": "cross_module"
+      }
+    }
+  ]
+}

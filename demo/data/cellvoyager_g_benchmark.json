@@ -1,0 +1,233 @@
+{
+  "ok": true,
+  "variant": "K1",
+  "session_id": "K1",
+  "generated_at": "2026-08-16T18:36:44",
+  "expected_types": null,
+  "cross_validate": {
+    "stats": null,
+    "n_added": null
+  },
+  "final_trajectory": {
+    "n_decisions": 20,
+    "decision_types": null
+  },
+  "audit": {
+    "trajectory_score": 30.0,
+    "eval_verdict": "needs_correction",
+    "dimension_scores": {
+      "method_selection": 0.3392857142857143,
+      "data_handling": 0.3
+    },
+    "critical_issues": [],
+    "per_decision": [
+      {
+        "step_id": "nb08-annotation_method",
+        "decision_type": "annotation_method",
+        "choice": "manual_marker",
+        "level": 1,
+        "matched_rules": [
+          "A1.1-ANNO-001_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb01-clustering_method",
+        "decision_type": "clustering_method",
+        "choice": "Leiden",
+        "level": 3,
+        "matched_rules": [
+          "C1.1-CLUS-001_method"
+        ],
+        "explanation": "正确级 — 方法选择正确"
+      },
+      {
+        "step_id": "nb09-immune_correlation_method",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb09-immune_correlation_method#2",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb09-immune_correlation_method#3",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb12-immune_correlation_method",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb12-immune_correlation_method#2",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb12-immune_correlation_method#3",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb15-immune_correlation_method",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb15-immune_correlation_method#2",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb15-immune_correlation_method#3",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb18-immune_correlation_method",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb18-immune_correlation_method#2",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb18-immune_correlation_method#3",
+        "decision_type": "immune_correlation_method",
+        "choice": "Spearman",
+        "level": 1,
+        "matched_rules": [
+          "I4.1-IMMU-001_scRNA_correlation_method"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb01-qc_filtering",
+        "decision_type": "qc_filtering",
+        "choice": "hard_threshold",
+        "level": 1,
+        "matched_rules": [
+          "Q1.1-QC-001"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb01-qc_filtering#2",
+        "decision_type": "qc_filtering",
+        "choice": "hard_threshold",
+        "level": 1,
+        "matched_rules": [
+          "Q1.1-QC-001"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb01-qc_filtering#3",
+        "decision_type": "qc_filtering",
+        "choice": "hard_threshold",
+        "level": 1,
+        "matched_rules": [
+          "Q1.1-QC-001"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb01-qc_filtering#4",
+        "decision_type": "qc_filtering",
+        "choice": "hard_threshold",
+        "level": 1,
+        "matched_rules": [
+          "Q1.1-QC-001"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb01-scRNA_normalization",
+        "decision_type": "scRNA_normalization",
+        "choice": "LogNormalize",
+        "level": 1,
+        "matched_rules": [
+          "N1.1-NORM-001"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      },
+      {
+        "step_id": "nb01-scRNA_normalization#2",
+        "decision_type": "scRNA_normalization",
+        "choice": "LogNormalize",
+        "level": 1,
+        "matched_rules": [
+          "N1.1-NORM-001"
+        ],
+        "explanation": "有风险 — 方法选择值得商榷"
+      }
+    ]
+  },
+  "provenance": {
+    "source": "windowK1_reeval.json",
+    "source_sha256": "55ad1189b2124283474736d89fa9f4decd0d22ff82d97ba26227a5e6b4eb350e",
+    "generated_at": "2026-08-16T18:36:44",
+    "exported_at": "2026-09-23T04:59:54+00:00",
+    "note": "采集链路断言基准提炼副本（63.7 复现链路说明 §6；断言读本副本）"
+  }
+}

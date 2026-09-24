@@ -1,0 +1,166 @@
+{
+  "version": 2,
+  "trajectory_id": "pan_error",
+  "act": "pan",
+  "provenance": {
+    "source": "legacy",
+    "migrated_from": "pan_error.json",
+    "migrated_at": "2026-08-14T15:36:34.826993+00:00",
+    "migrator": "bioaudit.capture.trajectory_migrator",
+    "note": "v1 → v2 迁移：新增 version/provenance/act 元数据；decisions 内容逐条保留，不参与评分（golden 0 差异不变量）"
+  },
+  "decisions": [
+    {
+      "step_id": "D1",
+      "decision_type": "filtering",
+      "choice": "no_filtering",
+      "rationale": "跳过过滤以保留全部基因进行发现性分析。",
+      "context": {
+        "sequencing": "bulk_RNA_seq",
+        "n_replicates": 3
+      }
+    },
+    {
+      "step_id": "D2",
+      "decision_type": "normalization",
+      "choice": "TPM",
+      "rationale": "TPM是RNA-seq数据最常用的归一化方法。",
+      "context": {
+        "data_category": "raw_counts",
+        "sequencing": "bulk_RNA_seq"
+      }
+    },
+    {
+      "step_id": "D3",
+      "decision_type": "deg_method",
+      "choice": "Student_t_test",
+      "rationale": "t-test是经典的差异检验方法,简单直接。",
+      "context": {
+        "data_category": "raw_counts",
+        "sequencing": "bulk_RNA_seq",
+        "design": "simple_two_group",
+        "n_replicates": 3
+      }
+    },
+    {
+      "step_id": "D4",
+      "decision_type": "multiple_testing_correction",
+      "choice": "BH",
+      "rationale": "Benjamini-Hochberg FDR控制假阳性率。",
+      "context": {
+        "analysis_type": "differential_expression"
+      }
+    },
+    {
+      "step_id": "D5",
+      "decision_type": "significance_threshold",
+      "choice": "padj <= 0.05, |logFC| >= 1.0",
+      "rationale": "双阈值筛选确保统计和生物学显著性。",
+      "context": {
+        "analysis_type": "differential_expression"
+      }
+    },
+    {
+      "step_id": "D6",
+      "decision_type": "cox_ph_assumption",
+      "choice": "no_ph_test",
+      "rationale": "Cox回归是标准的生存分析方法,按惯例直接使用。",
+      "context": {
+        "analysis_type": "survival_analysis",
+        "method": "Cox_regression"
+      }
+    },
+    {
+      "step_id": "D7",
+      "decision_type": "independent_prognostic_claim",
+      "choice": "univariate_Cox_claiming_independent",
+      "rationale": "单变量Cox分析中CSTB HR=1.38, p=0.008, 因此CSTB是独立的预后因素。",
+      "context": {
+        "analysis_type": "survival_analysis"
+      }
+    },
+    {
+      "step_id": "D8",
+      "decision_type": "events_per_variable",
+      "choice": "EPV_less_than_5",
+      "rationale": "多变量Cox模型纳入CSTB+年龄+分期+分级共4个协变量。",
+      "context": {
+        "analysis_type": "survival_analysis"
+      }
+    },
+    {
+      "step_id": "D9",
+      "decision_type": "cbioportal_projection",
+      "choice": "SUMMARY",
+      "rationale": "SUMMARY模式更快,数据量更小。",
+      "context": {
+        "data_source": "cBioPortal"
+      }
+    },
+    {
+      "step_id": "D10",
+      "decision_type": "immune_correlation_method",
+      "choice": "Pearson_no_normality_check",
+      "rationale": "Pearson相关是标准的线性相关分析方法。",
+      "context": {
+        "analysis_type": "immune_expression_correlation"
+      }
+    },
+    {
+      "step_id": "D11",
+      "decision_type": "purity_confounding",
+      "choice": "purity_ignored",
+      "rationale": "本研究主要关注基因表达与免疫的相关性,纯度不是主要关注点。",
+      "context": {
+        "analysis_type": "immune_expression_correlation"
+      }
+    },
+    {
+      "step_id": "D12",
+      "decision_type": "gsea_background",
+      "choice": "GO_all_genes_no_filter",
+      "rationale": "使用GO全基因组注释作为GSEA的背景基因集。",
+      "context": {
+        "analysis_type": "pathway_enrichment",
+        "method": "GSEA"
+      }
+    },
+    {
+      "step_id": "D13",
+      "decision_type": "enrichment_correction",
+      "choice": "no_correction",
+      "rationale": "富集分析是探索性的,我们只关注top通路,不需要多重检验校正。",
+      "context": {
+        "analysis_type": "pathway_enrichment"
+      }
+    },
+    {
+      "step_id": "D14",
+      "decision_type": "ic50_sample_size",
+      "choice": "n_gte_30_with_power_analysis",
+      "rationale": "GDSC2包含809个细胞系,样本量充足。",
+      "context": {
+        "analysis_type": "drug_sensitivity",
+        "data_source": "GDSC2"
+      }
+    },
+    {
+      "step_id": "D15",
+      "decision_type": "expression_survival_consistency",
+      "choice": "direction_inconsistent_not_discussed",
+      "rationale": "CSTB在肿瘤中高表达,同时HR<1(保护因素),两个结果我们分开报告。",
+      "context": {
+        "integration_type": "cross_module"
+      }
+    },
+    {
+      "step_id": "D16",
+      "decision_type": "immune_expression_consistency",
+      "choice": "direction_inconsistent_not_discussed",
+      "rationale": "免疫浸润数据显示CSTB与CD8+ T细胞负相关,但表达分析显示CSTB上调,分开解释。",
+      "context": {
+        "integration_type": "cross_module"
+      }
+    }
+  ]
+}

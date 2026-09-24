@@ -1,0 +1,21 @@
+# 决策类型：trajectory_annotation_consistency（轨迹-注释一致性）— conclusion / scRNA
+# 一致性族（L4 概念）成员：联合上游决策评分（G1 internal_ref）
+decision_type: trajectory_annotation_consistency
+display:
+  cn: 轨迹与注释一致性
+  en: Trajectory-annotation consistency
+stage: conclusion
+paradigms: [scRNA]
+dimension: method_selection
+optional: true
+when_not_applicable: claim_not_made
+aliases: []
+depends_on: [trajectory_inference, annotation_method]
+internal_ref: [trajectory_inference, annotation_method]
+context_schema:
+  - key: integration_type
+    type: enum
+    values: [cross_module]
+    required: true
+    # A2：被罚分规则（S1.3）引用 → 禁止 fail-open
+    missing: fail-closed

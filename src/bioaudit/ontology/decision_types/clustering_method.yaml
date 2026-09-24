@@ -1,0 +1,27 @@
+# 决策类型：clustering_method（聚类方法）— inference / scRNA
+decision_type: clustering_method
+display:
+  cn: 聚类方法
+  en: Clustering method
+stage: inference
+paradigms: [scRNA]
+dimension: method_selection
+optional: false
+aliases: []
+depends_on: [dim_reduction, pca_dimension]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed
+  - key: graph_type
+    type: enum
+    values: [SNN, KNN]
+    required: false
+    missing: skip
+  - key: resolution
+    type: float
+    min: 0
+    required: false
+    missing: fail-open

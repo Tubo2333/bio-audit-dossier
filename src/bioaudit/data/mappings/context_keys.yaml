@@ -1,0 +1,6 @@
+# Context key normalization (B8: moved from code to data)
+n: n_replicates
+replicates: n_replicates
+n_samples: n_replicates
+data_type: data_category
+seq_type: sequencing

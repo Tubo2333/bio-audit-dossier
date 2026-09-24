@@ -1,0 +1,17 @@
+# 决策类型：clustering_resolution（聚类分辨率）— inference / scRNA
+decision_type: clustering_resolution
+display:
+  cn: 聚类分辨率选择
+  en: Clustering resolution
+stage: inference
+paradigms: [scRNA]
+dimension: method_selection
+optional: false
+aliases: []
+depends_on: [clustering_method]
+context_schema:
+  - key: sequencing
+    type: enum
+    values: [bulk_RNA_seq, 10X_scRNA_seq, smartseq2]
+    required: true
+    missing: fail-closed

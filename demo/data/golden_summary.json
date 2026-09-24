@@ -1,0 +1,131 @@
+{
+  "entries": [
+    {
+      "id": "windowI_A",
+      "paradigm": "scrna",
+      "window": "I",
+      "platform": "smartseq2",
+      "trajectory_score": 80.0,
+      "eval_verdict": "pass",
+      "n_decisions": 10,
+      "dimension_scores": {
+        "method_selection": 0.8,
+        "data_handling": 0.85,
+        "statistical_rigor": 0.85
+      },
+      "critical_issues": [],
+      "provenance": {
+        "source": "windowI_A.json",
+        "source_sha256": "31bd2bfeb4710e4d5848a38d74b76d23fed5e2096bfd73f751f16e95fe470bf9",
+        "generated_at": "2026-08-16T01:00:47",
+        "exported_at": "2026-09-23T04:59:51+00:00"
+      },
+      "note": "黄金对照 A（Smart-seq2）· 10 决策"
+    },
+    {
+      "id": "windowI_B",
+      "paradigm": "scrna",
+      "window": "I",
+      "platform": "smartseq2",
+      "trajectory_score": 69.0,
+      "eval_verdict": "needs_correction",
+      "n_decisions": 10,
+      "dimension_scores": {
+        "method_selection": 0.63,
+        "data_handling": 0.85,
+        "statistical_rigor": 0.85
+      },
+      "critical_issues": [
+        "[Level 0] Step deg_method: wilcoxon_rank_sum — 危险 — 方法选择将导致错误结论"
+      ],
+      "provenance": {
+        "source": "windowI_B.json",
+        "source_sha256": "817df161c001047438c43658252af30cf8337d24f363ec864bcef3b100ab88db",
+        "generated_at": "2026-08-16T01:02:54",
+        "exported_at": "2026-09-23T04:59:51+00:00",
+        "note": "原始 63.0·blocked 实测于 windowI_B.json；69.0·needs_correction 为复核后重评值（二次复核不变）"
+      },
+      "score_original": 63.0,
+      "verdict_original": "blocked",
+      "note": "黄金对照 B（Smart-seq2；复核后重评）63.0 → 69.0 · needs_correction"
+    },
+    {
+      "id": "windowI_C",
+      "paradigm": "scrna",
+      "window": "I",
+      "platform": "smartseq2",
+      "trajectory_score": 66.7,
+      "eval_verdict": "needs_correction",
+      "n_decisions": 10,
+      "dimension_scores": {
+        "method_selection": 0.8,
+        "data_handling": 0.6666666666666666,
+        "statistical_rigor": 0.85
+      },
+      "critical_issues": [
+        "[Level 1] Step qc_filtering: hard_threshold — 有风险 — 方法选择值得商榷"
+      ],
+      "provenance": {
+        "source": "windowI_C.json",
+        "source_sha256": "6b1fa1d3a7c658af1b185be6967b047d033a9659b04b391fa601938a6f1ac24b",
+        "generated_at": "2026-08-16T01:05:01",
+        "exported_at": "2026-09-23T04:59:51+00:00"
+      },
+      "note": "黄金对照 C（Smart-seq2）· 66.7 仅限 Smart-seq2-C 口径（QC 硬阈值），禁止与 63.7 混写"
+    },
+    {
+      "id": "windowL_10X_A",
+      "paradigm": "scrna",
+      "window": "L",
+      "platform": "10X_scRNA_seq",
+      "trajectory_score": 80.0,
+      "eval_verdict": "pass",
+      "n_decisions": 11,
+      "dimension_scores": {
+        "method_selection": 0.8,
+        "data_handling": 0.85,
+        "statistical_rigor": 0.85
+      },
+      "critical_issues": [],
+      "provenance": {
+        "source": "windowL_10X_A.json",
+        "source_sha256": "a4a94637ae050aed83991e463da4a5fcca20755cb60de470b4e9eaf79b6b5cc4",
+        "generated_at": "2026-08-16T20:43:31",
+        "exported_at": "2026-09-23T04:59:51+00:00"
+      },
+      "note": "黄金对照 A（10X）· 11 决策含双联体检测"
+    },
+    {
+      "id": "windowL_10X_B_expected",
+      "paradigm": "scrna",
+      "window": "L",
+      "platform": "10X_scRNA_seq",
+      "trajectory_score": 63.7,
+      "eval_verdict": "blocked",
+      "n_decisions": 11,
+      "dimension_scores": {
+        "method_selection": 0.8,
+        "data_handling": 0.6375,
+        "statistical_rigor": 0.85
+      },
+      "critical_issues": [
+        "[Level 0] Step doublet_detection: skip_doublet — 危险 — 方法选择将导致错误结论"
+      ],
+      "provenance": {
+        "source": "windowL_10X_B_expected.json",
+        "source_sha256": "87b3f0ca65f0b8c14117aa84609ee21b677ed768139b85d6398cf7eec69f8dba",
+        "generated_at": "2026-08-16T23:05:11",
+        "exported_at": "2026-09-23T04:59:51+00:00"
+      },
+      "note": "黄金对照 B（10X，expected_types 后）· 63.7 仅限 10X-B expected 口径（静默跳过双联体被补入），禁止与 66.7 混写",
+      "expected_types_n_added": 1
+    }
+  ],
+  "provenance": {
+    "source": "windowI_A/B/C + windowL_10X_A/B_expected.json",
+    "source_sha256": "31bd2bfeb4710e4d5848a38d74b76d23fed5e2096bfd73f751f16e95fe470bf9",
+    "generated_at": "",
+    "exported_at": "2026-09-23T04:59:51+00:00",
+    "note": "五份黄金对照报告提炼；口径分列见各条目 note；source_sha256 为聚合块引用值，各条目含独立指纹"
+  }
+}

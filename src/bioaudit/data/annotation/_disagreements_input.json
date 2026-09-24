@@ -1,0 +1,728 @@
+[
+ {
+  "task_id": "bmd_deg_002",
+  "step_id": "s1",
+  "decision": {
+   "decision_type": "filtering",
+   "choice": "no_filtering",
+   "rationale": "Skipping filtering to retain all genes for maximum discovery power.",
+   "context": {
+    "sequencing": "bulk_RNA_seq",
+    "n_replicates": 3
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "不预过滤可辩护（DESeq2 内置 independent filtering 部分补偿），但属非标准做法"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.7,
+   "note": "跳过低表达基因过滤会保留噪声基因、增加检验数；'最大化发现能力'是误解，过滤通常反而提升功效"
+  }
+ },
+ {
+  "task_id": "bmd_deg_003",
+  "step_id": "s2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM normalization as integrated with edgeR pipeline — corrects for RNA composition bias and library size.",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.75,
+   "note": "TMM 归一化 bulk counts 主流"
+  }
+ },
+ {
+  "task_id": "bmd_deg_008",
+  "step_id": "s5",
+  "decision": {
+   "decision_type": "significance_threshold",
+   "choice": "padj <= 0.1, |logFC| >= 0.5",
+   "rationale": "Relaxed threshold to capture more candidates for validation.",
+   "context": {
+    "analysis_type": "differential_expression",
+    "n_replicates": 6
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "放宽阈值用于候选筛选、后续验证，是合理的探索性选择"
+  },
+  "B": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "放宽阈值用于候选筛选可辩护，但假阳性偏高"
+  }
+ },
+ {
+  "task_id": "bmd_pan_001",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.55,
+   "note": "TMM 本身是主流归一化，但 rationale 称其适用于 DESeq2 输入属工具链混淆（DESeq2 自带中位数比值归一化）"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.75,
+   "note": "TMM 对 bulk counts 标准；仅提示 DESeq2 自带归一化，若直接喂 TMM 值会重复归一化，但本步选择合理"
+  }
+ },
+ {
+  "task_id": "bmd_pan_002",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配（DESeq2 自行估计 size factors，需原始 counts），不影响最终检验但不够严谨"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "TMM 是 bulk counts 主流归一化"
+  }
+ },
+ {
+  "task_id": "bmd_pan_003",
+  "step_id": "D12",
+  "decision": {
+   "decision_type": "gsea_background",
+   "choice": "expressed_genes_background",
+   "rationale": "使用实际表达的13,847个基因作为GSEA背景基因集(非全基因组~20,000个),避免未检测基因影响富集分数的零分布 (Subramanian et al. 2005, PMID 16199512)",
+   "context": {
+    "analysis_type": "pathway_enrichment",
+    "method": "GSEA"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.55,
+   "note": "GSEA 全基因背景可辩护，但未过滤未检测基因可能稀释富集信号"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.85,
+   "note": "表达基因背景做 GSEA，规范"
+  }
+ },
+ {
+  "task_id": "bmd_pan_003",
+  "step_id": "D13",
+  "decision": {
+   "decision_type": "enrichment_correction",
+   "choice": "BH_FDR",
+   "rationale": "对236条通路做BH FDR多重检验校正,控制通路富集分析的假阳性率 (Huang et al. 2009, PMID 19131956)",
+   "context": {
+    "analysis_type": "pathway_enrichment"
+   }
+  },
+  "A": {
+   "label": "error",
+   "confidence": 0.7,
+   "note": "236 条通路不做多重检验校正，仅看 top 通路会放大假阳性"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.9,
+   "note": "通路富集 BH FDR 校正，标准"
+  }
+ },
+ {
+  "task_id": "bmd_pan_003",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.55,
+   "note": "TMM 本身主流，但 rationale 与 DESeq2 输入混用，工具链概念不清"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.75,
+   "note": "TMM 对 bulk counts 标准；仅提示 DESeq2 自带归一化，本步选择合理"
+  }
+ },
+ {
+  "task_id": "bmd_pan_003",
+  "step_id": "D9",
+  "decision": {
+   "decision_type": "cbioportal_projection",
+   "choice": "DETAILED",
+   "rationale": "使用 projection=DETAILED 确保返回完整 hugoGeneSymbol,避免 SUMMARY 模式返回'?' (cBioPortal API文档)",
+   "context": {
+    "data_source": "cBioPortal"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "SUMMARY 模式可能返回缺失基因符号，影响下游，但属 API 参数选择"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.85,
+   "note": "DETAILED 投影保证基因符号完整"
+  }
+ },
+ {
+  "task_id": "bmd_pan_004",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配（DESeq2 需原始 counts 并自行归一化）"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "TMM 是 bulk counts 主流归一化"
+  }
+ },
+ {
+  "task_id": "bmd_pan_005",
+  "step_id": "A1",
+  "decision": {
+   "decision_type": "expression_survival_consistency",
+   "choice": "direction_inconsistent_not_discussed",
+   "rationale": "High expression of the gene but protective HR — two results reported separately.",
+   "context": {
+    "integration_type": "cross_module"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "高表达却为保护性 HR 的方向矛盾未讨论，属解释/报告不足而非方法本身错误；若据此下促癌结论则会失真"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.6,
+   "note": "表达方向（高表达促癌）与生存方向（保护性 HR）矛盾却未讨论，结论可信度受损"
+  }
+ },
+ {
+  "task_id": "bmd_pan_005",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "TMM 是 bulk counts 主流归一化"
+  }
+ },
+ {
+  "task_id": "bmd_pan_006",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.55,
+   "note": "TMM 本身主流，但 rationale 与 DESeq2 输入混用，工具链概念不清"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.75,
+   "note": "TMM 对 bulk counts 是标准归一化；仅提示 DESeq2 自带归一化，若直接喂 TMM 值会重复归一化，但本步选择本身合理"
+  }
+ },
+ {
+  "task_id": "bmd_pan_006",
+  "step_id": "D9",
+  "decision": {
+   "decision_type": "cbioportal_projection",
+   "choice": "SUMMARY",
+   "rationale": "SUMMARY mode is faster, smaller data.",
+   "context": {
+    "data_source": "cBioPortal"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "SUMMARY 模式可能返回缺失基因符号，影响下游，但属 API 参数选择"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.7,
+   "note": "cBioPortal SUMMARY 投影模式可能返回 '?'/不完整基因符号，导致基因级投影静默失败，下游关联分析失真"
+  }
+ },
+ {
+  "task_id": "bmd_pan_007",
+  "step_id": "D15",
+  "decision": {
+   "decision_type": "expression_survival_consistency",
+   "choice": "direction_inconsistent_not_discussed",
+   "rationale": "Two results reported separately.",
+   "context": {
+    "integration_type": "cross_module"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "表达-生存方向矛盾未讨论，属报告/解释不足而非方法错误"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.6,
+   "note": "表达与生存方向矛盾却未讨论，跨模块结论不自洽"
+  }
+ },
+ {
+  "task_id": "bmd_pan_007",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "TMM 是 bulk counts 主流归一化"
+  }
+ },
+ {
+  "task_id": "bmd_pan_008",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.65,
+   "note": "TMM 是 bulk counts 主流归一化；与 DESeq2 搭配时需注意 DESeq2 自带尺寸因子"
+  }
+ },
+ {
+  "task_id": "bmd_pan_009",
+  "step_id": "D16",
+  "decision": {
+   "decision_type": "immune_expression_consistency",
+   "choice": "direction_inconsistent_not_discussed",
+   "rationale": "Two results reported separately.",
+   "context": {
+    "integration_type": "cross_module"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "免疫-表达方向矛盾未讨论，属报告/解释不足而非方法错误"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.6,
+   "note": "免疫一致性方向矛盾却未讨论，跨模块结论不自洽"
+  }
+ },
+ {
+  "task_id": "bmd_pan_009",
+  "step_id": "D2",
+  "decision": {
+   "decision_type": "normalization",
+   "choice": "TMM",
+   "rationale": "TMM归一化校正RNA组成偏差和文库大小差异,适用于原始counts的下游DESeq2分析 (Robinson & Oshlack 2010, PMID 20196867)",
+   "context": {
+    "data_category": "raw_counts",
+    "sequencing": "bulk_RNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "TMM 本身是标准归一化，但与 DESeq2 联用冗余/不匹配"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "TMM 是 bulk counts 主流归一化"
+  }
+ },
+ {
+  "task_id": "bmd_pan_010",
+  "step_id": "D11",
+  "decision": {
+   "decision_type": "purity_confounding",
+   "choice": "purity_discussed_as_limitation",
+   "rationale": "Tumor purity acknowledged as a limitation; not adjusted in correlation.",
+   "context": {
+    "analysis_type": "immune_expression_correlation"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "将纯度作为局限显式讨论是可接受的报告做法（未调整但已声明）"
+  },
+  "B": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "承认纯度混杂但未校正，相关可能仍受混杂影响"
+  }
+ },
+ {
+  "task_id": "bmd_pan_010",
+  "step_id": "D5",
+  "decision": {
+   "decision_type": "significance_threshold",
+   "choice": "padj <= 0.1, |logFC| >= 0.5",
+   "rationale": "Relaxed threshold to capture more candidates for external validation.",
+   "context": {
+    "analysis_type": "differential_expression"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "放宽阈值用于候选筛选、后续外部验证，是合理的探索性选择"
+  },
+  "B": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "放宽阈值做候选筛选可辩护但假阳性偏高"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_001",
+  "step_id": "S1",
+  "decision": {
+   "decision_type": "api_data_integrity",
+   "choice": "DETAILED_with_validation",
+   "rationale": "GSE131907 .h5ad validated: genes x cells indices intact, no duplicate barcodes, obs/var complete",
+   "context": {
+    "data_source": "GSE149614",
+    "data_format": "h5ad"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.5,
+   "note": "数据完整性校验做法正确，但 rationale 写 GSE131907 而 context 为 GSE149614，校验对象与数据源不符"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.75,
+   "note": "数据完整性校验合理；但理由中数据集号（GSE131907）与 context（GSE149614）不一致，属表述瑕疵"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_002",
+  "step_id": "S1",
+  "decision": {
+   "decision_type": "api_data_integrity",
+   "choice": "DETAILED_with_validation",
+   "rationale": "GSE131907 .h5ad validated: genes x cells indices intact, no duplicate barcodes, obs/var complete",
+   "context": {
+    "data_source": "GSE115978",
+    "data_format": "h5ad"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "分析前做数据完整性校验是标准做法；但 rationale 数据集编号(GSE131907)与 context(GSE115978)不一致，值得留意"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.55,
+   "note": "校验内容（GSE131907）与声明的数据源（GSE115978）不一致，数据完整性存疑"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_002",
+  "step_id": "S10",
+  "decision": {
+   "decision_type": "deg_method",
+   "choice": "pseudobulk_DESeq2",
+   "rationale": "Pseudobulk + DESeq2 at patient level — avoids pseudoreplication, patients as biological replicates (Squair et al. 2021, PMID 34433851)",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_patients": 11,
+    "pseudobulk": true
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.95,
+   "note": "多患者 scRNA DEG 用患者级 pseudobulk+DESeq2 避免伪重复，是标准做法"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.9,
+   "note": "多患者（11）组间比较用细胞级 Wilcoxon，pseudobulk=true 场景下严重伪重复"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_002",
+  "step_id": "S3",
+  "decision": {
+   "decision_type": "doublet_detection",
+   "choice": "no_doublet_detection",
+   "rationale": "Doublet rate is low (<5%), skipping to save compute time.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_cells": 85210
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.55,
+   "note": "85K 10X 细胞跳过双细胞去除可辩护但非最优：声称双细胞率<5% 未经验证，双细胞可能产生假簇，但下游为患者级 pseudobulk DEG 影响有限"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.6,
+   "note": "8.5 万细胞规模跳过双细胞去除，'<5%'无依据且以省算力为由，双细胞会引入伪信号"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_004",
+  "step_id": "S1",
+  "decision": {
+   "decision_type": "api_data_integrity",
+   "choice": "DETAILED_with_validation",
+   "rationale": "GSE131907 .h5ad validated: genes x cells indices intact, no duplicate barcodes, obs/var complete",
+   "context": {
+    "data_source": "GSE132465",
+    "data_format": "h5ad"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.85,
+   "note": "数据完整性校验是标准前置步骤"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.55,
+   "note": "校验内容（GSE131907）与数据源（GSE132465）不一致，数据完整性存疑"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_006",
+  "step_id": "A1",
+  "decision": {
+   "decision_type": "qc_mito_threshold",
+   "choice": "fixed_mito_25",
+   "rationale": "Standard 25% mito cutoff — common default in Seurat tutorials.",
+   "context": {
+    "sequencing": "10X_scRNA_seq"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "固定 25% mito 阈值在肿瘤 scRNA 中常用可接受；与 S2 的 20% 自适应阈值略有出入"
+  },
+  "B": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "25% 线粒体阈值偏高但常见，自适应更优"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_006",
+  "step_id": "A8",
+  "decision": {
+   "decision_type": "clustering_resolution",
+   "choice": "default_0_8",
+   "rationale": "Resolution 0.8 — Seurat default.",
+   "context": {
+    "sequencing": "10X_scRNA_seq"
+   }
+  },
+  "A": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "分辨率 0.8 本身是常用默认，但与 S8 的 clustree 选定 1.2 矛盾，属轨迹内不一致"
+  },
+  "B": {
+   "label": "correct",
+   "confidence": 0.7,
+   "note": "分辨率 0.8 是常用默认可接受（与 S8 的 1.2 略有出入）"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_006",
+  "step_id": "S12",
+  "decision": {
+   "decision_type": "cluster_annotation_consistency",
+   "choice": "consistent_with_cross_validation",
+   "rationale": "CellTypist and SingleR annotations concordant on 92% of cells. 38 clusters map to 8 major cell types. Marker dotplot confirms T cell (CD3D/CD8A/CD4), B cell (CD19/MS4A1), myeloid (CD14/CD68), and epithelial (EPCAM) lineages with clear separation.",
+   "context": {
+    "integration_type": "cross_module"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.8,
+   "note": "双方法注释一致性核查合理"
+  },
+  "B": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "S9 仅用 SingleR 却声称 CellTypist 交叉验证 92% 一致，内部不一致"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_007",
+  "step_id": "S10",
+  "decision": {
+   "decision_type": "deg_method",
+   "choice": "Kruskal_Wallis_cell_level",
+   "rationale": "Kruskal-Wallis H-test (non-parametric ANOVA) on cell-level log-normalized data — comparing immune evasion gene expression across G1/S/G2M cell-cycle phases. Cell-level test without pseudobulk aggregation.",
+   "context": {
+    "sequencing": "10X_scRNA_seq",
+    "n_patients": 12,
+    "pseudobulk": false
+   }
+  },
+  "A": {
+   "label": "error",
+   "confidence": 0.6,
+   "note": "细胞级 Kruskal-Wallis 忽略 12 名患者的非独立结构，伪重复使显著性膨胀"
+  },
+  "B": {
+   "label": "edge",
+   "confidence": 0.55,
+   "note": "Kruskal-Wallis 细胞级检验比较细胞周期阶段，属样本内探索性比较，但 12 例患者细胞非独立，存在伪重复，显著性情度被高估"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_008",
+  "step_id": "S1",
+  "decision": {
+   "decision_type": "api_data_integrity",
+   "choice": "DETAILED_with_validation",
+   "rationale": "GSE131907 .h5ad validated: genes x cells indices intact, no duplicate barcodes, obs/var complete",
+   "context": {
+    "data_source": "GSE149614",
+    "data_format": "h5ad"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.85,
+   "note": "数据完整性校验是标准前置步骤"
+  },
+  "B": {
+   "label": "error",
+   "confidence": 0.55,
+   "note": "校验内容（GSE131907）与数据源（GSE149614）不一致，数据完整性存疑"
+  }
+ },
+ {
+  "task_id": "bmd_scrna_008",
+  "step_id": "S12",
+  "decision": {
+   "decision_type": "cluster_annotation_consistency",
+   "choice": "consistent_with_cross_validation",
+   "rationale": "41 subclusters map to 8 major cell types via cross-validation; marker dotplot confirms consistency across annotation levels",
+   "context": {
+    "integration_type": "cross_module"
+   }
+  },
+  "A": {
+   "label": "correct",
+   "confidence": 0.8,
+   "note": "注释一致性核查合理"
+  },
+  "B": {
+   "label": "edge",
+   "confidence": 0.6,
+   "note": "S9 为人工注释却声称交叉验证一致，内部不一致"
+  }
+ }
+]
